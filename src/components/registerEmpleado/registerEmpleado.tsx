@@ -1,36 +1,82 @@
 "use client";
 
-import { useState } from "react";
+import { RegisterEmployeeErrorProps, RegisterEmployeeProps } from "@/types";
+import { validateRegisterEmployee } from "@/utils/registerEmployeeValidation";
+import { useEffect, useState } from "react";
 
 export default function RegisterEmpleyoee() {
-  const [formData, setFormData] = useState({
+  const [submitted, setSubmitted] = useState(false);
+
+  const [formData, setFormData] = useState<RegisterEmployeeProps>({
     nombres: "",
     apellidoPaterno: "",
     apellidoMaterno: "",
     documento: "",
-    tipoDocumento: "DNI",
+    tipoDocumento: "",
+    fechaNacimiento: new Date(),
+    genero: "",
+    telefono: "",
+    telefonoEmergencia: "",
+    correo: "",
+    direccion: "",
+    cargo: "",
+    fechaContratacion: new Date(),
+    tipoContrato: "",
+  });
+
+  const [error, setError] = useState<RegisterEmployeeErrorProps>({
+    nombres: "",
+    apellidoPaterno: "",
+    apellidoMaterno: "",
+    documento: "",
+    tipoDocumento: "",
     fechaNacimiento: "",
     genero: "",
     telefono: "",
     telefonoEmergencia: "",
-    email: "",
+    correo: "",
     direccion: "",
     cargo: "",
-    fechaIngreso: "",
+    fechaContratacion: "",
     tipoContrato: "",
   });
 
+  // Funcion para validar los campos al cambiar el valor
+  const isValidField = (field: keyof RegisterEmployeeErrorProps) => {
+    return submitted && error[field] === "";
+  };
+
+  // Funcion para manejar el cambio de los inputs
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "date" ? new Date(value) : value,
+    }));
   };
 
+  // Funcion para manejar el submit del formulario
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(formData);
+    const validationErrors = validateRegisterEmployee(formData);
+    setError(validationErrors);
+    setSubmitted(true);
+
+    const isValid = Object.values(validationErrors).every((v) => v === "");
+    if (isValid) {
+      console.log("Formulario válido ✅", formData);
+    }
   };
+
+  // Funcion para validar los campos al cambiar el valor
+  useEffect(() => {
+    if (submitted) {
+      const validationErrors = validateRegisterEmployee(formData);
+      setError(validationErrors);
+    }
+  }, [formData, submitted]);
 
   return (
     <form
@@ -40,250 +86,328 @@ export default function RegisterEmpleyoee() {
       <h2 className="text-2xl font-semibold mb-6 text-left">
         Registro de Empleado
       </h2>
-      <div className="grid gap-6 mb-6 md:grid-cols-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         {/* Nombres */}
-        <div>
-          <div className="mb-2 block">
-            <label
-              htmlFor="nombres"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Nombres
-            </label>
-          </div>
+        <div className="flex flex-col">
+          <label htmlFor="nombres" className="mb-1 text-sm font-medium">
+            Nombres
+          </label>
           <input
-            id="nombres"
             type="text"
+            id="nombres"
+            name="nombres"
             value={formData.nombres}
             onChange={handleChange}
-            placeholder="Ingrese nombres"
-            required
             className="input input-info"
           />
+          {submitted && error.nombres && (
+            <p className="text-red-500 text-sm mt-1">{error.nombres}</p>
+          )}
+          {isValidField("nombres") && (
+            <p className="text-green-600 text-sm mt-1">Completado ✅</p>
+          )}
         </div>
+
         {/* Apellido Paterno */}
-        <div>
-          <div className="mb-2 block">
-            <label
-              htmlFor="apellidosPaterno"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Apellido Paterno
-            </label>
-            <input
-              id="apellidosPaterno"
-              type="text"
-              value={formData.apellidoPaterno}
-              onChange={handleChange}
-              placeholder="Ingrese apellido paterno"
-              className="input input-info"
-              required
-            />
-          </div>
+        <div className="flex flex-col">
+          <label htmlFor="apellidoPaterno" className="mb-1 text-sm font-medium">
+            Apellido Paterno
+          </label>
+          <input
+            type="text"
+            id="apellidoPaterno"
+            name="apellidoPaterno"
+            value={formData.apellidoPaterno}
+            onChange={handleChange}
+            className="input input-info"
+          />
+          {submitted && error.apellidoPaterno && (
+            <p className="text-red-500 text-sm mt-1">{error.apellidoPaterno}</p>
+          )}
+          {isValidField("apellidoPaterno") && (
+            <p className="text-green-600 text-sm mt-1">Completado ✅</p>
+          )}
         </div>
 
         {/* Apellido Materno */}
-        <div>
-          <label
-            htmlFor="apellidosMaterno"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
+        <div className="flex flex-col">
+          <label htmlFor="apellidoMaterno" className="mb-1 text-sm font-medium">
             Apellido Materno
           </label>
           <input
             type="text"
-            id="apellidosMaterno"
+            id="apellidoMaterno"
+            name="apellidoMaterno"
             value={formData.apellidoMaterno}
             onChange={handleChange}
-            placeholder="Ingrese apellido materno"
             className="input input-info"
-            required
           />
+          {submitted && error.apellidoMaterno && (
+            <p className="text-red-500 text-sm mt-1">{error.apellidoMaterno}</p>
+          )}
+          {isValidField("apellidoMaterno") && (
+            <p className="text-green-600 text-sm mt-1">Completado ✅</p>
+          )}
         </div>
 
         {/* Fecha de Nacimiento */}
-
-        <div>
-          <label htmlFor="genero" className="block mb-2 text-sm font-medium">
+        <div className="flex flex-col">
+          <label htmlFor="fechaNacimiento" className="mb-1 text-sm font-medium">
             Fecha de Nacimiento
           </label>
           <input
             type="date"
             id="fechaNacimiento"
-            value={formData.fechaNacimiento}
+            name="fechaNacimiento"
+            value={formData.fechaNacimiento.toISOString().split("T")[0]}
             onChange={handleChange}
             className="input input-info"
+            onKeyDown={(e) => e.preventDefault()}
           />
+          {submitted && error.fechaNacimiento && (
+            <p className="text-red-500 text-sm mt-1">{error.fechaNacimiento}</p>
+          )}
+          {isValidField("fechaNacimiento") && (
+            <p className="text-green-600 text-sm mt-1">Completado ✅</p>
+          )}
         </div>
 
-        {/* Tipo de documento*/}
-        <div>
-          <div className="block mb-2 text-sm font-medium">
-            <label htmlFor="tipoDocumento">Tipo de Documento</label>
-          </div>
+        {/* Tipo de Documento */}
+        <div className="flex flex-col">
+          <label htmlFor="tipoDocumento" className="mb-1 text-sm font-medium">
+            Tipo de Documento
+          </label>
           <select
             id="tipoDocumento"
             name="tipoDocumento"
             value={formData.tipoDocumento}
             onChange={handleChange}
             className="input input-info"
-            required
           >
             <option value="">Seleccione</option>
             <option value="dni">DNI</option>
-            <option value="carnetExtranjeria">Carnet de extranjería</option>
             <option value="pasaporte">Pasaporte</option>
+            <option value="carnetExtranjeria">Carnet de Extranjería</option>
           </select>
+          {submitted && error.tipoDocumento && (
+            <p className="text-red-500 text-sm mt-1">{error.tipoDocumento}</p>
+          )}
+          {isValidField("tipoDocumento") && (
+            <p className="text-green-600 text-sm mt-1">Completado ✅</p>
+          )}
         </div>
 
         {/* Documento */}
-        <div>
-          <label
-            htmlFor="documento"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Numero de Documento
+        <div className="flex flex-col">
+          <label htmlFor="documento" className="mb-1 text-sm font-medium">
+            Número de Documento
           </label>
           <input
-            type="number"
+            type="text"
             id="documento"
+            name="documento"
             value={formData.documento}
             onChange={handleChange}
-            placeholder="Ingrese número de documento"
             className="input input-info"
-            required
+            maxLength={8}
           />
+          {submitted && error.documento && (
+            <p className="text-red-500 text-sm mt-1">{error.documento}</p>
+          )}
+          {isValidField("documento") && (
+            <p className="text-green-600 text-sm mt-1">Completado ✅</p>
+          )}
         </div>
 
-        {/* Fecha de ingreso */}
-        <div>
-          <label className="block font-medium">Fecha de Ingreso</label>
-          <input
-            type="date"
-            id="fechaIngreso"
-            value={formData.fechaIngreso}
-            onChange={handleChange}
-            className="input input-info"
-            required
-          />
-        </div>
-
-        {/* Correo electrónico */}
-        <div>
-          <label htmlFor="email" className="block mb-2 text-sm font-medium">
-            Correo electrónico
+        {/* Género */}
+        <div className="flex flex-col">
+          <label htmlFor="genero" className="mb-1 text-sm font-medium">
+            Género
           </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
+          <select
+            id="genero"
+            name="genero"
+            value={formData.genero}
             onChange={handleChange}
-            placeholder="Ingrese correo electrónico"
             className="input input-info"
-            required
-          />
+          >
+            <option value="">Seleccione</option>
+            <option value="masculino">Masculino</option>
+            <option value="femenino">Femenino</option>
+          </select>
+          {submitted && error.genero && (
+            <p className="text-red-500 text-sm mt-1">{error.genero}</p>
+          )}
+          {isValidField("genero") && (
+            <p className="text-green-600 text-sm mt-1">Completado ✅</p>
+          )}
         </div>
 
         {/* Teléfono */}
-        <div>
-          <label
-            htmlFor="telefono"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
+        <div className="flex flex-col">
+          <label htmlFor="telefono" className="mb-1 text-sm font-medium">
             Teléfono
           </label>
           <input
             type="number"
             id="telefono"
+            name="telefono"
             value={formData.telefono}
             onChange={handleChange}
-            placeholder="Ingrese número de teléfono"
             className="input input-info"
-            required
+            maxLength={9}
           />
+          {submitted && error.telefono && (
+            <p className="text-red-500 text-sm mt-1">{error.telefono}</p>
+          )}
+          {isValidField("telefono") && (
+            <p className="text-green-600 text-sm mt-1">Completado ✅</p>
+          )}
         </div>
 
-        {/* Teléfono de Emergencia */}
-        <div>
+        {/* Teléfono Emergencia */}
+        <div className="flex flex-col">
           <label
             htmlFor="telefonoEmergencia"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            className="mb-1 text-sm font-medium"
           >
             Teléfono de Emergencia
           </label>
           <input
             type="number"
             id="telefonoEmergencia"
+            name="telefonoEmergencia"
             value={formData.telefonoEmergencia}
             onChange={handleChange}
-            placeholder="Ingrese teléfono de emergencia"
             className="input input-info"
-            required
+            maxLength={9}
           />
+          {submitted && error.telefonoEmergencia && (
+            <p className="text-red-500 text-sm mt-1">
+              {error.telefonoEmergencia}
+            </p>
+          )}
+          {isValidField("telefonoEmergencia") && (
+            <p className="text-green-600 text-sm mt-1">Completado ✅</p>
+          )}
         </div>
+
+        {/* Correo */}
+        <div className="flex flex-col">
+          <label htmlFor="correo" className="mb-1 text-sm font-medium">
+            Correo Electrónico
+          </label>
+          <input
+            type="email"
+            id="correo"
+            name="correo"
+            value={formData.correo}
+            onChange={handleChange}
+            className="input input-info"
+          />
+          {submitted && error.correo && (
+            <p className="text-red-500 text-sm mt-1">{error.correo}</p>
+          )}
+          {isValidField("correo") && (
+            <p className="text-green-600 text-sm mt-1">Completado ✅</p>
+          )}
+        </div>
+
         {/* Dirección */}
-        <div>
-          <label
-            htmlFor="direccion"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
+        <div className="flex flex-col">
+          <label htmlFor="direccion" className="mb-1 text-sm font-medium">
             Dirección
           </label>
           <input
             type="text"
             id="direccion"
+            name="direccion"
             value={formData.direccion}
             onChange={handleChange}
-            placeholder="Ingrese dirección"
             className="input input-info"
-            required
           />
+          {submitted && error.direccion && (
+            <p className="text-red-500 text-sm mt-1">{error.direccion}</p>
+          )}
+          {isValidField("direccion") && (
+            <p className="text-green-600 text-sm mt-1">Completado ✅</p>
+          )}
         </div>
+
         {/* Cargo */}
-        <div>
-          <label
-            htmlFor="cargo"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
+        <div className="flex flex-col">
+          <label htmlFor="cargo" className="mb-1 text-sm font-medium">
             Cargo
           </label>
           <input
             type="text"
             id="cargo"
+            name="cargo"
             value={formData.cargo}
             onChange={handleChange}
-            placeholder="Ingrese cargo"
             className="input input-info"
-            required
           />
+          {submitted && error.cargo && (
+            <p className="text-red-500 text-sm mt-1">{error.cargo}</p>
+          )}
+          {isValidField("cargo") && (
+            <p className="text-green-600 text-sm mt-1">Completado ✅</p>
+          )}
         </div>
-        {/* Tipo de Contrato */}
 
-        <div>
-          <div className="mb-2 block">
-            <label htmlFor="tipoContrato">Tipo de contrato </label>
-          </div>
+        {/* Fecha de Contratación */}
+        <div className="flex flex-col">
+          <label
+            htmlFor="fechaContratacion"
+            className="mb-1 text-sm font-medium"
+          >
+            Fecha de Contratación
+          </label>
+          <input
+            type="date"
+            id="fechaContratacion"
+            name="fechaContratacion"
+            value={formData.fechaContratacion.toISOString().split("T")[0]}
+            onChange={handleChange}
+            className="input input-info"
+            onKeyDown={(e) => e.preventDefault()}
+          />
+          {submitted && error.fechaContratacion && (
+            <p className="text-red-500 text-sm mt-1">
+              {error.fechaContratacion}
+            </p>
+          )}
+          {isValidField("fechaContratacion") && (
+            <p className="text-green-600 text-sm mt-1">Completado ✅</p>
+          )}
+        </div>
+
+        {/* Tipo de Contrato */}
+        <div className="flex flex-col">
+          <label htmlFor="tipoContrato" className="mb-1 text-sm font-medium">
+            Tipo de Contrato
+          </label>
           <select
             id="tipoContrato"
             name="tipoContrato"
             value={formData.tipoContrato}
             onChange={handleChange}
             className="input input-info"
-            required
           >
             <option value="">Seleccione</option>
             <option value="indeterminado">Indeterminado</option>
-            <option value="plazoFijo">Plazo fijo</option>
+            <option value="plazoFijo">Plazo Fijo</option>
             <option value="practicas">Prácticas</option>
           </select>
+          {submitted && error.tipoContrato && (
+            <p className="text-red-500 text-sm mt-1">{error.tipoContrato}</p>
+          )}
+          {isValidField("tipoContrato") && (
+            <p className="text-green-600 text-sm mt-1">Completado ✅</p>
+          )}
         </div>
       </div>
-      <div>
-        <input id="genero" type="text" />
-      </div>
 
-      {/* Botón de envío */}
       <div className="mt-6 text-center">
         <button
           type="submit"
