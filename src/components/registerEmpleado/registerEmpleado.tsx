@@ -68,6 +68,25 @@ export default function RegisterEmpleyoee() {
     if (isValid) {
       console.log("Formulario válido ✅", formData);
     }
+
+    try {
+      fetch("https://localhost:7160/api/empleados", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          console.log(json);
+          // Mostrar el alert aquí si el registro fue exitoso
+          // setShowAlert(true);
+          // Redirigiriendo al login
+        });
+    } catch (error) {
+      console.error("Error al registrar el empleado:", error);
+    }
   };
 
   // Funcion para validar los campos al cambiar el valor
@@ -249,7 +268,7 @@ export default function RegisterEmpleyoee() {
             Teléfono
           </label>
           <input
-            type="number"
+            type="text"
             id="telefono"
             name="telefono"
             value={formData.telefono}
@@ -274,7 +293,7 @@ export default function RegisterEmpleyoee() {
             Teléfono de Emergencia
           </label>
           <input
-            type="number"
+            type="text"
             id="telefonoEmergencia"
             name="telefonoEmergencia"
             value={formData.telefonoEmergencia}

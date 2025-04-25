@@ -71,7 +71,7 @@ export function validateRegisterEmployee(
 
   // Teléfono
   if (!values.telefono.trim()) {
-    errors.telefono = "El número de teléfono es requerido";
+    errors.telefono = "El teléfono es requerido";
   } else if (!/^\d+$/.test(values.telefono)) {
     errors.telefono = "El teléfono debe contener solo números";
   } else if (values.telefono.length < 9) {
@@ -80,13 +80,11 @@ export function validateRegisterEmployee(
 
   // Teléfono de emergencia
   if (!values.telefonoEmergencia.trim()) {
-    errors.telefonoEmergencia = "El número de emergencia es requerido";
+    errors.telefonoEmergencia = "El teléfono de emergencia es requerido";
   } else if (!/^\d+$/.test(values.telefonoEmergencia)) {
-    errors.telefonoEmergencia =
-      "El teléfono de emergencia debe contener solo números";
+    errors.telefonoEmergencia = "El teléfono de emergencia debe contener solo números";
   } else if (values.telefonoEmergencia.length < 9) {
-    errors.telefonoEmergencia =
-      "El teléfono de emergencia debe tener al menos 9 dígitos";
+    errors.telefonoEmergencia = "El teléfono de emergencia debe tener al menos 9 dígitos";
   }
 
   // Email
