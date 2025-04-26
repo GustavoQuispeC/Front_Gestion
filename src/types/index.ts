@@ -13,6 +13,8 @@ export interface RegisterEmployeeProps {
   cargo: string;
   fechaContratacion: Date;
   tipoContrato: string;
+  fotoUrl: string;// URL de la imagen en Firebase
+
 }
 
 export interface RegisterEmployeeErrorProps {
@@ -30,4 +32,5 @@ export interface RegisterEmployeeErrorProps {
   cargo: string;
   fechaContratacion: string;
   tipoContrato: string;
+  fotoUrl: string; // URL de la imagen en Firebase
 }

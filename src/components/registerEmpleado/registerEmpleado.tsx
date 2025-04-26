@@ -1,14 +1,17 @@
 "use client";
 
 import { createEmpleado } from "@/helpers/empleado.helpers";
+import { uploadImage } from "@/helpers/uploadImageToFirebase";
 import { RegisterEmployeeErrorProps, RegisterEmployeeProps } from "@/types";
 import { validateRegisterEmployee } from "@/utils/registerEmployeeValidation";
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 
-export default function RegisterEmpleyoee() {
+export default function RegisterEmployee() {
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const [formData, setFormData] = useState<RegisterEmployeeProps>({
     nombres: "",
@@ -25,6 +28,7 @@ export default function RegisterEmpleyoee() {
     cargo: "",
     fechaContratacion: new Date(),
     tipoContrato: "",
+    fotoUrl: "",
   });
 
   const [error, setError] = useState<RegisterEmployeeErrorProps>({
@@ -42,6 +46,7 @@ export default function RegisterEmpleyoee() {
     cargo: "",
     fechaContratacion: "",
     tipoContrato: "",
+    fotoUrl: "",
   });
 
   // Funcion para validar los campos al cambiar el valor
@@ -53,47 +58,78 @@ export default function RegisterEmpleyoee() {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const { name, value, type } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "date" ? new Date(value) : value,
-    }));
+    const { name, value, type, files } = e.target as HTMLInputElement;
+
+    if (type === "file" && files && files.length > 0) {
+      const file = files[0];
+
+      setSelectedImage(file); // Guardamos el archivo como objeto File
+
+      // Creamos una URL temporal para mostrar la vista previa
+      const imageUrl = URL.createObjectURL(file);
+      setPreviewUrl(imageUrl);
+
+      // Opcionalmente puedes guardar el nombre del archivo en el formData
+      setFormData((prev) => ({
+        ...prev,
+        [name]: file.name,
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: type === "date" ? new Date(value) : value,
+      }));
+    }
   };
 
   // Funcion para manejar el submit del formulario
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true); // ✅ Inicia la carga
+    setIsLoading(true);
 
-    const validationErrors = validateRegisterEmployee(formData);
-    setError(validationErrors);
-    setSubmitted(true);
-
-    const isValid = Object.values(validationErrors).every((v) => v === "");
-
-    if (!isValid) {
-      toast.error("❌ Por favor, corrige los errores del formulario.", {
-        theme: "colored",
-      });
-      setIsLoading(false); // 🛑 Detén la carga si hay errores
-      return;
-    }
+    let fotoUrl = "";
 
     try {
-      const result = await createEmpleado(formData);
+      if (selectedImage) {
+        fotoUrl = await uploadImage(selectedImage);
+      }
+
+      // 🔥 AQUÍ LA CORRECCIÓN: FotoUrl
+      const finalFormData = {
+        ...formData,
+        FotoUrl: fotoUrl, // NO "foto", debe ser "FotoUrl"
+      };
+
+      const validationErrors = validateRegisterEmployee(finalFormData);
+      setError(validationErrors);
+      setSubmitted(true);
+
+      const isValid = Object.values(validationErrors).every((v) => v === "");
+
+      if (!isValid) {
+        toast.error("❌ Por favor, corrige los errores del formulario.", {
+          theme: "colored",
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      const result = await createEmpleado(finalFormData);
       console.log("Empleado creado ✅", result);
       toast.success("✅ Se guardó correctamente", {
         theme: "colored",
       });
-      // ✅ Aquí podrías limpiar el formulario si deseas
+
+      // Limpieza opcional
       // setFormData(...);
+      // setSelectedImage(null);
     } catch (err) {
       console.error("Error al registrar:", err);
       toast.error("❌ Error al guardar la información", {
         theme: "colored",
       });
     } finally {
-      setIsLoading(false); // ✅ Termina la carga
+      setIsLoading(false);
     }
   };
 
@@ -105,6 +141,15 @@ export default function RegisterEmpleyoee() {
     }
   }, [formData, submitted]);
 
+  // Funcion para manejar el cambio de los input files
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl); // ✅ Ahora sí correcto
+      }
+    };
+  }, [previewUrl]);
+
   return (
     <>
       <form
@@ -114,7 +159,7 @@ export default function RegisterEmpleyoee() {
         <h2 className="text-2xl font-semibold mb-6 text-left">
           Registro de Empleado
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 ">
           {/* Nombres */}
           <div className="flex flex-col">
             <label htmlFor="nombres" className="mb-1 text-sm font-medium">
@@ -451,6 +496,53 @@ export default function RegisterEmpleyoee() {
           </div>
         </div>
 
+        {/* Adjuntar Foto de Empleado */}
+        <div className="flex flex-col">
+          <label
+            htmlFor="foto"
+            className="text-base text-slate-900 font-medium mb-3 block"
+          >
+            Adjuntar Foto de Empleado
+          </label>
+
+          <input
+            type="file"
+            id="foto"
+            name="foto"
+            accept="image/*"
+            onChange={handleChange}
+            className={`file:mr-4 file:py-3 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold ${
+              submitted && error.fotoUrl ? "input-error" : "input-info"
+            }`}
+          />
+
+          {/* Mensajes de validación */}
+          {submitted && error.fotoUrl && (
+            <p className="text-red-500 text-sm mt-1">{error.fotoUrl}</p>
+          )}
+          {isValidField("fotoUrl") && (
+            <p className="text-green-600 text-sm mt-1">Completado ✅</p>
+          )}
+
+          {/* Texto guía */}
+          <p className="text-xs text-slate-500 mt-2">
+            Solo se permiten archivos .jpg, .jpeg y .png
+          </p>
+
+          {/* Vista previa de la imagen seleccionada */}
+          {previewUrl && (
+            <div className="mt-4">
+              <p className="text-sm text-slate-700 mb-2">Vista previa:</p>
+              <img
+                src={previewUrl}
+                alt="Vista previa"
+                className="h-32 w-32 object-cover rounded-lg border"
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Botón de enviar */}
         <div className="mt-6 text-center">
           <button
             type="submit"
