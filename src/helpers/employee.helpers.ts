@@ -1,10 +1,10 @@
-import { RegisterEmployeeProps } from "@/types";
+import { RegisterEmployeeApiProps } from "@/types";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-export async function createEmpleado(formData: RegisterEmployeeProps) {
+export async function createEmployee(formData: RegisterEmployeeApiProps) {
   try {
-    const response = await fetch(`${apiUrl}/empleados`, {
+    const response = await fetch(`${apiUrl}/employee`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

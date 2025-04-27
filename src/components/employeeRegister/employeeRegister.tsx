@@ -1,8 +1,11 @@
 "use client";
-
-import { createEmpleado } from "@/helpers/empleado.helpers";
+import { createEmployee } from "@/helpers/employee.helpers";
 import { uploadImage } from "@/helpers/uploadImageToFirebase";
-import { RegisterEmployeeErrorProps, RegisterEmployeeProps } from "@/types";
+import {
+  RegisterEmployeeApiProps,
+  RegisterEmployeeErrorProps,
+  RegisterEmployeeProps,
+} from "@/types";
 import { validateRegisterEmployee } from "@/utils/registerEmployeeValidation";
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
@@ -14,39 +17,39 @@ export default function RegisterEmployee() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const [formData, setFormData] = useState<RegisterEmployeeProps>({
-    nombres: "",
-    apellidoPaterno: "",
-    apellidoMaterno: "",
-    documento: "",
-    tipoDocumento: "",
-    fechaNacimiento: new Date(),
-    genero: "",
-    telefono: "",
-    telefonoEmergencia: "",
-    correo: "",
-    direccion: "",
-    cargo: "",
-    fechaContratacion: new Date(),
-    tipoContrato: "",
-    fotoUrl: "",
+    firstName: "",
+    lastNameFather: "",
+    lastNameMother: "",
+    documentNumber: "",
+    documentType: "",
+    birthDate: new Date(),
+    gender: "",
+    phone: "",
+    emergencyPhone: "",
+    email: "",
+    address: "",
+    position: "",
+    hireDate: new Date(),
+    contractType: "",
+    photoUrl: "", // URL de la imagen en Firebase
   });
 
   const [error, setError] = useState<RegisterEmployeeErrorProps>({
-    nombres: "",
-    apellidoPaterno: "",
-    apellidoMaterno: "",
-    documento: "",
-    tipoDocumento: "",
-    fechaNacimiento: "",
-    genero: "",
-    telefono: "",
-    telefonoEmergencia: "",
-    correo: "",
-    direccion: "",
-    cargo: "",
-    fechaContratacion: "",
-    tipoContrato: "",
-    fotoUrl: "",
+    firstName: "",
+    lastNameFather: "",
+    lastNameMother: "",
+    documentNumber: "",
+    documentType: "",
+    birthDate: "",
+    gender: "",
+    phone: "",
+    emergencyPhone: "",
+    email: "",
+    address: "",
+    position: "",
+    hireDate: "",
+    contractType: "",
+    photoUrl: "", // URL de la imagen en Firebase
   });
 
   // Funcion para validar los campos al cambiar el valor
@@ -68,12 +71,6 @@ export default function RegisterEmployee() {
       // Creamos una URL temporal para mostrar la vista previa
       const imageUrl = URL.createObjectURL(file);
       setPreviewUrl(imageUrl);
-
-      // Opcionalmente puedes guardar el nombre del archivo en el formData
-      setFormData((prev) => ({
-        ...prev,
-        [name]: file.name,
-      }));
     } else {
       setFormData((prev) => ({
         ...prev,
@@ -87,45 +84,66 @@ export default function RegisterEmployee() {
     e.preventDefault();
     setIsLoading(true);
 
-    let fotoUrl = "";
-
     try {
+      let uploadedPhotoUrl = "";
+
       if (selectedImage) {
-        fotoUrl = await uploadImage(selectedImage);
+        uploadedPhotoUrl = await uploadImage(selectedImage);
       }
 
-      // 🔥 AQUÍ LA CORRECCIÓN: FotoUrl
-      const finalFormData = {
-        ...formData,
-        FotoUrl: fotoUrl, // NO "foto", debe ser "FotoUrl"
-      };
+      const finalPhotoUrl = uploadedPhotoUrl || formData.photoUrl;
 
-      const validationErrors = validateRegisterEmployee(finalFormData);
+      const validationErrors = validateRegisterEmployee({
+        ...formData,
+        photoUrl: finalPhotoUrl,
+      });
       setError(validationErrors);
       setSubmitted(true);
 
       const isValid = Object.values(validationErrors).every((v) => v === "");
 
       if (!isValid) {
-        toast.error("❌ Por favor, corrige los errores del formulario.", {
+        toast.error("Por favor, corrige los errores del formulario.", {
           theme: "colored",
         });
         setIsLoading(false);
         return;
       }
 
-      const result = await createEmpleado(finalFormData);
+      const finalFormData: RegisterEmployeeApiProps = {
+        FirstName: formData.firstName,
+        LastNameFather: formData.lastNameFather,
+        LastNameMother: formData.lastNameMother,
+        DocumentNumber: formData.documentNumber,
+        DocumentType: formData.documentType,
+        BirthDate: formData.birthDate,
+        Gender: formData.gender,
+        Phone: formData.phone,
+        EmergencyPhone: formData.emergencyPhone,
+        Email: formData.email,
+        Address: formData.address,
+        Position: formData.position,
+        HireDate: formData.hireDate,
+        ContractType: formData.contractType,
+        PhotoUrl: finalPhotoUrl,
+      };
+
+      console.log("JSON a enviar:", JSON.stringify(finalFormData, null, 2));
+
+      const result = await createEmployee(finalFormData);
       console.log("Empleado creado ✅", result);
-      toast.success("✅ Se guardó correctamente", {
+
+      toast.success("Se guardó correctamente", {
         theme: "colored",
       });
 
-      // Limpieza opcional
-      // setFormData(...);
+      // Opcional: limpiar formulario aquí
+      // setFormData(initialState);
       // setSelectedImage(null);
+      // setPreviewUrl(null);
     } catch (err) {
       console.error("Error al registrar:", err);
-      toast.error("❌ Error al guardar la información", {
+      toast.error("Error al guardar la información", {
         theme: "colored",
       });
     } finally {
@@ -145,7 +163,7 @@ export default function RegisterEmployee() {
   useEffect(() => {
     return () => {
       if (previewUrl) {
-        URL.revokeObjectURL(previewUrl); // ✅ Ahora sí correcto
+        URL.revokeObjectURL(previewUrl);
       }
     };
   }, [previewUrl]);
@@ -162,21 +180,21 @@ export default function RegisterEmployee() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 ">
           {/* Nombres */}
           <div className="flex flex-col">
-            <label htmlFor="nombres" className="mb-1 text-sm font-medium">
+            <label htmlFor="firstName" className="mb-1 text-sm font-medium">
               Nombres
             </label>
             <input
               type="text"
-              id="nombres"
-              name="nombres"
-              value={formData.nombres}
+              id="firstName"
+              name="firstName"
+              value={formData.firstName}
               onChange={handleChange}
               className="input input-info"
             />
-            {submitted && error.nombres && (
-              <p className="text-red-500 text-sm mt-1">{error.nombres}</p>
+            {submitted && error.firstName && (
+              <p className="text-red-500 text-sm mt-1">{error.firstName}</p>
             )}
-            {isValidField("nombres") && (
+            {isValidField("firstName") && (
               <p className="text-green-600 text-sm mt-1">Completado ✅</p>
             )}
           </div>
@@ -184,25 +202,25 @@ export default function RegisterEmployee() {
           {/* Apellido Paterno */}
           <div className="flex flex-col">
             <label
-              htmlFor="apellidoPaterno"
+              htmlFor="lastNameFather"
               className="mb-1 text-sm font-medium"
             >
               Apellido Paterno
             </label>
             <input
               type="text"
-              id="apellidoPaterno"
-              name="apellidoPaterno"
-              value={formData.apellidoPaterno}
+              id="lastNameFather"
+              name="lastNameFather"
+              value={formData.lastNameFather}
               onChange={handleChange}
               className="input input-info"
             />
-            {submitted && error.apellidoPaterno && (
+            {submitted && error.lastNameFather && (
               <p className="text-red-500 text-sm mt-1">
-                {error.apellidoPaterno}
+                {error.lastNameFather}
               </p>
             )}
-            {isValidField("apellidoPaterno") && (
+            {isValidField("lastNameFather") && (
               <p className="text-green-600 text-sm mt-1">Completado ✅</p>
             )}
           </div>
@@ -210,65 +228,60 @@ export default function RegisterEmployee() {
           {/* Apellido Materno */}
           <div className="flex flex-col">
             <label
-              htmlFor="apellidoMaterno"
+              htmlFor="lastNameMother"
               className="mb-1 text-sm font-medium"
             >
               Apellido Materno
             </label>
             <input
               type="text"
-              id="apellidoMaterno"
-              name="apellidoMaterno"
-              value={formData.apellidoMaterno}
+              id="lastNameMother"
+              name="lastNameMother"
+              value={formData.lastNameMother}
               onChange={handleChange}
               className="input input-info"
             />
-            {submitted && error.apellidoMaterno && (
+            {submitted && error.lastNameMother && (
               <p className="text-red-500 text-sm mt-1">
-                {error.apellidoMaterno}
+                {error.lastNameMother}
               </p>
             )}
-            {isValidField("apellidoMaterno") && (
+            {isValidField("lastNameMother") && (
               <p className="text-green-600 text-sm mt-1">Completado ✅</p>
             )}
           </div>
 
           {/* Fecha de Nacimiento */}
           <div className="flex flex-col">
-            <label
-              htmlFor="fechaNacimiento"
-              className="mb-1 text-sm font-medium"
-            >
+            <label htmlFor="birthDate" className="mb-1 text-sm font-medium">
               Fecha de Nacimiento
             </label>
             <input
               type="date"
-              id="fechaNacimiento"
-              name="fechaNacimiento"
-              value={formData.fechaNacimiento.toISOString().split("T")[0]}
+              id="birthDate"
+              name="birthDate"
+              value={formData.birthDate.toISOString().split("T")[0]}
               onChange={handleChange}
               className="input input-info"
               onKeyDown={(e) => e.preventDefault()}
             />
-            {submitted && error.fechaNacimiento && (
-              <p className="text-red-500 text-sm mt-1">
-                {error.fechaNacimiento}
-              </p>
+            {submitted && error.birthDate && (
+              <p className="text-red-500 text-sm mt-1">{error.birthDate}</p>
             )}
-            {isValidField("fechaNacimiento") && (
+            {isValidField("birthDate") && (
               <p className="text-green-600 text-sm mt-1">Completado ✅</p>
             )}
           </div>
 
           {/* Tipo de Documento */}
           <div className="flex flex-col">
-            <label htmlFor="tipoDocumento" className="mb-1 text-sm font-medium">
+            <label htmlFor="documentType" className="mb-1 text-sm font-medium">
               Tipo de Documento
             </label>
             <select
-              id="tipoDocumento"
-              name="tipoDocumento"
-              value={formData.tipoDocumento}
+              id="documentType"
+              name="documentType"
+              value={formData.documentType}
               onChange={handleChange}
               className="input input-info"
             >
@@ -277,45 +290,50 @@ export default function RegisterEmployee() {
               <option value="pasaporte">Pasaporte</option>
               <option value="carnetExtranjeria">Carnet de Extranjería</option>
             </select>
-            {submitted && error.tipoDocumento && (
-              <p className="text-red-500 text-sm mt-1">{error.tipoDocumento}</p>
+            {submitted && error.documentType && (
+              <p className="text-red-500 text-sm mt-1">{error.documentType}</p>
             )}
-            {isValidField("tipoDocumento") && (
+            {isValidField("documentType") && (
               <p className="text-green-600 text-sm mt-1">Completado ✅</p>
             )}
           </div>
 
           {/* Documento */}
           <div className="flex flex-col">
-            <label htmlFor="documento" className="mb-1 text-sm font-medium">
+            <label
+              htmlFor="documentNumber"
+              className="mb-1 text-sm font-medium"
+            >
               Número de Documento
             </label>
             <input
               type="text"
-              id="documento"
-              name="documento"
-              value={formData.documento}
+              id="documentNumber"
+              name="documentNumber"
+              value={formData.documentNumber}
               onChange={handleChange}
               className="input input-info"
               maxLength={8}
             />
-            {submitted && error.documento && (
-              <p className="text-red-500 text-sm mt-1">{error.documento}</p>
+            {submitted && error.documentNumber && (
+              <p className="text-red-500 text-sm mt-1">
+                {error.documentNumber}
+              </p>
             )}
-            {isValidField("documento") && (
+            {isValidField("documentNumber") && (
               <p className="text-green-600 text-sm mt-1">Completado ✅</p>
             )}
           </div>
 
           {/* Género */}
           <div className="flex flex-col">
-            <label htmlFor="genero" className="mb-1 text-sm font-medium">
+            <label htmlFor="gender" className="mb-1 text-sm font-medium">
               Género
             </label>
             <select
-              id="genero"
-              name="genero"
-              value={formData.genero}
+              id="gender"
+              name="gender"
+              value={formData.gender}
               onChange={handleChange}
               className="input input-info"
             >
@@ -323,32 +341,32 @@ export default function RegisterEmployee() {
               <option value="masculino">Masculino</option>
               <option value="femenino">Femenino</option>
             </select>
-            {submitted && error.genero && (
-              <p className="text-red-500 text-sm mt-1">{error.genero}</p>
+            {submitted && error.gender && (
+              <p className="text-red-500 text-sm mt-1">{error.gender}</p>
             )}
-            {isValidField("genero") && (
+            {isValidField("gender") && (
               <p className="text-green-600 text-sm mt-1">Completado ✅</p>
             )}
           </div>
 
           {/* Teléfono */}
           <div className="flex flex-col">
-            <label htmlFor="telefono" className="mb-1 text-sm font-medium">
+            <label htmlFor="phone" className="mb-1 text-sm font-medium">
               Teléfono
             </label>
             <input
               type="text"
-              id="telefono"
-              name="telefono"
-              value={formData.telefono}
+              id="phone"
+              name="phone"
+              value={formData.phone}
               onChange={handleChange}
               className="input input-info"
               maxLength={9}
             />
-            {submitted && error.telefono && (
-              <p className="text-red-500 text-sm mt-1">{error.telefono}</p>
+            {submitted && error.phone && (
+              <p className="text-red-500 text-sm mt-1">{error.phone}</p>
             )}
-            {isValidField("telefono") && (
+            {isValidField("phone") && (
               <p className="text-green-600 text-sm mt-1">Completado ✅</p>
             )}
           </div>
@@ -356,26 +374,26 @@ export default function RegisterEmployee() {
           {/* Teléfono Emergencia */}
           <div className="flex flex-col">
             <label
-              htmlFor="telefonoEmergencia"
+              htmlFor="emergencyPhone"
               className="mb-1 text-sm font-medium"
             >
               Teléfono de Emergencia
             </label>
             <input
               type="text"
-              id="telefonoEmergencia"
-              name="telefonoEmergencia"
-              value={formData.telefonoEmergencia}
+              id="emergencyPhone"
+              name="emergencyPhone"
+              value={formData.emergencyPhone}
               onChange={handleChange}
               className="input input-info"
               maxLength={9}
             />
-            {submitted && error.telefonoEmergencia && (
+            {submitted && error.emergencyPhone && (
               <p className="text-red-500 text-sm mt-1">
-                {error.telefonoEmergencia}
+                {error.emergencyPhone}
               </p>
             )}
-            {isValidField("telefonoEmergencia") && (
+            {isValidField("emergencyPhone") && (
               <p className="text-green-600 text-sm mt-1">Completado ✅</p>
             )}
           </div>
@@ -387,16 +405,16 @@ export default function RegisterEmployee() {
             </label>
             <input
               type="email"
-              id="correo"
-              name="correo"
-              value={formData.correo}
+              id="email"
+              name="email"
+              value={formData.email}
               onChange={handleChange}
               className="input input-info"
             />
-            {submitted && error.correo && (
-              <p className="text-red-500 text-sm mt-1">{error.correo}</p>
+            {submitted && error.email && (
+              <p className="text-red-500 text-sm mt-1">{error.email}</p>
             )}
-            {isValidField("correo") && (
+            {isValidField("email") && (
               <p className="text-green-600 text-sm mt-1">Completado ✅</p>
             )}
           </div>
@@ -408,77 +426,72 @@ export default function RegisterEmployee() {
             </label>
             <input
               type="text"
-              id="direccion"
-              name="direccion"
-              value={formData.direccion}
+              id="address"
+              name="address"
+              value={formData.address}
               onChange={handleChange}
               className="input input-info"
             />
-            {submitted && error.direccion && (
-              <p className="text-red-500 text-sm mt-1">{error.direccion}</p>
+            {submitted && error.address && (
+              <p className="text-red-500 text-sm mt-1">{error.address}</p>
             )}
-            {isValidField("direccion") && (
+            {isValidField("address") && (
               <p className="text-green-600 text-sm mt-1">Completado ✅</p>
             )}
           </div>
 
           {/* Cargo */}
           <div className="flex flex-col">
-            <label htmlFor="cargo" className="mb-1 text-sm font-medium">
+            <label htmlFor="position" className="mb-1 text-sm font-medium">
               Cargo
             </label>
             <input
               type="text"
-              id="cargo"
-              name="cargo"
-              value={formData.cargo}
+              id="position"
+              name="position"
+              value={formData.position}
               onChange={handleChange}
               className="input input-info"
             />
-            {submitted && error.cargo && (
-              <p className="text-red-500 text-sm mt-1">{error.cargo}</p>
+            {submitted && error.position && (
+              <p className="text-red-500 text-sm mt-1">{error.position}</p>
             )}
-            {isValidField("cargo") && (
+            {isValidField("position") && (
               <p className="text-green-600 text-sm mt-1">Completado ✅</p>
             )}
           </div>
 
           {/* Fecha de Contratación */}
           <div className="flex flex-col">
-            <label
-              htmlFor="fechaContratacion"
-              className="mb-1 text-sm font-medium"
-            >
+            <label htmlFor="hireDate" className="mb-1 text-sm font-medium">
               Fecha de Contratación
             </label>
             <input
               type="date"
-              id="fechaContratacion"
-              name="fechaContratacion"
-              value={formData.fechaContratacion.toISOString().split("T")[0]}
+              id="hireDate"
+              name="hireDate"
+              value={formData.hireDate.toISOString().split("T")[0]}
               onChange={handleChange}
               className="input input-info"
               onKeyDown={(e) => e.preventDefault()}
             />
-            {submitted && error.fechaContratacion && (
-              <p className="text-red-500 text-sm mt-1">
-                {error.fechaContratacion}
-              </p>
+            {submitted && error.hireDate && (
+              <p className="text-red-500 text-sm mt-1">{error.hireDate}</p>
             )}
-            {isValidField("fechaContratacion") && (
+            {isValidField("hireDate") && (
               <p className="text-green-600 text-sm mt-1">Completado ✅</p>
             )}
           </div>
 
           {/* Tipo de Contrato */}
           <div className="flex flex-col">
-            <label htmlFor="tipoContrato" className="mb-1 text-sm font-medium">
+            <label htmlFor="contractType" className="mb-1 text-sm font-medium">
               Tipo de Contrato
             </label>
             <select
-              id="tipoContrato"
-              name="tipoContrato"
-              value={formData.tipoContrato}
+              id="contractType"
+              name="contractType"
+              value={formData.contractType}
               onChange={handleChange}
               className="input input-info"
             >
@@ -487,10 +500,10 @@ export default function RegisterEmployee() {
               <option value="plazoFijo">Plazo Fijo</option>
               <option value="practicas">Prácticas</option>
             </select>
-            {submitted && error.tipoContrato && (
-              <p className="text-red-500 text-sm mt-1">{error.tipoContrato}</p>
+            {submitted && error.contractType && (
+              <p className="text-red-500 text-sm mt-1">{error.contractType}</p>
             )}
-            {isValidField("tipoContrato") && (
+            {isValidField("contractType") && (
               <p className="text-green-600 text-sm mt-1">Completado ✅</p>
             )}
           </div>
@@ -499,7 +512,7 @@ export default function RegisterEmployee() {
         {/* Adjuntar Foto de Empleado */}
         <div className="flex flex-col">
           <label
-            htmlFor="foto"
+            htmlFor="photoUrl"
             className="text-base text-slate-900 font-medium mb-3 block"
           >
             Adjuntar Foto de Empleado
@@ -507,20 +520,20 @@ export default function RegisterEmployee() {
 
           <input
             type="file"
-            id="foto"
-            name="foto"
+            id="photoUrl"
+            name="photoUrl"
             accept="image/*"
             onChange={handleChange}
-            className={`file:mr-4 file:py-3 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold ${
-              submitted && error.fotoUrl ? "input-error" : "input-info"
+            className={`file-input file-input-info ${
+              submitted && error.photoUrl ? "input-error" : "input-info"
             }`}
           />
 
           {/* Mensajes de validación */}
-          {submitted && error.fotoUrl && (
-            <p className="text-red-500 text-sm mt-1">{error.fotoUrl}</p>
+          {submitted && error.photoUrl && (
+            <p className="text-red-500 text-sm mt-1">{error.photoUrl}</p>
           )}
-          {isValidField("fotoUrl") && (
+          {isValidField("photoUrl") && (
             <p className="text-green-600 text-sm mt-1">Completado ✅</p>
           )}
 
@@ -536,7 +549,7 @@ export default function RegisterEmployee() {
               <img
                 src={previewUrl}
                 alt="Vista previa"
-                className="h-32 w-32 object-cover rounded-lg border"
+                className="h-48 w-40 object-cover rounded-lg border"
               />
             </div>
           )}

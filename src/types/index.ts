@@ -1,36 +1,53 @@
 export interface RegisterEmployeeProps {
-  nombres: string;
-  apellidoPaterno: string;
-  apellidoMaterno: string;
-  documento: string;
-  tipoDocumento: string;
-  fechaNacimiento: Date;
-  genero: string;
-  telefono: string;
-  telefonoEmergencia: string;
-  correo: string;
-  direccion: string;
-  cargo: string;
-  fechaContratacion: Date;
-  tipoContrato: string;
-  fotoUrl: string;// URL de la imagen en Firebase
-
+  firstName: string;
+  lastNameFather: string;
+  lastNameMother: string;
+  documentNumber: string;
+  documentType: string;
+  birthDate: Date;
+  gender: string;
+  phone: string;
+  emergencyPhone: string;
+  email: string;
+  address: string;
+  position: string;
+  hireDate: Date;
+  contractType: string;
+  photoUrl: string; // Firebase image URL
 }
 
 export interface RegisterEmployeeErrorProps {
-  nombres: string;
-  apellidoPaterno: string;
-  apellidoMaterno: string;
-  documento: string;
-  tipoDocumento: string;
-  fechaNacimiento: string;
-  genero: string;
-  telefono: string;
-  telefonoEmergencia: string;
-  correo: string;
-  direccion: string;
-  cargo: string;
-  fechaContratacion: string;
-  tipoContrato: string;
-  fotoUrl: string; // URL de la imagen en Firebase
+  firstName: string;
+  lastNameFather: string;
+  lastNameMother: string;
+  documentNumber: string;
+  documentType: string;
+  birthDate: string;
+  gender: string;
+  phone: string;
+  emergencyPhone: string;
+  email: string;
+  address: string;
+  position: string;
+  hireDate: string;
+  contractType: string;
+  photoUrl: string; // Firebase image URL
+}
+
+export interface RegisterEmployeeApiProps {
+  FirstName: string;
+  LastNameFather: string;
+  LastNameMother: string;
+  DocumentNumber: string;
+  DocumentType: string;
+  BirthDate: Date;
+  Gender: string;
+  Phone: string;
+  EmergencyPhone: string;
+  Email: string;
+  Address: string;
+  Position: string;
+  HireDate: Date;
+  ContractType: string;
+  PhotoUrl: string;
 }
