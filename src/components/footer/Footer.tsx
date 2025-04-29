@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -8,7 +9,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Logo */}
           <div className="lg:flex lg:items-center">
-            <a href="/" aria-label="Inicio">
+            <Link href="/" aria-label="Inicio">
               <Image
                 src="/images/LogoFamet.png"
                 alt="Logo Principal"
@@ -17,7 +18,7 @@ export default function Footer() {
                 className="object-cover mb-4 lg:mb-0"
                 priority
               />
-            </a>
+            </Link>
           </div>
 
           {/* Redes Sociales */}

@@ -1,14 +1,17 @@
 "use client";
-import { createEmployee } from "@/helpers/employee.helpers";
+
 import { uploadImage } from "@/helpers/uploadImageToFirebase";
 import {
-  RegisterEmployeeApiProps,
-  RegisterEmployeeErrorProps,
-  RegisterEmployeeProps,
+  EmployeeRegisterApiProps,
+  EmployeeRegisterErrorProps,
+  EmployeeRegisterProps,
 } from "@/types";
-import { validateRegisterEmployee } from "@/utils/registerEmployeeValidation";
+
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
+
+import { employeeCreate } from "@/helpers/employee.helpers";
+import { employeeValidateRegister } from "@/utils/employeeRegisterValidation";
 
 export default function RegisterEmployee() {
   const [submitted, setSubmitted] = useState(false);
@@ -16,7 +19,7 @@ export default function RegisterEmployee() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-  const [formData, setFormData] = useState<RegisterEmployeeProps>({
+  const [formData, setFormData] = useState<EmployeeRegisterProps>({
     firstName: "",
     lastNameFather: "",
     lastNameMother: "",
@@ -34,7 +37,7 @@ export default function RegisterEmployee() {
     photoUrl: "", // URL de la imagen en Firebase
   });
 
-  const [error, setError] = useState<RegisterEmployeeErrorProps>({
+  const [error, setError] = useState<EmployeeRegisterErrorProps>({
     firstName: "",
     lastNameFather: "",
     lastNameMother: "",
@@ -53,7 +56,7 @@ export default function RegisterEmployee() {
   });
 
   // Funcion para validar los campos al cambiar el valor
-  const isValidField = (field: keyof RegisterEmployeeErrorProps) => {
+  const isValidField = (field: keyof EmployeeRegisterErrorProps) => {
     return submitted && error[field] === "";
   };
 
@@ -93,7 +96,7 @@ export default function RegisterEmployee() {
 
       const finalPhotoUrl = uploadedPhotoUrl || formData.photoUrl;
 
-      const validationErrors = validateRegisterEmployee({
+      const validationErrors = employeeValidateRegister({
         ...formData,
         photoUrl: finalPhotoUrl,
       });
@@ -110,7 +113,7 @@ export default function RegisterEmployee() {
         return;
       }
 
-      const finalFormData: RegisterEmployeeApiProps = {
+      const finalFormData: EmployeeRegisterApiProps = {
         FirstName: formData.firstName,
         LastNameFather: formData.lastNameFather,
         LastNameMother: formData.lastNameMother,
@@ -130,7 +133,7 @@ export default function RegisterEmployee() {
 
       console.log("JSON a enviar:", JSON.stringify(finalFormData, null, 2));
 
-      const result = await createEmployee(finalFormData);
+      const result = await employeeCreate(finalFormData);
       console.log("Empleado creado ✅", result);
 
       toast.success("Se guardó correctamente", {
@@ -154,7 +157,7 @@ export default function RegisterEmployee() {
   // Funcion para validar los campos al cambiar el valor
   useEffect(() => {
     if (submitted) {
-      const validationErrors = validateRegisterEmployee(formData);
+      const validationErrors = employeeValidateRegister(formData);
       setError(validationErrors);
     }
   }, [formData, submitted]);

@@ -1,4 +1,4 @@
-export interface RegisterEmployeeProps {
+export interface EmployeeRegisterProps {
   firstName: string;
   lastNameFather: string;
   lastNameMother: string;
@@ -16,7 +16,7 @@ export interface RegisterEmployeeProps {
   photoUrl: string; // Firebase image URL
 }
 
-export interface RegisterEmployeeErrorProps {
+export interface EmployeeRegisterErrorProps {
   firstName: string;
   lastNameFather: string;
   lastNameMother: string;
@@ -34,7 +34,7 @@ export interface RegisterEmployeeErrorProps {
   photoUrl: string; // Firebase image URL
 }
 
-export interface RegisterEmployeeApiProps {
+export interface EmployeeRegisterApiProps {
   FirstName: string;
   LastNameFather: string;
   LastNameMother: string;

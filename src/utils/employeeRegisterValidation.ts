@@ -1,9 +1,9 @@
-import { RegisterEmployeeErrorProps, RegisterEmployeeProps } from "@/types";
+import { EmployeeRegisterErrorProps, EmployeeRegisterProps } from "@/types";
 
-export function validateRegisterEmployee(
-  values: RegisterEmployeeProps
-): RegisterEmployeeErrorProps {
-  const errors: RegisterEmployeeErrorProps = {
+export function employeeValidateRegister(
+  values: EmployeeRegisterProps
+): EmployeeRegisterErrorProps {
+  const errors: EmployeeRegisterErrorProps = {
     firstName: "",
     lastNameFather: "",
     lastNameMother: "",
@@ -18,7 +18,7 @@ export function validateRegisterEmployee(
     position: "",
     hireDate: "",
     contractType: "",
-    photoUrl: "", 
+    photoUrl: "",
   };
 
   // First Name
@@ -42,7 +42,8 @@ export function validateRegisterEmployee(
   } else if (!/^\d+$/.test(values.documentNumber)) {
     errors.documentNumber = "El número de documento debe contener solo números";
   } else if (values.documentNumber.length < 8) {
-    errors.documentNumber = "El número de documento debe tener al menos 8 dígitos";
+    errors.documentNumber =
+      "El número de documento debe tener al menos 8 dígitos";
   }
 
   // Document Type
@@ -86,9 +87,11 @@ export function validateRegisterEmployee(
   if (!values.emergencyPhone.trim()) {
     errors.emergencyPhone = "El teléfono de emergencia es requerido";
   } else if (!/^\d+$/.test(values.emergencyPhone)) {
-    errors.emergencyPhone = "El teléfono de emergencia debe contener solo números";
+    errors.emergencyPhone =
+      "El teléfono de emergencia debe contener solo números";
   } else if (values.emergencyPhone.length < 9) {
-    errors.emergencyPhone = "El teléfono de emergencia debe tener al menos 9 dígitos";
+    errors.emergencyPhone =
+      "El teléfono de emergencia debe tener al menos 9 dígitos";
   }
 
   // Email
@@ -122,4 +125,3 @@ export function validateRegisterEmployee(
 
   return errors;
 }
-
