@@ -7,3 +7,4 @@ export { default as LoginForm } from "./login/Login";
 export { default as ContactForm } from "./contact/Contact";
 export { default as EmployeeFormRegister } from "./employeeRegister/employeeRegister";
 export { default as EmployeeFormList } from "./employeeList/employeeList";
+export { default as EmployeeFormView } from "./employeeView/employeeView";
