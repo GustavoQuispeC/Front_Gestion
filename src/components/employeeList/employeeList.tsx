@@ -116,10 +116,10 @@ export default function EmployeeList() {
               </td>
               <td className="p-3 text-[15px] text-slate-900 font-medium">
                 <div className="flex items-center">
-                  <Link href={`/employee/${employee.id}`}>
-                  <button className="mr-3" title="View">
-                    <FaEye size={20} color="#566573" />
-                  </button>
+                  <Link href={`/employeeView/${employee.id}`}>
+                    <button className="mr-3" title="View">
+                      <FaEye size={20} color="#566573" />
+                    </button>
                   </Link>
                   <button className="mr-3" title="Edit">
                     <MdModeEditOutline size={20} color="#2980b9" />

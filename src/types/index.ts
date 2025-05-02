@@ -1,3 +1,4 @@
+
 export interface EmployeeRegisterProps {
   firstName: string;
   lastNameFather: string;

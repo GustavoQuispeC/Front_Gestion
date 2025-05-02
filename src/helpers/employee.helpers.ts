@@ -1,4 +1,4 @@
-import { EmployeeRegisterApiProps } from "@/types";
+import { EmployeeListProps, EmployeeRegisterApiProps } from "@/types";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -25,9 +25,9 @@ export async function getAllEmployees() {
 }
 
 //get employee by id
-export async function getEmployeeById(id: string) {
+export const getEmployeeById = async (employeeId: string): Promise<EmployeeListProps> => {
   try {
-    const response = await fetch(`${apiUrl}/employee/${id}`, {
+    const response = await fetch(`${apiUrl}/employee/${employeeId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -35,16 +35,16 @@ export async function getEmployeeById(id: string) {
     });
 
     if (!response.ok) {
-      throw new Error("Error en la solicitud: " + response.statusText);
+      throw new Error(`Error al obtener el empleado: ${response.statusText}`);
     }
 
-    const json = await response.json();
-    return json;
+    const employeeData = await response.json();
+    return employeeData;  // Se asume que la respuesta es un objeto que representa al empleado
   } catch (error) {
     console.error("Error al obtener el empleado:", error);
     throw error;
   }
-}
+};
 
 
 //Create employee
