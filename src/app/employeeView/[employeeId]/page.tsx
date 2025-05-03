@@ -1,10 +1,9 @@
 "use client";
 import React from "react";
-import { EmployeeFormView } from "@/components"; // Asegúrate de importar tu componente aquí
+import { EmployeeFormView } from "@/components"; 
 import { useParams } from "next/navigation";
 
 const EmployeeViewPage = () => {
-  // Accedemos directamente al parámetro employeeId usando useParams
   const params = useParams();
 
   // Si params?.employeeId es un array, tomamos el primer valor
@@ -19,7 +18,6 @@ const EmployeeViewPage = () => {
 
   return (
     <div>
-      {/* Pasamos el employeeId como propiedad al componente EmployeeFormView */}
       <EmployeeFormView employeeId={employeeId} />
     </div>
   );
