@@ -1,3 +1,4 @@
+'use client";'
 import { EmployeeFormRegister } from "@/components";
 
 const employeeRegister = () => {

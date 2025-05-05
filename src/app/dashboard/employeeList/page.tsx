@@ -1,3 +1,4 @@
+'use client";';
 import { EmployeeFormList } from "@/components";
 
 const employeeList = () => {
