@@ -1,6 +1,7 @@
 "use client";
+
 import React from "react";
-import { EmployeeFormView } from "@/components"; 
+import { EmployeeFormView } from "@/components";
 import { useParams } from "next/navigation";
 
 const EmployeeViewPage = () => {
@@ -24,3 +25,11 @@ const EmployeeViewPage = () => {
 };
 
 export default EmployeeViewPage;
+
+// interface Props {
+//   params: { employeeId: string };
+// }
+
+// export default function EmployeeViewPage({ params }: Props) {
+//   return <EmployeeFormView employeeId={params.employeeId} />;
+// }

@@ -29,116 +29,84 @@ const EmployeeView = ({ employeeId }: { employeeId: string }) => {
     );
   }
 
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-gray-100">
-      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-lg">
-        <div className="flex items-center justify-center mb-6">
-          <img
-            src={employee.photoUrl || "/default-avatar.png"} // Default image if no photo
-            alt="Employee"
-            className="w-24 h-24 rounded-full object-cover border-4 border-blue-600"
-          />
-        </div>
+  const DataItem = ({
+    label,
+    value,
+  }: {
+    label: string;
+    value: React.ReactNode;
+  }) => (
+    <div className="flex flex-col">
+      <span className="text-sm text-gray-500 font-medium">{label}</span>
+      <span className="text-base text-gray-700 font-semibold">{value}</span>
+    </div>
+  );
 
-        <h1 className="text-3xl font-semibold text-center text-gray-800 mb-4">
+  return (
+    <div className="min-h-screen py-10 px-6 bg-gray-100 flex items-center justify-center">
+      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-5xl">
+        <h1 className="text-3xl font-semibold text-gray-800 mb-6 text-center">
           Detalles del Empleado
         </h1>
 
-        <div className="space-y-4">
-          <div className="flex justify-between">
-            <label className="font-medium text-gray-700">ID:</label>
-            <p className="text-gray-600">{employee.id}</p>
-          </div>
-
-          <div className="flex justify-between">
-            <label className="font-medium text-gray-700">Nombre:</label>
-            <p className="text-gray-600">
-              {employee.firstName} {employee.lastNameFather}{" "}
-              {employee.lastNameMother}
-            </p>
-          </div>
-
-          <div className="flex justify-between">
-            <label className="font-medium text-gray-700">
-              Fecha de Nacimiento:
-            </label>
-            <p className="text-gray-600">
-              {new Date(employee.birthDate).toLocaleDateString()}
-            </p>
-          </div>
-          <div className="flex justify-between">
-            <label className="font-medium text-gray-700">
-              Tipo de Documento:
-            </label>
-            <p className="text-gray-600">{employee.documentType}</p>
-          </div>
-
-          <div className="flex justify-between">
-            <label className="font-medium text-gray-700">
-              Número de Documento:
-            </label>
-            <p className="text-gray-600">{employee.documentNumber}</p>
-          </div>
-
-
-          <div className="flex justify-between">
-            <label className="font-medium text-gray-700">Teléfono:</label>
-            <p className="text-gray-600">{employee.phone}</p>
-          </div>
-
-          <div className="flex justify-between">
-            <label className="font-medium text-gray-700">
-              Teléfono de emergencia:
-            </label>
-            <p className="text-gray-600">{employee.emergencyPhone}</p>
-          </div>
-          <div className="flex justify-between">
-            <label className="font-medium text-gray-700">
-              Fecha de Contratación:
-            </label>
-            <p className="text-gray-600">
-              {new Date(employee.hireDate).toLocaleDateString()}
-            </p>
-          </div>
-
-          <div className="flex justify-between">
-            <label className="font-medium text-gray-700">Email:</label>
-            <p className="text-gray-600">{employee.email}</p>
-          </div>
-
-          <div className="flex justify-between">
-            <label className="font-medium text-gray-700">Dirección:</label>
-            <p className="text-gray-600">{employee.address}</p>
-          </div>
-
-
-          <div className="flex justify-between">
-            <label className="font-medium text-gray-700">Estado:</label>
-            <span
-              className={`px-3 py-1 rounded-full font-semibold text-white ${
-                employee.isActive ? "bg-green-500" : "bg-red-500"
-              }`}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Columna izquierda: foto y botones */}
+          <div className="flex flex-col items-center space-y-4">
+            <img
+              src={employee.photoUrl || "/default-avatar.png"}
+              alt="Employee"
+              className="w-32 h-32 rounded-full object-cover border-4 border-blue-600"
+            />
+            <button
+              onClick={() => router.push("/dashboard/employeeList")}
+              className="w-full text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm font-semibold"
             >
-              {employee.isActive ? "Activo" : "Inactivo"}
-            </span>
+              Volver a la lista
+            </button>
+           
           </div>
 
-          <div className="flex justify-between">
-            <label className="font-medium text-gray-700">Posición:</label>
-            <p className="text-gray-600">{employee.position}</p>
+          {/* Columnas de datos */}
+          <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <DataItem label="ID" value={employee.id} />
+            <DataItem
+              label="Nombre completo"
+              value={`${employee.firstName} ${employee.lastNameFather} ${employee.lastNameMother}`}
+            />
+            <DataItem
+              label="Fecha de nacimiento"
+              value={new Date(employee.birthDate).toLocaleDateString()}
+            />
+            <DataItem label="Tipo de documento" value={employee.documentType} />
+            <DataItem
+              label="Número de documento"
+              value={employee.documentNumber}
+            />
+            <DataItem label="Teléfono" value={employee.phone} />
+            <DataItem
+              label="Teléfono de emergencia"
+              value={employee.emergencyPhone}
+            />
+            <DataItem
+              label="Fecha de contratación"
+              value={new Date(employee.hireDate).toLocaleDateString()}
+            />
+            <DataItem label="Email" value={employee.email} />
+            <DataItem label="Dirección" value={employee.address} />
+            <DataItem
+              label="Estado"
+              value={
+                <span
+                  className={`px-3 py-1 rounded-full font-semibold text-white ${
+                    employee.isActive ? "bg-green-500" : "bg-red-500"
+                  }`}
+                >
+                  {employee.isActive ? "Activo" : "Inactivo"}
+                </span>
+              }
+            />
+            <DataItem label="Posición" value={employee.position} />
           </div>
-
-         
-         
-        </div>
-
-        <div className="mt-6 text-center">
-          <button
-            onClick={() => router.push("/employeeList")}
-            className="text-white bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg text-lg"
-          >
-            Volver a la lista
-          </button>
         </div>
       </div>
     </div>
