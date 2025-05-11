@@ -2,36 +2,38 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { IoCalculator, IoLogoReact } from "react-icons/io5";
+import {  IoLogoReact } from "react-icons/io5";
 import { SidebarMenuItem } from "./SidebarMenuItem";
 import { FaUserCog } from "react-icons/fa";
+import { MdDashboardCustomize } from "react-icons/md";
+import { FaUsersGear } from "react-icons/fa6";
 
 
 const menuItems = [
-  {
+  { 
     path: "/dashboard/main",
-    icon: <FaUserCog size={40} />,
-    title: "Dashboard",
-    subTitle: "Visualización",
+    icon: <MdDashboardCustomize size={28} />,
+    title: "Inicio",
+    subTitle: "Panel de control",
   },
   {
     path: "/dashboard/employeeList",
-    icon: <IoCalculator size={40} />,
+    icon: <FaUsersGear size={28} />,
     title: "Empleados",
-    subTitle: "Lista de empleados",
+    subTitle: "",
   },  {
     path: "/dashboard/userList",
-    icon: <IoCalculator size={40} />,
+    icon: <FaUserCog size={28} />,
     title: "Usuarios",
-    subTitle: "Lista de usuarios",
+    subTitle: "",
   },
 
-  
+   
 ];
 
 export const Sidebar = () => {
   return (
-    <div className="w-[400px] min-h-screen bg-gray-900 text-slate-300 flex flex-col">
+    <div className="w-[300px] min-h-screen bg-gray-900 text-slate-300 flex flex-col">
       <div className="px-6 py-4">
         <h1 className="flex items-center text-lg font-bold text-white md:text-2xl">
           <IoLogoReact className="mr-2" />

@@ -173,14 +173,15 @@ export default function RegisterEmployee() {
 
   return (
     <>
+    
       <form
         onSubmit={handleSubmit}
         className="max-w-5xl mx-auto mt-10 p-6 bg-gray-50 shadow-lg rounded-xl"
       >
-        <h2 className="text-2xl font-semibold mb-6 text-left">
+        <h2 className="text-2xl font-semibold mb-6 text-left mx-10">
           Registro de Empleado
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 ">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 mx-10">
           {/* Nombres */}
           <div className="flex flex-col">
             <label htmlFor="firstName" className="mb-1 text-sm font-medium">
@@ -192,7 +193,7 @@ export default function RegisterEmployee() {
               name="firstName"
               value={formData.firstName}
               onChange={handleChange}
-              className="input input-info"
+              className="input input-info w-full"
             />
             {submitted && error.firstName && (
               <p className="text-red-500 text-sm mt-1">{error.firstName}</p>
@@ -216,7 +217,7 @@ export default function RegisterEmployee() {
               name="lastNameFather"
               value={formData.lastNameFather}
               onChange={handleChange}
-              className="input input-info"
+              className="input input-info w-full"
             />
             {submitted && error.lastNameFather && (
               <p className="text-red-500 text-sm mt-1">
@@ -242,7 +243,7 @@ export default function RegisterEmployee() {
               name="lastNameMother"
               value={formData.lastNameMother}
               onChange={handleChange}
-              className="input input-info"
+              className="input input-info w-full"
             />
             {submitted && error.lastNameMother && (
               <p className="text-red-500 text-sm mt-1">
@@ -265,7 +266,7 @@ export default function RegisterEmployee() {
               name="birthDate"
               value={formData.birthDate.toISOString().split("T")[0]}
               onChange={handleChange}
-              className="input input-info"
+              className="input input-info w-full"
               onKeyDown={(e) => e.preventDefault()}
             />
             {submitted && error.birthDate && (
@@ -286,7 +287,7 @@ export default function RegisterEmployee() {
               name="documentType"
               value={formData.documentType}
               onChange={handleChange}
-              className="input input-info"
+              className="input input-info w-full"
             >
               <option value="">Seleccione</option>
               <option value="dni">DNI</option>
@@ -315,7 +316,7 @@ export default function RegisterEmployee() {
               name="documentNumber"
               value={formData.documentNumber}
               onChange={handleChange}
-              className="input input-info"
+              className="input input-info w-full"
               maxLength={8}
             />
             {submitted && error.documentNumber && (
@@ -338,7 +339,7 @@ export default function RegisterEmployee() {
               name="gender"
               value={formData.gender}
               onChange={handleChange}
-              className="input input-info"
+              className="input input-info w-full"
             >
               <option value="">Seleccione</option>
               <option value="masculino">Masculino</option>
@@ -363,7 +364,7 @@ export default function RegisterEmployee() {
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              className="input input-info"
+              className="input input-info w-full"
               maxLength={9}
             />
             {submitted && error.phone && (
@@ -388,7 +389,7 @@ export default function RegisterEmployee() {
               name="emergencyPhone"
               value={formData.emergencyPhone}
               onChange={handleChange}
-              className="input input-info"
+              className="input input-info w-full"
               maxLength={9}
             />
             {submitted && error.emergencyPhone && (
@@ -412,7 +413,7 @@ export default function RegisterEmployee() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="input input-info"
+              className="input input-info w-full"
             />
             {submitted && error.email && (
               <p className="text-red-500 text-sm mt-1">{error.email}</p>
@@ -433,7 +434,7 @@ export default function RegisterEmployee() {
               name="address"
               value={formData.address}
               onChange={handleChange}
-              className="input input-info"
+              className="input input-info w-full"
             />
             {submitted && error.address && (
               <p className="text-red-500 text-sm mt-1">{error.address}</p>
@@ -454,7 +455,7 @@ export default function RegisterEmployee() {
               name="position"
               value={formData.position}
               onChange={handleChange}
-              className="input input-info"
+              className="input input-info w-full"
             />
             {submitted && error.position && (
               <p className="text-red-500 text-sm mt-1">{error.position}</p>
@@ -475,7 +476,7 @@ export default function RegisterEmployee() {
               name="hireDate"
               value={formData.hireDate.toISOString().split("T")[0]}
               onChange={handleChange}
-              className="input input-info"
+              className="input input-info w-full"
               onKeyDown={(e) => e.preventDefault()}
             />
             {submitted && error.hireDate && (
@@ -496,7 +497,7 @@ export default function RegisterEmployee() {
               name="contractType"
               value={formData.contractType}
               onChange={handleChange}
-              className="input input-info"
+              className="input input-info w-full"
             >
               <option value="">Seleccione</option>
               <option value="indeterminado">Indeterminado</option>
@@ -513,7 +514,7 @@ export default function RegisterEmployee() {
         </div>
 
         {/* Adjuntar Foto de Empleado */}
-        <div className="flex flex-col">
+        <div className="flex flex-col mx-10">
           <label
             htmlFor="photoUrl"
             className="text-base text-slate-900 font-medium mb-3 block"
@@ -527,7 +528,7 @@ export default function RegisterEmployee() {
             name="photoUrl"
             accept="image/*"
             onChange={handleChange}
-            className={`file-input file-input-info ${
+            className={`file-input file-input-info w-full ${
               submitted && error.photoUrl ? "input-error" : "input-info"
             }`}
           />

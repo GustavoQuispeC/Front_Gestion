@@ -15,6 +15,7 @@ export default function UserList() {
     try {
       const employeeData = await getAllUsers();
       setUsers(employeeData); // Actualizamos el estado con los empleados
+      console.log("Empleados obtenidos:", employeeData);
     } catch (error) {
       console.error("Error al obtener los empleados:", error);
       toast.error("Error al obtener los empleados", { theme: "colored" });
@@ -34,7 +35,7 @@ export default function UserList() {
         </h1>
 
         <Link
-          href="/dashboard/employeeRegister"
+          href="/dashboard/userRegister"
           className="inline-flex items-center text-blue-600 hover:underline font-medium text-base"
         >
           <svg
@@ -60,12 +61,13 @@ export default function UserList() {
           <thead className="bg-cyan-800 text-white">
             <tr>
               <th className="p-4 text-left text-sm font-medium">Id</th>
-              <th className="p-4 text-left text-sm font-medium">A. Paterno</th>
-              <th className="p-4 text-left text-sm font-medium">A. Materno</th>
-              <th className="p-4 text-left text-sm font-medium">Nombres</th>
+              <th className="p-4 text-left text-sm font-medium">
+                Apellidos y Nombres
+              </th>
               <th className="p-4 text-left text-sm font-medium">Correo</th>
               <th className="p-4 text-left text-sm font-medium">Estado</th>
               <th className="p-4 text-left text-sm font-medium">Rol</th>
+              <th className="p-4 text-left text-sm font-medium">Cargo</th>
               <th className="p-4 text-left text-sm font-medium">Creado</th>
               <th className="p-4 text-left text-sm font-medium">Acciones</th>
             </tr>
@@ -77,16 +79,12 @@ export default function UserList() {
                   {user.employeeId}
                 </td>
                 <td className="p-3 text-slate-900 font-medium">
-                  {user.employee?.lastNameFather || "-"}
+                  {user.lastNameFather}{" "}
+                  {user.lastNameMother} {" "}
+                  {user.firstName}
                 </td>
                 <td className="p-3 text-slate-900 font-medium">
-                  {user.employee?.lastNameMother || "-"}
-                </td>
-                <td className="p-3 text-slate-900 font-medium">
-                  {user.employee?.firstName || "-"}
-                </td>
-                <td className="p-3 text-slate-900 font-medium">
-                  {user.employee?.email || user.email}
+                  {user.email || user.email}
                 </td>
                 <td className="p-3 text-slate-900 font-medium">
                   <button
@@ -100,8 +98,10 @@ export default function UserList() {
                   </button>
                 </td>
                 <td className="p-3 text-slate-900 font-medium">
-                  {/* Asumiendo que aún no tienes el rol, puedes poner temporalmente: */}
-                  -
+                  {user.roleName}
+                </td>
+                <td className="p-3 text-slate-900 font-medium">
+                  {user.position}
                 </td>
                 <td className="p-3 text-slate-900 font-medium">
                   {new Date(user.createdAt).toLocaleDateString()}
