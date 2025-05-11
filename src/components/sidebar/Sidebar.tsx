@@ -6,6 +6,7 @@ import { IoCalculator, IoLogoReact } from "react-icons/io5";
 import { SidebarMenuItem } from "./SidebarMenuItem";
 import { FaUserCog } from "react-icons/fa";
 
+
 const menuItems = [
   {
     path: "/dashboard/main",
@@ -18,7 +19,14 @@ const menuItems = [
     icon: <IoCalculator size={40} />,
     title: "Empleados",
     subTitle: "Lista de empleados",
+  },  {
+    path: "/dashboard/userList",
+    icon: <IoCalculator size={40} />,
+    title: "Usuarios",
+    subTitle: "Lista de usuarios",
   },
+
+  
 ];
 
 export const Sidebar = () => {

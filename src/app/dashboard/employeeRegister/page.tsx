@@ -1,10 +1,10 @@
-'use client";'
-import { EmployeeFormRegister } from "@/components";
+'use client";';
+import { UserFormRegister } from "@/components";
 
 const employeeRegister = () => {
   return (
     <div>
-      <EmployeeFormRegister />
+      <UserFormRegister />
     </div>
   );
 };
