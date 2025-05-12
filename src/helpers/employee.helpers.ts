@@ -46,6 +46,28 @@ export const getEmployeeById = async (employeeId: string): Promise<EmployeeListP
   }
 };
 
+//get employee by documentNumber
+export const getEmployeeByDocumentNumber = async (documentNumber: string): Promise<EmployeeListProps> => {
+  try {
+    const response = await fetch(`${apiUrl}/employee/document/${documentNumber}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error al obtener el empleado: ${response.statusText}`);
+    }
+
+    const employeeData = await response.json();
+    return employeeData;  // Se asume que la respuesta es un objeto que representa al empleado
+  } catch (error) {
+    console.error("Error al obtener el empleado:", error);
+    throw error;
+  }
+}
+
 
 //Create employee
 export async function employeeCreate(formData: EmployeeRegisterApiProps) {
