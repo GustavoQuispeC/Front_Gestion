@@ -2,9 +2,11 @@
 import { getEmployeeByDocumentNumber } from "@/helpers/employee.helpers";
 import { getAllRoles } from "@/helpers/role.helper";
 import { RoleListProps } from "@/types/role";
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import { FaCaretDown } from "react-icons/fa";
+import { FaBrush, FaCaretDown, FaSave } from "react-icons/fa";
 import { FcSearch } from "react-icons/fc";
+import { IoMdArrowRoundBack } from "react-icons/io";
 import { toast, ToastContainer } from "react-toastify";
 
 const UserRegister = () => {
@@ -69,6 +71,17 @@ const UserRegister = () => {
     GetRoles();
   }, []);
 
+  //Limpiar input
+  const handleReset = () => {
+    setEmployeeData({
+      firstName: "",
+      lastNameFather: "",
+      lastNameMother: "",
+      email: "",
+      address: "",
+    });
+  }
+
   return (
     <>
       <form className="w-full max-w-5xl mx-auto mt-10 p-6 bg-gray-50 shadow-lg rounded-xl">
@@ -98,7 +111,7 @@ const UserRegister = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 mx-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 mx-10">
           {/* Nombres */}
           <div className="flex flex-col">
             <label htmlFor="firstName" className="mb-1 text-sm font-medium">
@@ -150,6 +163,35 @@ const UserRegister = () => {
             />
           </div>
 
+          {/* Correo */}
+          <div className="flex flex-col">
+            <label htmlFor="email" className="mb-1 text-sm font-medium">
+              Correo Electrónico
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={employeeData.email}
+              readOnly
+              className="input input-info w-full"
+            />
+          </div>
+
+          {/* Password */}
+          <div className="flex flex-col">
+            <label htmlFor="password" className="mb-1 text-sm font-medium">
+              Contraseña
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              className="input input-info w-full"
+              placeholder="Ingrese una contraseña"
+            />
+          </div>
+
           {/* Roles */}
           <div className="flex flex-col">
             <label htmlFor="role" className="mb-1 text-sm font-medium">
@@ -173,45 +215,39 @@ const UserRegister = () => {
               </div>
             </div>
           </div>
-
-          {/* Correo */}
-          <div className="flex flex-col">
-            <label htmlFor="email" className="mb-1 text-sm font-medium">
-              Correo Electrónico
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={employeeData.email}
-              readOnly
-              className="input input-info w-full"
-            />
-          </div>
-
-          {/* Dirección */}
-          <div className="flex flex-col">
-            <label htmlFor="address" className="mb-1 text-sm font-medium">
-              Dirección
-            </label>
-            <input
-              type="text"
-              id="address"
-              name="address"
-              value={employeeData.address}
-              readOnly
-              className="input input-info w-full"
-            />
-          </div>
         </div>
 
         {/* Botón */}
-        <div className="mt-6 text-center">
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 mx-10">
+          <Link href="/dashboard/userList">
+            <button
+              type="button"
+              className="flex items-center justify-center gap-1.5 text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium 
+    rounded-md text-xs px-4 py-2 w-[80%] mx-auto disabled:opacity-50"
+            >
+              <IoMdArrowRoundBack className="text-base" />
+              Volver
+            </button>
+          </Link>
+
           <button
             type="submit"
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 disabled:opacity-50"
+            className="flex items-center justify-center gap-1.5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium 
+    rounded-md text-xs px-4 py-2 w-[80%] mx-auto disabled:opacity-50"
           >
+            <FaSave className="text-base" />
             Registrar
+          </button>
+
+          <button
+            type="reset"
+            onClick={handleReset}
+            className="flex items-center justify-center gap-1.5 text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium
+     rounded-md text-xs px-4 py-2 w-[80%] mx-auto disabled:opacity-50"
+          >
+            <FaBrush className="text-base" />
+            Limpiar
           </button>
         </div>
       </form>
