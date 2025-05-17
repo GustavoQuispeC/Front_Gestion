@@ -1,16 +1,15 @@
 "use client";
-
+import { useEffect, useState } from "react"; // Importamos useState y useEffect
 import Link from "next/link";
 import Image from "next/image";
-import {  IoLogoReact } from "react-icons/io5";
+import { IoLogoReact } from "react-icons/io5";
 import { SidebarMenuItem } from "./SidebarMenuItem";
 import { FaUserCog } from "react-icons/fa";
 import { MdDashboardCustomize } from "react-icons/md";
 import { FaUsersGear } from "react-icons/fa6";
 
-
 const menuItems = [
-  { 
+  {
     path: "/dashboard/main",
     icon: <MdDashboardCustomize size={28} />,
     title: "Inicio",
@@ -21,17 +20,37 @@ const menuItems = [
     icon: <FaUsersGear size={28} />,
     title: "Empleados",
     subTitle: "",
-  },  {
+  },
+  {
     path: "/dashboard/userList",
     icon: <FaUserCog size={28} />,
     title: "Usuarios",
     subTitle: "",
   },
-
-   
 ];
 
+type User = {
+  username?: string;
+  photoUrl?: string;
+  // Agrega aquí otras propiedades si es necesario
+};
+
 export const Sidebar = () => {
+  const [user, setUser] = useState<User | null>(null); // Usamos useState para manejar el estado del usuario
+
+  useEffect(() => {
+    // Este código solo se ejecutará en el cliente
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser); // Establecemos el usuario en el estado
+    }
+  }, []); // El efecto se ejecuta solo una vez, después de que el componente se monta
+
+  if (!user) {
+    return null; // Si no se ha cargado el usuario, no renderizamos nada
+  }
+
   return (
     <div className="w-[300px] min-h-screen bg-gray-900 text-slate-300 flex flex-col">
       <div className="px-6 py-4">
@@ -48,13 +67,16 @@ export const Sidebar = () => {
         <Link href="/perfil" className="inline-flex items-center space-x-2">
           <Image
             className="w-8 h-8 rounded-full"
-            src="https://images.unsplash.com/photo-1542909168-82c3e7fdca5c"
+            src={user.photoUrl || "/images/default-avatar.png"} // Usa un avatar por defecto si no hay foto
             alt="User avatar"
             width={50}
             height={50}
             priority
           />
-          <span className="text-sm font-bold md:text-base">Gustavo</span>
+          <span className="text-sm font-bold md:text-base">
+            {user.username || "Usuario"}{" "}
+            {/* Mostrar nombre de usuario o 'Usuario' si no existe */}
+          </span>
         </Link>
       </div>
 
