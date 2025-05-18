@@ -1,7 +1,9 @@
 "use client";
+
 import { getEmployeeByDocumentNumber } from "@/helpers/employee.helpers";
 import { getAllRoles } from "@/helpers/role.helper";
 import { RoleListProps } from "@/types/role";
+import { UserRegisterProps } from "@/types/user";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaBrush, FaCaretDown, FaSave } from "react-icons/fa";
@@ -11,13 +13,20 @@ import { toast, ToastContainer } from "react-toastify";
 
 const UserRegister = () => {
   const [roles, setRoles] = useState<RoleListProps[]>([]);
-
   const [employeeData, setEmployeeData] = useState({
+    EmployeeId: 0,
     firstName: "",
     lastNameFather: "",
     lastNameMother: "",
     email: "",
-    address: "",
+  });
+
+  const [userRegister, setUserRegister] = useState<UserRegisterProps>({
+    EmployeeId: 0,
+    UserName: "",
+    Email: "",
+    Password: "",
+    RoleId: 0, // Inicializamos como 0, para evitar el error de NaN
   });
 
   // Función para obtener todos los roles
@@ -25,10 +34,9 @@ const UserRegister = () => {
     try {
       const rolesData = await getAllRoles();
       setRoles(rolesData);
-      console.log("roles obtenidos:", rolesData);
-    } catch (error) {
-      console.error("Error al obtener los empleados:", error);
-      toast.error("Error al obtener los empleados", { theme: "colored" });
+    } catch (e) {
+      toast.error("Error al obtener los roles", { theme: "colored" });
+      console.error("Error al obtener los roles:", e);
     }
   };
 
@@ -37,14 +45,13 @@ const UserRegister = () => {
     if (documentNumber.length >= 8) {
       try {
         const empleadoData = await getEmployeeByDocumentNumber(documentNumber);
-        console.log("Empleado encontrado:", empleadoData);
         if (!empleadoData) {
           setEmployeeData({
+            EmployeeId: 0,
             firstName: "",
             lastNameFather: "",
             lastNameMother: "",
             email: "",
-            address: "",
           });
           toast.error("No se encontró el empleado", { theme: "colored" });
           return;
@@ -55,13 +62,13 @@ const UserRegister = () => {
           lastNameFather: empleadoData.lastNameFather,
           lastNameMother: empleadoData.lastNameMother,
           email: empleadoData.email,
-          address: empleadoData.address,
+          EmployeeId: empleadoData.id,
         });
 
         toast.success("Empleado encontrado", { theme: "colored" });
-      } catch (error) {
-        console.error("Error en la búsqueda:", error);
+      } catch (e) {
         toast.error("Error al buscar el empleado", { theme: "colored" });
+        console.error("Error al buscar el empleado:", e);
       }
     }
   };
@@ -71,25 +78,75 @@ const UserRegister = () => {
     GetRoles();
   }, []);
 
-  //Limpiar input
+  // Función para manejar el registro de usuario
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const form = e.currentTarget as HTMLFormElement;
+    const formData = new FormData(form);
+
+    const userRegisterData: UserRegisterProps = {
+      EmployeeId: employeeData.EmployeeId || 0,
+      UserName: formData.get("userName") as string,
+      Email: formData.get("email") as string,
+      Password: formData.get("password") as string,
+      RoleId: Number(formData.get("role")), // Convertir el valor a número
+    };
+
+    // Validación de campos
+    if (!userRegisterData.UserName) {
+      toast.error("El campo Nombre de Usuario es obligatorio", {
+        theme: "colored",
+      });
+      return;
+    }
+    if (!userRegisterData.Password) {
+      toast.error("El campo Contraseña es obligatorio", { theme: "colored" });
+      return;
+    }
+  
+
+    // Aquí puedes agregar la lógica para enviar estos datos a la API de registro.
+    console.log(userRegisterData);
+    toast.success("Usuario registrado con éxito", { theme: "colored" });
+  };
+
+  // Limpiar el formulario
   const handleReset = () => {
     setEmployeeData({
+      EmployeeId: 0,
       firstName: "",
       lastNameFather: "",
       lastNameMother: "",
       email: "",
-      address: "",
     });
-  }
+    setUserRegister({
+      EmployeeId: 0,
+      UserName: "",
+      Email: "",
+      Password: "",
+      RoleId: 0,
+    });
+  };
+
+  // Función para manejar el cambio en el campo Role
+  const handleRoleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setUserRegister({
+      ...userRegister,
+      RoleId: Number(e.target.value), // Asignar el valor numérico de Role
+    });
+  };
 
   return (
     <>
-      <form className="w-full max-w-5xl mx-auto mt-10 p-6 bg-gray-50 shadow-lg rounded-xl">
+      <form
+        className="w-full max-w-5xl mx-auto mt-10 p-6 bg-gray-50 shadow-lg rounded-xl"
+        onSubmit={handleRegister}
+      >
         <h2 className="text-2xl font-semibold mb-6 text-left mx-10">
           Registro de usuario
         </h2>
-        {/* Buscar empleado por numero de documento */}
 
+        {/* Buscar empleado por número de documento */}
         <div className="flex flex-col mb-6 mx-10">
           <div className="relative">
             <input
@@ -111,58 +168,38 @@ const UserRegister = () => {
           </div>
         </div>
 
+        {/* Fila de Apellido y Nombre + Username */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 mx-10">
+          {/* Apellido y Nombre */}
+          <div className="flex flex-col">
+            <label htmlFor="fullName" className="mb-1 text-sm font-medium">
+              Apellido y Nombres:{" "}
+            </label>
+            <span id="fullName" className="text-gray-700">
+              {`${employeeData.lastNameFather} ${employeeData.lastNameMother} ${employeeData.firstName}`}
+            </span>
+          </div>
+
+          {/* Username */}
+          <div className="flex flex-col">
+            <label htmlFor="userName" className="mb-1 text-sm font-medium">
+              Nombre de Usuario
+            </label>
+            <input
+              type="text"
+              id="userName"
+              name="userName"
+              value={userRegister.UserName}
+              onChange={(e) =>
+                setUserRegister({ ...userRegister, UserName: e.target.value })
+              }
+              className="input input-info w-full"
+            />
+          </div>
+        </div>
+
+        {/* Fila de Correo, Contraseña y Rol */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 mx-10">
-          {/* Nombres */}
-          <div className="flex flex-col">
-            <label htmlFor="firstName" className="mb-1 text-sm font-medium">
-              Nombres
-            </label>
-            <input
-              type="text"
-              id="firstName"
-              name="firstName"
-              value={employeeData.firstName}
-              readOnly
-              className="input input-info w-full"
-            />
-          </div>
-
-          {/* Apellido Paterno */}
-          <div className="flex flex-col">
-            <label
-              htmlFor="lastNameFather"
-              className="mb-1 text-sm font-medium"
-            >
-              Apellido Paterno
-            </label>
-            <input
-              type="text"
-              id="lastNameFather"
-              name="lastNameFather"
-              value={employeeData.lastNameFather}
-              readOnly
-              className="input input-info w-full"
-            />
-          </div>
-
-          {/* Apellido Materno */}
-          <div className="flex flex-col">
-            <label
-              htmlFor="lastNameMother"
-              className="mb-1 text-sm font-medium"
-            >
-              Apellido Materno
-            </label>
-            <input
-              type="text"
-              id="lastNameMother"
-              name="lastNameMother"
-              value={employeeData.lastNameMother}
-              readOnly
-              className="input input-info w-full"
-            />
-          </div>
-
           {/* Correo */}
           <div className="flex flex-col">
             <label htmlFor="email" className="mb-1 text-sm font-medium">
@@ -178,7 +215,7 @@ const UserRegister = () => {
             />
           </div>
 
-          {/* Password */}
+          {/* Contraseña */}
           <div className="flex flex-col">
             <label htmlFor="password" className="mb-1 text-sm font-medium">
               Contraseña
@@ -192,7 +229,7 @@ const UserRegister = () => {
             />
           </div>
 
-          {/* Roles */}
+          {/* Rol */}
           <div className="flex flex-col">
             <label htmlFor="role" className="mb-1 text-sm font-medium">
               Rol
@@ -202,6 +239,8 @@ const UserRegister = () => {
                 id="role"
                 name="role"
                 className="input input-info w-full pr-10 appearance-none"
+                onChange={handleRoleChange}
+                value={userRegister.RoleId}
               >
                 <option value="">Seleccione un rol</option>
                 {roles.map((role) => (
@@ -217,14 +256,13 @@ const UserRegister = () => {
           </div>
         </div>
 
-        {/* Botón */}
-
+        {/* Botones */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 mx-10">
           <Link href="/dashboard/userList">
             <button
               type="button"
               className="flex items-center justify-center gap-1.5 text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium 
-    rounded-md text-xs px-4 py-2 w-[80%] mx-auto disabled:opacity-50"
+              rounded-md text-xs px-4 py-2 w-[80%] mx-auto disabled:opacity-50"
             >
               <IoMdArrowRoundBack className="text-base" />
               Volver
@@ -234,7 +272,7 @@ const UserRegister = () => {
           <button
             type="submit"
             className="flex items-center justify-center gap-1.5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium 
-    rounded-md text-xs px-4 py-2 w-[80%] mx-auto disabled:opacity-50"
+            rounded-md text-xs px-4 py-2 w-[80%] mx-auto disabled:opacity-50"
           >
             <FaSave className="text-base" />
             Registrar
@@ -244,13 +282,14 @@ const UserRegister = () => {
             type="reset"
             onClick={handleReset}
             className="flex items-center justify-center gap-1.5 text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium
-     rounded-md text-xs px-4 py-2 w-[80%] mx-auto disabled:opacity-50"
+            rounded-md text-xs px-4 py-2 w-[80%] mx-auto disabled:opacity-50"
           >
             <FaBrush className="text-base" />
             Limpiar
           </button>
         </div>
       </form>
+
       <ToastContainer
         position="top-right"
         autoClose={3000}

@@ -36,16 +36,16 @@ type User = {
 };
 
 export const Sidebar = () => {
-  const [user, setUser] = useState<User | null>(null); // Usamos useState para manejar el estado del usuario
+  const [user, setUser] = useState<User | null>(null); 
 
   useEffect(() => {
-    // Este código solo se ejecutará en el cliente
+    //obtenemos el usuario del localStorage
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser); // Establecemos el usuario en el estado
+      setUser(parsedUser); 
     }
-  }, []); // El efecto se ejecuta solo una vez, después de que el componente se monta
+  }, []); 
 
   if (!user) {
     return null; // Si no se ha cargado el usuario, no renderizamos nada
@@ -67,7 +67,7 @@ export const Sidebar = () => {
         <Link href="/perfil" className="inline-flex items-center space-x-2">
           <Image
             className="w-8 h-8 rounded-full"
-            src={user.photoUrl || "/images/default-avatar.png"} // Usa un avatar por defecto si no hay foto
+            src={user.photoUrl || "/images/default-avatar.png"} 
             alt="User avatar"
             width={50}
             height={50}

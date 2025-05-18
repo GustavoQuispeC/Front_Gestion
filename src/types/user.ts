@@ -13,3 +13,23 @@ export interface UserListProps {
     position:       string;
     roleName:       string;
 }
+
+
+
+export interface UserRegisterProps {
+    EmployeeId: number;
+    UserName: string;
+    Email: string;
+    Password: string;
+    RoleId: number;
+  
+}
+
+export interface UserRegisterErrorProps {
+    EmployeeId: number;
+    UserName: string;
+    Email: string;
+    Password: string;
+    RoleId: number;
+ 
+}
