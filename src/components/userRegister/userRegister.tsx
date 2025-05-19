@@ -2,6 +2,7 @@
 
 import { getEmployeeByDocumentNumber } from "@/helpers/employee.helpers";
 import { getAllRoles } from "@/helpers/role.helper";
+import { registerUser } from "@/helpers/user.helpers";
 import { RoleListProps } from "@/types/role";
 import { UserRegisterProps } from "@/types/user";
 import Link from "next/link";
@@ -14,7 +15,7 @@ import { toast, ToastContainer } from "react-toastify";
 const UserRegister = () => {
   const [roles, setRoles] = useState<RoleListProps[]>([]);
   const [employeeData, setEmployeeData] = useState({
-    EmployeeId: 0,
+    employeeId: 0,
     firstName: "",
     lastNameFather: "",
     lastNameMother: "",
@@ -22,11 +23,11 @@ const UserRegister = () => {
   });
 
   const [userRegister, setUserRegister] = useState<UserRegisterProps>({
-    EmployeeId: 0,
-    UserName: "",
-    Email: "",
-    Password: "",
-    RoleId: 0, // Inicializamos como 0, para evitar el error de NaN
+    employeeId: 0,
+    userName: "",
+    email: "",
+    password: "",
+    roleId: "",
   });
 
   // Función para obtener todos los roles
@@ -47,7 +48,7 @@ const UserRegister = () => {
         const empleadoData = await getEmployeeByDocumentNumber(documentNumber);
         if (!empleadoData) {
           setEmployeeData({
-            EmployeeId: 0,
+            employeeId: 0,
             firstName: "",
             lastNameFather: "",
             lastNameMother: "",
@@ -62,7 +63,7 @@ const UserRegister = () => {
           lastNameFather: empleadoData.lastNameFather,
           lastNameMother: empleadoData.lastNameMother,
           email: empleadoData.email,
-          EmployeeId: empleadoData.id,
+          employeeId: empleadoData.id,
         });
 
         toast.success("Empleado encontrado", { theme: "colored" });
@@ -78,61 +79,74 @@ const UserRegister = () => {
     GetRoles();
   }, []);
 
+  // Función para manejar el cambio del rol
+  const handleRoleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setUserRegister({
+      ...userRegister,
+      roleId: e.target.value,
+    });
+  };
+
   // Función para manejar el registro de usuario
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    const form = e.currentTarget as HTMLFormElement;
-    const formData = new FormData(form);
-
-    const userRegisterData: UserRegisterProps = {
-      EmployeeId: employeeData.EmployeeId || 0,
-      UserName: formData.get("userName") as string,
-      Email: formData.get("email") as string,
-      Password: formData.get("password") as string,
-      RoleId: Number(formData.get("role")), // Convertir el valor a número
-    };
 
     // Validación de campos
-    if (!userRegisterData.UserName) {
+    if (!userRegister.userName) {
       toast.error("El campo Nombre de Usuario es obligatorio", {
         theme: "colored",
       });
       return;
     }
-    if (!userRegisterData.Password) {
+    if (!userRegister.password) {
       toast.error("El campo Contraseña es obligatorio", { theme: "colored" });
       return;
     }
-  
+    if (!userRegister.roleId) {
+      toast.error("El campo Rol es obligatorio", { theme: "colored" });
+      return;
+    }
 
-    // Aquí puedes agregar la lógica para enviar estos datos a la API de registro.
-    console.log(userRegisterData);
-    toast.success("Usuario registrado con éxito", { theme: "colored" });
+    // Asignar datos de empleado a userRegister antes de enviar
+    const userRegisterData: UserRegisterProps = {
+      employeeId: employeeData.employeeId, // Asegúrate de que este valor esté correctamente asignado
+      userName: userRegister.userName, // Username capturado en el estado
+      email: employeeData.email, // El email lo tomamos del estado de employeeData
+      password: userRegister.password, // Password capturado en el estado
+      roleId: userRegister.roleId, // RoleId capturado en el estado
+    };
+
+    try {
+      // Llamamos al helper para registrar al usuario
+      const response = await registerUser(userRegisterData);
+
+      if (response && response.message === "Usuario creado correctamente") {
+        toast.success("Usuario registrado con éxito", { theme: "colored" });
+        // Realiza cualquier acción adicional después del registro exitoso
+      } else {
+        toast.error("Error al registrar el usuario", { theme: "colored" });
+      }
+    } catch (error) {
+      console.error("Error al registrar el usuario:", error);
+      toast.error("Error al registrar el usuario", { theme: "colored" });
+    }
   };
 
   // Limpiar el formulario
   const handleReset = () => {
     setEmployeeData({
-      EmployeeId: 0,
+      employeeId: 0,
       firstName: "",
       lastNameFather: "",
       lastNameMother: "",
       email: "",
     });
     setUserRegister({
-      EmployeeId: 0,
-      UserName: "",
-      Email: "",
-      Password: "",
-      RoleId: 0,
-    });
-  };
-
-  // Función para manejar el cambio en el campo Role
-  const handleRoleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setUserRegister({
-      ...userRegister,
-      RoleId: Number(e.target.value), // Asignar el valor numérico de Role
+      employeeId: 0,
+      userName: "",
+      email: "",
+      password: "",
+      roleId: "",
     });
   };
 
@@ -189,9 +203,9 @@ const UserRegister = () => {
               type="text"
               id="userName"
               name="userName"
-              value={userRegister.UserName}
+              value={userRegister.userName}
               onChange={(e) =>
-                setUserRegister({ ...userRegister, UserName: e.target.value })
+                setUserRegister({ ...userRegister, userName: e.target.value })
               }
               className="input input-info w-full"
             />
@@ -224,6 +238,10 @@ const UserRegister = () => {
               type="password"
               id="password"
               name="password"
+              value={userRegister.password}
+              onChange={(e) =>
+                setUserRegister({ ...userRegister, password: e.target.value })
+              }
               className="input input-info w-full"
               placeholder="Ingrese una contraseña"
             />
@@ -240,7 +258,7 @@ const UserRegister = () => {
                 name="role"
                 className="input input-info w-full pr-10 appearance-none"
                 onChange={handleRoleChange}
-                value={userRegister.RoleId}
+                value={userRegister.roleId}
               >
                 <option value="">Seleccione un rol</option>
                 {roles.map((role) => (

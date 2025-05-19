@@ -22,53 +22,53 @@ export async function getAllUsers() {
     console.error("Error al obtener los usuarios:", error);
     throw error;
   }
-
-  
-
 }
 
 //Login user
-  export async function loginUser(email: string, password: string) {
-    try {
-      const response = await fetch(`${apiUrl}/user/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+export async function loginUser(email: string, password: string) {
+  try {
+    const response = await fetch(`${apiUrl}/user/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
 
-      if (!response.ok) {
-        throw new Error("Error en la solicitud: " + response.statusText);
-      }
-
-      const json = await response.json();
-      return json;
-    } catch (error) {
-      console.error("Error al iniciar sesión:", error);
-      throw error;
+    if (!response.ok) {
+      throw new Error("Error en la solicitud: " + response.statusText);
     }
+
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    console.error("Error al iniciar sesión:", error);
+    throw error;
   }
+}
 
-  //Register user
-  export async function registerUser(userData: UserRegisterProps) {
-    try {
-      const response = await fetch(`${apiUrl}/user/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
+//Register user
+export async function registerUser(userData: UserRegisterProps) {
+  try {
+    const response = await fetch(`${apiUrl}/user`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
+    console.log("userData", userData);
+    console.log("response", response);
 
-      if (!response.ok) {
-        throw new Error("Error en la solicitud: " + response.statusText);
-      }
-
-      const json = await response.json();
-      return json;
-    } catch (error) {
-      console.error("Error al registrar el usuario:", error);
-      throw error;
+    if (!response.ok) {
+      const errorMessage = await response.json(); // Obtener mensaje de error desde el backend
+      throw new Error(errorMessage.message || "Error desconocido al registrar");
     }
+
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    console.error("Error al registrar el usuario:", error);
+    throw error;
   }
+}

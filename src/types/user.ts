@@ -17,19 +17,19 @@ export interface UserListProps {
 
 
 export interface UserRegisterProps {
-    EmployeeId: number;
-    UserName: string;
-    Email: string;
-    Password: string;
-    RoleId: number;
+    employeeId: number;
+    userName: string;
+    email: string;
+    password: string;
+    roleId: string;
   
 }
 
 export interface UserRegisterErrorProps {
-    EmployeeId: number;
-    UserName: string;
-    Email: string;
-    Password: string;
-    RoleId: number;
+    employeeId: number;
+    userName: string;
+    email: string;
+    password: string;
+    roleId: string;
  
 }
