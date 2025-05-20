@@ -3,27 +3,38 @@ import { UserRegisterProps } from "@/types/user";
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 //Get all users
-export async function getAllUsers() {
+export async function getAllUsers(token: string) {
   try {
     const response = await fetch(`${apiUrl}/user`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
     });
 
+    // Verificamos si la respuesta fue correcta
     if (!response.ok) {
+      // Si no fue exitosa, manejamos el error (401, 403, etc.)
+      if (response.status === 401) {
+        throw new Error("No autorizado. Token inválido o expirado.");
+      }
+      if (response.status === 403) {
+        throw new Error("Acceso prohibido.");
+      }
       throw new Error("Error en la solicitud: " + response.statusText);
     }
 
+    // Si la respuesta es exitosa, parseamos el JSON
     const json = await response.json();
+    console.log("Respuesta del backend:", json);
+
     return json;
   } catch (error) {
     console.error("Error al obtener los usuarios:", error);
-    throw error;
+    throw error; // Propaga el error para manejarlo en el componente o controlador
   }
 }
-
 //Login user
 export async function loginUser(email: string, password: string) {
   try {

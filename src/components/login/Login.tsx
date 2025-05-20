@@ -3,12 +3,15 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { loginUser } from "@/helpers/user.helpers";
 import { toast, ToastContainer } from "react-toastify";
-import Link from "next/link";
+
+import { useRouter } from "next/navigation";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,21 +20,22 @@ const Login = () => {
     try {
       const response = await loginUser(email, password);
       if (response && response.token) {
-        // Si la respuesta es exitosa y contiene un token
         console.log("Inicio de sesión exitoso:", response);
-        
-        // Almacenar los datos del login en el localStorage
-        localStorage.setItem("user", JSON.stringify({
-          token: response.token,
-          username: response.username,
-          roles: response.roles,
-          photoUrl: response.photoUrl,
-        }));
 
-        // Muestra mensaje de bienvenida
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            token: response.token,
+            username: response.username,
+            roles: response.roles,
+            photoUrl: response.photoUrl,
+          })
+        );
+
         toast.success("Bienvenido, " + response.username, { theme: "colored" });
-      } else {
-        toast.error("Correo o contraseña incorrectos", { theme: "colored" });
+
+        // Redirigir después de guardar los datos
+        router.push("/dashboard/main");
       }
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
@@ -142,16 +146,13 @@ const Login = () => {
               </div>
 
               <div className="!mt-12">
-                <Link href="dashboard/main">
-                 <button
+                <button
                   type="submit"
                   disabled={isLoading}
                   className="w-full shadow-xl py-2.5 px-4 text-sm font-semibold rounded text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
                 >
                   {isLoading ? "Cargando..." : "Iniciar Sesión"}
                 </button>
-                </Link>
-               
               </div>
 
               <div className="my-4 flex items-center gap-4">

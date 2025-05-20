@@ -10,19 +10,40 @@ import { toast } from "react-toastify";
 export default function UserList() {
   const [users, setUsers] = useState<UserListProps[]>([]);
 
-  // Función para obtener todos los empleados
   const GetUsers = async () => {
     try {
-      const employeeData = await getAllUsers();
-      setUsers(employeeData); // Actualizamos el estado con los empleados
-      console.log("Empleados obtenidos:", employeeData);
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      const token = user?.token;
+      const role = user?.roles?.[0];
+
+      console.log(role);
+      console.log(token);
+
+      if (!token || !role) {
+        toast.error("No se encontró token o rol del usuario", {
+          theme: "colored",
+        });
+        return;
+      }
+
+      // Validación de rol
+      const allowedRoles = ["Administrador", "Gerente"];
+
+      if (!allowedRoles.includes(role)) {
+        toast.error("No tienes permiso para ver esta sección", {
+          theme: "colored",
+        });
+        return;
+      }
+
+      const employeeData = await getAllUsers(token);
+      setUsers(employeeData);
     } catch (error) {
       console.error("Error al obtener los empleados:", error);
       toast.error("Error al obtener los empleados", { theme: "colored" });
     }
   };
 
-  // Llamada automática cuando el componente se monta
   useEffect(() => {
     GetUsers();
   }, []);
@@ -79,9 +100,7 @@ export default function UserList() {
                   {user.employeeId}
                 </td>
                 <td className="p-3 text-slate-900 font-medium">
-                  {user.lastNameFather}{" "}
-                  {user.lastNameMother} {" "}
-                  {user.firstName}
+                  {user.lastNameFather} {user.lastNameMother} {user.firstName}
                 </td>
                 <td className="p-3 text-slate-900 font-medium">
                   {user.email || user.email}
