@@ -290,9 +290,9 @@ export default function RegisterEmployee() {
               className="input input-info w-full"
             >
               <option value="">Seleccione</option>
-              <option value="dni">DNI</option>
+              <option value="D.N.I.">DNI</option>
               <option value="pasaporte">Pasaporte</option>
-              <option value="carnetExtranjeria">Carnet de Extranjería</option>
+              <option value="carnet de Extranjeria">Carnet de Extranjería</option>
             </select>
             {submitted && error.documentType && (
               <p className="text-red-500 text-sm mt-1">{error.documentType}</p>

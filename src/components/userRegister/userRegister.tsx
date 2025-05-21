@@ -6,6 +6,7 @@ import { registerUser } from "@/helpers/user.helpers";
 import { RoleListProps } from "@/types/role";
 import { UserRegisterProps } from "@/types/user";
 import Link from "next/link";
+
 import { useEffect, useState } from "react";
 import { FaBrush, FaCaretDown, FaSave } from "react-icons/fa";
 import { FcSearch } from "react-icons/fc";
@@ -21,7 +22,6 @@ const UserRegister = () => {
     lastNameMother: "",
     email: "",
   });
-
   const [userRegister, setUserRegister] = useState<UserRegisterProps>({
     employeeId: 0,
     userName: "",
@@ -29,6 +29,7 @@ const UserRegister = () => {
     password: "",
     roleId: "",
   });
+  const [hasPermission, setHasPermission] = useState<boolean>(true); // Para mostrar u ocultar el formulario
 
   // Función para obtener todos los roles
   const GetRoles = async () => {
@@ -76,7 +77,15 @@ const UserRegister = () => {
 
   // Llamada automática cuando el componente se monta
   useEffect(() => {
-    GetRoles();
+    // Aquí validamos el rol del usuario antes de permitirle ver la página
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const role = user?.roles?.[0];
+
+    if (!role || !["Administrador", "Gerente"].includes(role)) {
+      setHasPermission(false); // Si no tiene el rol, se oculta el formulario y muestra el mensaje
+    } else {
+      GetRoles(); // Si tiene el rol, continuamos con la obtención de roles
+    }
   }, []);
 
   // Función para manejar el cambio del rol
@@ -150,6 +159,25 @@ const UserRegister = () => {
     });
   };
 
+  if (!hasPermission) {
+    return (
+      <div className="p-6">
+        <div className="text-center">
+          <h2 className="text-3xl font-semibold text-red-600">
+            No tiene permisos suficientes
+          </h2>
+          <p className="text-xl mt-2">
+            Por favor comuníquese con el administrador del sistema.
+          </p>
+          <Link href="/dashboard/main">
+            <button className="mt-6 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+              Volver al Dashboard
+            </button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
   return (
     <>
       <form

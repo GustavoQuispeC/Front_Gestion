@@ -1,8 +1,11 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import { getEmployeeById } from "@/helpers/employee.helpers";
 import { EmployeeListProps } from "@/types";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { IoMdArrowRoundBack } from "react-icons/io";
 
 const EmployeeView = ({ employeeId }: { employeeId: string }) => {
   const router = useRouter();
@@ -24,7 +27,9 @@ const EmployeeView = ({ employeeId }: { employeeId: string }) => {
   if (!employee) {
     return (
       <div className="flex items-center justify-center min-h-screen py-2 bg-gray-100">
-        <p>Cargando detalles del empleado...</p>
+        <p className="text-xl font-medium text-gray-500">
+          Cargando detalles del empleado...
+        </p>
       </div>
     );
   }
@@ -52,22 +57,25 @@ const EmployeeView = ({ employeeId }: { employeeId: string }) => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Columna izquierda: foto y botones */}
           <div className="flex flex-col items-center space-y-4">
-            <img
+            <Image
               src={employee.photoUrl || "/default-avatar.png"}
-              alt="Employee"
-              className="w-32 h-32 rounded-full object-cover border-4 border-blue-600"
+              alt="Foto del empleado"
+              width={150}
+              height={150}
+              className="rounded-full border-4 border-gray-300 shadow-lg object-cover"
             />
             <button
               onClick={() => router.push("/dashboard/employeeList")}
-              className="w-full text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm font-semibold"
+              className="flex items-center justify-center gap-1.5 text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium 
+              rounded-md text-xs px-4 py-2 w-[80%] mx-auto disabled:opacity-50"
             >
-              Volver a la lista
+              <IoMdArrowRoundBack className="text-base" />
+              Volver
             </button>
-           
           </div>
 
           {/* Columnas de datos */}
-          <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
             <DataItem label="ID" value={employee.id} />
             <DataItem
               label="Nombre completo"
@@ -97,8 +105,10 @@ const EmployeeView = ({ employeeId }: { employeeId: string }) => {
               label="Estado"
               value={
                 <span
-                  className={`px-3 py-1 rounded-full font-semibold text-white ${
-                    employee.isActive ? "bg-green-500" : "bg-red-500"
+                  className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                    employee.isActive
+                      ? "bg-green-100 text-green-500 border border-green-200"
+                      : "bg-red-100 text-red-500 border border-red-500"
                   }`}
                 >
                   {employee.isActive ? "Activo" : "Inactivo"}
