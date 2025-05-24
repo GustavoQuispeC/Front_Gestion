@@ -74,7 +74,7 @@ export default function UserList() {
 
             <Link
               href="/dashboard/userRegister"
-              className="inline-flex text-orange-600 items-cente hover:underline font-medium text-base"
+              className="inline-flex text-orange-600 items-cente hover:underline font-semibold text-base"
             >
               <IoAddCircle size={24} color="#e74c3c" className="mr-1" />
               Nuevo
@@ -83,7 +83,7 @@ export default function UserList() {
 
           <div className="overflow-x-auto bg-white shadow-lg rounded-lg p-4">
             <table className="min-w-full">
-              <thead className="bg-blue-800 text-white">
+              <thead className="bg-blue-700 text-white">
                 <tr>
                   <th className="p-1 text-left text-sm font-small">Id</th>
                   <th className="p-1 text-left text-sm font-small">
@@ -134,11 +134,11 @@ export default function UserList() {
                       <div className="flex items-center">
                         <Link href={`/dashboard/employeeView/${user.id}`}>
                           <button className="mr-3" title="Ver">
-                            <FaEye size={18} color="#f07a31" />
+                            <FaEye size={18} color="#575553" />
                           </button>
                         </Link>
                         <button className="mr-3" title="Editar">
-                          <MdModeEditOutline size={18} color="#292eb9" />
+                          <MdModeEditOutline size={18} color="#16cfe4" />
                         </button>
                         <button title="Eliminar">
                           <FaRegTrashAlt size={18} color="#f3240d" />

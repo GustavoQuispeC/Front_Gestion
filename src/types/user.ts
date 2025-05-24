@@ -33,3 +33,13 @@ export interface UserRegisterErrorProps {
     roleId: string;
  
 }
+
+export interface UserLoginProps {
+    email: string;
+    password: string;
+}   
+
+export interface UserLoginErrorProps {
+    email: string;
+    password: string;
+}

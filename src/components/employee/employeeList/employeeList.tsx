@@ -45,7 +45,7 @@ export default function EmployeeList() {
 
       <div className="overflow-x-auto bg-white shadow-lg rounded-lg p-4">
         <table className="min-w-full">
-          <thead className="bg-blue-800 text-white">
+          <thead className="bg-blue-700 text-white">
             <tr>
               <th className="p-1 text-left text-sm font-small">Id</th>
               <th className="p-1 text-left text-sm font-small">A. Paterno</th>
@@ -103,14 +103,14 @@ export default function EmployeeList() {
                   <div className="flex items-center">
                     <Link href={`/dashboard/employeeView/${employee.id}`}>
                       <button className="mr-3" title="Ver">
-                        <FaEye size={18} color="#566573" />
+                        <FaEye size={18} color="#575553" />
                       </button>
                     </Link>
                     <button className="mr-3" title="Editar">
-                      <MdModeEditOutline size={18} color="#2980b9" />
+                      <MdModeEditOutline size={18} color="#16cfe4" />
                     </button>
                     <button title="Eliminar">
-                      <FaRegTrashAlt size={18} color="#e74c3c" />
+                      <FaRegTrashAlt size={18} color="#f3240d" />
                     </button>
                   </div>
                 </td>
