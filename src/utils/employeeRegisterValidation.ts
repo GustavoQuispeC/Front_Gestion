@@ -1,4 +1,7 @@
-import { EmployeeRegisterErrorProps, EmployeeRegisterProps } from "@/types";
+import {
+  EmployeeRegisterErrorProps,
+  EmployeeRegisterProps,
+} from "@/types/employee";
 
 export function employeeValidateRegister(
   values: EmployeeRegisterProps

@@ -1,5 +1,5 @@
 "use client";
-import { EmployeeListProps } from "@/types";
+import { EmployeeListProps } from "@/types/employee";
 import { useState, useEffect } from "react";
 import { getAllEmployees } from "@/helpers/employee.helpers";
 import { toast } from "react-toastify";
@@ -38,12 +38,7 @@ export default function EmployeeList() {
           href="/dashboard/employeeRegister"
           className=" inline-flex items-center text-orange-600 hover:underline font-small font-semibold text-base"
         >
-          <IoAddCircle 
-          size={24}
-          color="#e74c3c" 
-          className="mr-1"
-          
-          />
+          <IoAddCircle size={24} color="#e74c3c" className="mr-1" />
           Nuevo
         </Link>
       </div>

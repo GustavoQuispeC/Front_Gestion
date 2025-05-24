@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { getEmployeeById } from "@/helpers/employee.helpers";
-import { EmployeeListProps } from "@/types";
+import { EmployeeListProps } from "@/types/employee";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { IoMdArrowRoundBack } from "react-icons/io";
@@ -66,7 +66,7 @@ const EmployeeView = ({ employeeId }: { employeeId: string }) => {
             />
             <button
               onClick={() => router.push("/dashboard/employeeList")}
-              className="flex items-center justify-center gap-1.5 text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium 
+              className="flex items-center justify-center gap-1.5 text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:ring-gray-300 font-medium 
               rounded-md text-xs px-4 py-2 w-[80%] mx-auto disabled:opacity-50"
             >
               <IoMdArrowRoundBack className="text-base" />
@@ -85,6 +85,7 @@ const EmployeeView = ({ employeeId }: { employeeId: string }) => {
               label="Fecha de nacimiento"
               value={new Date(employee.birthDate).toLocaleDateString()}
             />
+            <DataItem label="Email" value={employee.email} />
             <DataItem label="Tipo de documento" value={employee.documentType} />
             <DataItem
               label="Número de documento"
@@ -99,7 +100,7 @@ const EmployeeView = ({ employeeId }: { employeeId: string }) => {
               label="Fecha de contratación"
               value={new Date(employee.hireDate).toLocaleDateString()}
             />
-            <DataItem label="Email" value={employee.email} />
+
             <DataItem label="Dirección" value={employee.address} />
             <DataItem
               label="Estado"

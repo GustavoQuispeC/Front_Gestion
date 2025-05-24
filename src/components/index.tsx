@@ -5,9 +5,9 @@ export { default as Products } from "./products/products";
 export { default as CategoriasGrid } from "./categories/CategoriasGrid";
 export { default as LoginForm } from "./login/Login";
 export { default as ContactForm } from "./contact/Contact";
-export { default as EmployeeFormRegister } from "./employeeRegister/employeeRegister";
-export { default as EmployeeFormList } from "./employeeList/employeeList";
-export { default as EmployeeFormView } from "./employeeView/employeeView";
-export { default as UserFormList} from "./userList/userList";
-export { default as UserFormRegister} from "./userRegister/userRegister";
+export { default as EmployeeFormRegister } from "./employee/employeeRegister/employeeRegister";
+export { default as EmployeeFormList } from "./employee/employeeList/employeeList";
+export { default as EmployeeFormView } from "./employee/employeeView/employeeView";
+export { default as UserFormList} from "./user/userList/userList";
+export { default as UserFormRegister} from "./user/userRegister/userRegister";
 

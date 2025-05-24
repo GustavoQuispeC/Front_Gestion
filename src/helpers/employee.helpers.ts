@@ -1,4 +1,4 @@
-import { EmployeeListProps, EmployeeRegisterApiProps } from "@/types";
+import { EmployeeListProps, EmployeeRegisterApiProps } from "@/types/employee";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -25,7 +25,9 @@ export async function getAllEmployees() {
 }
 
 //get employee by id
-export const getEmployeeById = async (employeeId: string): Promise<EmployeeListProps> => {
+export const getEmployeeById = async (
+  employeeId: string
+): Promise<EmployeeListProps> => {
   try {
     const response = await fetch(`${apiUrl}/employee/${employeeId}`, {
       method: "GET",
@@ -39,7 +41,7 @@ export const getEmployeeById = async (employeeId: string): Promise<EmployeeListP
     }
 
     const employeeData = await response.json();
-    return employeeData;  // Se asume que la respuesta es un objeto que representa al empleado
+    return employeeData; // Se asume que la respuesta es un objeto que representa al empleado
   } catch (error) {
     console.error("Error al obtener el empleado:", error);
     throw error;
@@ -47,27 +49,31 @@ export const getEmployeeById = async (employeeId: string): Promise<EmployeeListP
 };
 
 //get employee by documentNumber
-export const getEmployeeByDocumentNumber = async (documentNumber: string): Promise<EmployeeListProps> => {
+export const getEmployeeByDocumentNumber = async (
+  documentNumber: string
+): Promise<EmployeeListProps> => {
   try {
-    const response = await fetch(`${apiUrl}/employee/document/${documentNumber}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `${apiUrl}/employee/document/${documentNumber}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`Error al obtener el empleado: ${response.statusText}`);
     }
 
     const employeeData = await response.json();
-    return employeeData;  // Se asume que la respuesta es un objeto que representa al empleado
+    return employeeData; // Se asume que la respuesta es un objeto que representa al empleado
   } catch (error) {
     console.error("Error al obtener el empleado:", error);
     throw error;
   }
-}
-
+};
 
 //Create employee
 export async function employeeCreate(formData: EmployeeRegisterApiProps) {

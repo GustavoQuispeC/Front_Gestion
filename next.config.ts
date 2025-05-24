@@ -1,17 +1,24 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "firebasestorage.googleapis.com", // permitir Firebase Storage
+        hostname: "firebasestorage.googleapis.com",
       },
       {
         protocol: "https",
         hostname: "images.unsplash.com",
       },
+    ],
+  },
+
+  experimental: {
+    // @ts-expect-error: allowedDevOrigins aún no está en los tipos
+    allowedDevOrigins: [
+      "http://192.168.100.167:3000", // acceso desde otros dispositivos en red
+      "http://localhost:3000", // acceso desde el mismo equipo
     ],
   },
 };

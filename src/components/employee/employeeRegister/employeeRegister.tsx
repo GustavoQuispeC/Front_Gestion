@@ -5,7 +5,7 @@ import {
   EmployeeRegisterApiProps,
   EmployeeRegisterErrorProps,
   EmployeeRegisterProps,
-} from "@/types";
+} from "@/types/employee";
 
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
@@ -173,7 +173,6 @@ export default function RegisterEmployee() {
 
   return (
     <>
-    
       <form
         onSubmit={handleSubmit}
         className="max-w-5xl mx-auto mt-10 p-6 bg-gray-50 shadow-lg rounded-xl"
@@ -292,7 +291,9 @@ export default function RegisterEmployee() {
               <option value="">Seleccione</option>
               <option value="D.N.I.">DNI</option>
               <option value="pasaporte">Pasaporte</option>
-              <option value="carnet de Extranjeria">Carnet de Extranjería</option>
+              <option value="carnet de Extranjeria">
+                Carnet de Extranjería
+              </option>
             </select>
             {submitted && error.documentType && (
               <p className="text-red-500 text-sm mt-1">{error.documentType}</p>
