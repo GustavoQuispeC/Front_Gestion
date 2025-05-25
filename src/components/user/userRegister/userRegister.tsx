@@ -6,7 +6,6 @@ import { registerUser } from "@/helpers/user.helpers";
 import { RoleListProps } from "@/types/role";
 import { UserRegisterProps } from "@/types/user";
 import Link from "next/link";
-
 import { useEffect, useState } from "react";
 import { FaBrush, FaCaretDown, FaSave } from "react-icons/fa";
 import { FcSearch } from "react-icons/fc";
@@ -15,6 +14,8 @@ import { toast, ToastContainer } from "react-toastify";
 
 const UserRegister = () => {
   const [roles, setRoles] = useState<RoleListProps[]>([]);
+  const [hasPermission, setHasPermission] = useState<boolean>(true); //? Para mostrar u ocultar el formulario
+
   const [employeeData, setEmployeeData] = useState({
     employeeId: 0,
     firstName: "",
@@ -22,6 +23,7 @@ const UserRegister = () => {
     lastNameMother: "",
     email: "",
   });
+
   const [userRegister, setUserRegister] = useState<UserRegisterProps>({
     employeeId: 0,
     userName: "",
@@ -29,9 +31,8 @@ const UserRegister = () => {
     password: "",
     roleId: "",
   });
-  const [hasPermission, setHasPermission] = useState<boolean>(true); // Para mostrar u ocultar el formulario
 
-  // Función para obtener todos los roles
+  //! Función para obtener todos los roles
   const GetRoles = async () => {
     try {
       const rolesData = await getAllRoles();
@@ -42,7 +43,7 @@ const UserRegister = () => {
     }
   };
 
-  // Función para buscar empleado por número de documento
+  //! Función para buscar empleado por número de documento
   const handleSearch = async (documentNumber: string) => {
     if (documentNumber.length >= 8) {
       try {
@@ -75,7 +76,7 @@ const UserRegister = () => {
     }
   };
 
-  // Llamada automática cuando el componente se monta
+  //! Llamada automática cuando el componente se monta
   useEffect(() => {
     // Aquí validamos el rol del usuario antes de permitirle ver la página
     const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -88,7 +89,7 @@ const UserRegister = () => {
     }
   }, []);
 
-  // Función para manejar el cambio del rol
+  //! Función para manejar el cambio del rol
   const handleRoleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setUserRegister({
       ...userRegister,
@@ -96,7 +97,7 @@ const UserRegister = () => {
     });
   };
 
-  // Función para manejar el registro de usuario
+  //! Función para manejar el registro de usuario
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -116,13 +117,13 @@ const UserRegister = () => {
       return;
     }
 
-    // Asignar datos de empleado a userRegister antes de enviar
+    //? Asignar datos de empleado a userRegister antes de enviar
     const userRegisterData: UserRegisterProps = {
-      employeeId: employeeData.employeeId, // Asegúrate de que este valor esté correctamente asignado
-      userName: userRegister.userName, // Username capturado en el estado
-      email: employeeData.email, // El email lo tomamos del estado de employeeData
-      password: userRegister.password, // Password capturado en el estado
-      roleId: userRegister.roleId, // RoleId capturado en el estado
+      employeeId: employeeData.employeeId, 
+      userName: userRegister.userName, 
+      email: employeeData.email, 
+      password: userRegister.password, 
+      roleId: userRegister.roleId,
     };
 
     try {
@@ -131,7 +132,7 @@ const UserRegister = () => {
 
       if (response && response.message === "Usuario creado correctamente") {
         toast.success("Usuario registrado con éxito", { theme: "colored" });
-        // Realiza cualquier acción adicional después del registro exitoso
+       
       } else {
         toast.error("Error al registrar el usuario", { theme: "colored" });
       }
@@ -141,7 +142,7 @@ const UserRegister = () => {
     }
   };
 
-  // Limpiar el formulario
+  //? Limpiar el formulario
   const handleReset = () => {
     setEmployeeData({
       employeeId: 0,
@@ -164,7 +165,7 @@ const UserRegister = () => {
       <div className="p-6">
         <div className="text-center">
           <h2 className="text-3xl font-semibold text-red-600">
-            No tiene permisos suficientes
+            Lo siento, no tiene permisos suficientes
           </h2>
           <p className="text-xl mt-2">
             Por favor comuníquese con el administrador del sistema.

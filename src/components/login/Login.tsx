@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { loginUser } from "@/helpers/user.helpers";
 import { toast, ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
@@ -100,16 +99,6 @@ const Login = () => {
               <h2 className="px-3 lg:text-2xl text-md font-bold lg:leading-[57px] text-blue-800 font-serif italic">
                 Tu mejor aliado en la construcción.
               </h2>
-
-              <p className="text-md px-4 text-slate-500">
-                ¿No tienes cuenta?{" "}
-                <Link
-                  href="/register"
-                  className="text-blue-600 font-bold hover:underline ml-1"
-                >
-                  Regístrate aquí
-                </Link>
-              </p>
             </div>
 
             <div className="max-w-md md:ml-auto w-full">
@@ -177,23 +166,6 @@ const Login = () => {
                     <p className="text-green-600 text-sm mt-1">Completado ✅</p>
                   )}
                 </div>
-
-                <div className="flex flex-wrap items-center justify-between gap-4">
-                  <div className="flex items-center">
-                    <input
-                      id="remember-me"
-                      name="remember-me"
-                      type="checkbox"
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded"
-                    />
-                    <label
-                      htmlFor="remember-me"
-                      className="ml-3 block text-sm text-slate-500"
-                    >
-                      Recordar mi sesión
-                    </label>
-                  </div>
-                </div>
               </div>
 
               <div className="!mt-12">
@@ -208,12 +180,6 @@ const Login = () => {
                 >
                   {isLoading ? "Cargando..." : "Iniciar Sesión"}
                 </button>
-              </div>
-
-              <div className="my-4 flex items-center gap-4">
-                <hr className="w-full border-slate-300" />
-                <p className="text-sm text-slate-800 text-center">o</p>
-                <hr className="w-full border-slate-300" />
               </div>
 
               <div className="space-x-6 flex justify-center">
