@@ -1,6 +1,6 @@
 "use client";
 
-import { getAllUsers } from "@/helpers/user.helpers";
+import { deleteUser, getAllUsers } from "@/helpers/user.helpers";
 import { UserListProps } from "@/types/user";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -9,10 +9,16 @@ import { IoAddCircle } from "react-icons/io5";
 import { MdModeEditOutline } from "react-icons/md";
 import { toast } from "react-toastify";
 
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
+
 export default function UserList() {
   const [users, setUsers] = useState<UserListProps[]>([]);
   const [hasPermission, setHasPermission] = useState<boolean>(true);
 
+  //! Función para obtener los usuarios
   const GetUsers = async () => {
     try {
       const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -48,6 +54,41 @@ export default function UserList() {
   useEffect(() => {
     GetUsers();
   }, []);
+
+  //Funcion elimianar usuario
+  const handleDeleteUser = async (userId: string) => {
+    const confirm = await MySwal.fire({
+      title: "¿Estás seguro?",
+      text: "Esta acción eliminará al usuario permanentemente.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (confirm.isConfirmed) {
+      try {
+        const response = await deleteUser(
+          userId,
+          localStorage.getItem("token") || ""
+        );
+
+        if (response.success) {
+          toast.success("Usuario eliminado correctamente", {
+            theme: "colored",
+          });
+          setUsers(users.filter((user) => user.id !== userId));
+        } else {
+          toast.error("Error al eliminar el usuario", { theme: "colored" });
+        }
+      } catch (error) {
+        console.error("Error al eliminar el usuario:", error);
+        toast.error("Error al eliminar el usuario", { theme: "colored" });
+      }
+    }
+  };
 
   return (
     <div className="p-6">
@@ -141,7 +182,12 @@ export default function UserList() {
                           <MdModeEditOutline size={18} color="#16cfe4" />
                         </button>
                         <button title="Eliminar">
-                          <FaRegTrashAlt size={18} color="#f3240d" />
+                          <span
+                            onClick={() => handleDeleteUser(user.id)}
+                            className="cursor-pointer"
+                          >
+                            <FaRegTrashAlt size={18} color="#f3240d" />
+                          </span>
                         </button>
                       </div>
                     </td>

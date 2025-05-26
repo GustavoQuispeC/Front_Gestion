@@ -2,7 +2,7 @@ import { UserRegisterProps } from "@/types/user";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-//Get all users
+//!Get all users
 export async function getAllUsers(token: string) {
   try {
     const response = await fetch(`${apiUrl}/user`, {
@@ -13,9 +13,9 @@ export async function getAllUsers(token: string) {
       },
     });
 
-    // Verificamos si la respuesta fue correcta
+   
     if (!response.ok) {
-      // Si no fue exitosa, manejamos el error (401, 403, etc.)
+     
       if (response.status === 401) {
         throw new Error("No autorizado. Token inválido o expirado.");
       }
@@ -24,18 +24,16 @@ export async function getAllUsers(token: string) {
       }
       throw new Error("Error en la solicitud: " + response.statusText);
     }
-
-    // Si la respuesta es exitosa, parseamos el JSON
     const json = await response.json();
     console.log("Respuesta del backend:", json);
 
     return json;
   } catch (error) {
     console.error("Error al obtener los usuarios:", error);
-    throw error; // Propaga el error para manejarlo en el componente o controlador
+    throw error; 
   }
 }
-//Login user
+//!Login user
 export async function loginUser(email: string, password: string) {
   try {
     const response = await fetch(`${apiUrl}/user/login`, {
@@ -58,7 +56,7 @@ export async function loginUser(email: string, password: string) {
   }
 }
 
-//Register user
+//!Register user
 export async function registerUser(userData: UserRegisterProps) {
   try {
     const response = await fetch(`${apiUrl}/user`, {
@@ -80,6 +78,29 @@ export async function registerUser(userData: UserRegisterProps) {
     return json;
   } catch (error) {
     console.error("Error al registrar el usuario:", error);
+    throw error;
+  }
+}
+
+//Delete user
+export async function deleteUser(userId: string, token: string) {
+  try {
+    const response = await fetch(`${apiUrl}/user/${userId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error en la solicitud: " + response.statusText);
+    }
+
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    console.error("Error al eliminar el usuario:", error);
     throw error;
   }
 }
