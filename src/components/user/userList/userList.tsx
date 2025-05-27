@@ -10,9 +10,6 @@ import { MdModeEditOutline } from "react-icons/md";
 import { toast } from "react-toastify";
 
 import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
-
-const MySwal = withReactContent(Swal);
 
 export default function UserList() {
   const [users, setUsers] = useState<UserListProps[]>([]);
@@ -57,31 +54,37 @@ export default function UserList() {
 
   //Funcion elimianar usuario
   const handleDeleteUser = async (userId: string) => {
-    const confirm = await MySwal.fire({
+    const confirm = await Swal.fire({
       title: "¿Estás seguro?",
-      text: "Esta acción eliminará al usuario permanentemente.",
+      text: "Esta acción cambiará el estado del usuario a inactivo.",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
-      confirmButtonText: "Sí, eliminar",
+      confirmButtonText: "Sí, confirmar",
       cancelButtonText: "Cancelar",
     });
 
     if (confirm.isConfirmed) {
       try {
-        const response = await deleteUser(
-          userId,
-          localStorage.getItem("token") || ""
-        );
+        const user = JSON.parse(localStorage.getItem("user") || "{}");
+        const token = user?.token;
 
-        if (response.success) {
-          toast.success("Usuario eliminado correctamente", {
+        const response = await deleteUser(userId, token);
+
+        if (response.message === "Usuario eliminado correctamente") {
+          toast.success("Usuario desactivado correctamente", {
             theme: "colored",
           });
-          setUsers(users.filter((user) => user.id !== userId));
+
+          // Actualizar estado del usuario sin eliminarlo del arreglo
+          setUsers((prev) =>
+            prev.map((u) => (u.id === userId ? { ...u, isActive: false } : u))
+          );
         } else {
-          toast.error("Error al eliminar el usuario", { theme: "colored" });
+          toast.error(response.message || "Error al eliminar el usuario", {
+            theme: "colored",
+          });
         }
       } catch (error) {
         console.error("Error al eliminar el usuario:", error);
@@ -178,17 +181,28 @@ export default function UserList() {
                             <FaEye size={18} color="#575553" />
                           </button>
                         </Link>
-                        <button className="mr-3" title="Editar">
-                          <MdModeEditOutline size={18} color="#16cfe4" />
-                        </button>
-                        <button title="Eliminar">
+
+                        <Link href={`/dashboard/userUpdate/${user.id}`}>
+                          <button className="mr-3" title="Editar">
+                            <MdModeEditOutline size={18} color="#16cfe4" />
+                          </button>
+                        </Link>
+
+                        {user.isActive ? (
                           <span
                             onClick={() => handleDeleteUser(user.id)}
                             className="cursor-pointer"
+                            title="Eliminar"
                           >
                             <FaRegTrashAlt size={18} color="#f3240d" />
                           </span>
-                        </button>
+                        ) : (
+                          <FaRegTrashAlt
+                            size={18}
+                            className="opacity-30 cursor-not-allowed"
+                            title="Usuario inactivo"
+                          />
+                        )}
                       </div>
                     </td>
                   </tr>

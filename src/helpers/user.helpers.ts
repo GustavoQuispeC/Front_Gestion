@@ -33,6 +33,30 @@ export async function getAllUsers(token: string) {
     throw error; 
   }
 }
+
+//Get user by ID
+export async function GetByUserId(employeeId: string, token: string) {
+  try {
+    const response = await fetch(`${apiUrl}/employee/${employeeId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error en la solicitud: " + response.statusText);
+    }
+
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    console.error("Error al obtener el empleado:", error);
+    throw error;
+  }
+}
+
 //!Login user
 export async function loginUser(email: string, password: string) {
   try {
