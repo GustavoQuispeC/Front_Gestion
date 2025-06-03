@@ -13,9 +13,7 @@ export async function getAllUsers(token: string) {
       },
     });
 
-   
     if (!response.ok) {
-     
       if (response.status === 401) {
         throw new Error("No autorizado. Token inválido o expirado.");
       }
@@ -30,14 +28,14 @@ export async function getAllUsers(token: string) {
     return json;
   } catch (error) {
     console.error("Error al obtener los usuarios:", error);
-    throw error; 
+    throw error;
   }
 }
 
 //Get user by ID
-export async function GetByUserId(employeeId: string, token: string) {
+export async function GetByUserId(userId: string, token: string) {
   try {
-    const response = await fetch(`${apiUrl}/employee/${employeeId}`, {
+    const response = await fetch(`${apiUrl}/user/${userId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -51,8 +49,9 @@ export async function GetByUserId(employeeId: string, token: string) {
 
     const json = await response.json();
     return json;
+    console.log("Respuesta del backend:", json);
   } catch (error) {
-    console.error("Error al obtener el empleado:", error);
+    console.error("Error al obtener el usuario:", error);
     throw error;
   }
 }

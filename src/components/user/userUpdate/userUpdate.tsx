@@ -4,14 +4,14 @@ import { GetByUserId } from "@/helpers/user.helpers";
 import { RoleListProps } from "@/types/role";
 import { UserListByIdProps } from "@/types/user";
 import Link from "next/link";
-import React, { useState } from "react";
+import { useState } from "react";
 import { FaBrush, FaCaretDown, FaSave } from "react-icons/fa";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { toast, ToastContainer } from "react-toastify";
-import { useParams } from "next/navigation";
+
 import { useEffect } from "react";
 
-const UserUpdate = () => {
+const UserUpdate = ({ userId }: { userId: string }) => {
   const [hasPermission, setHasPermission] = useState<boolean>(true); //? Para mostrar u ocultar el formulario
 
   const [roles, setRoles] = useState<RoleListProps[]>([]);
@@ -29,14 +29,9 @@ const UserUpdate = () => {
     roleId: "",
   });
 
-  const params = useParams();
-  const userId = params?.id as string;
-
   useEffect(() => {
-    if (userId) {
-      GetUserById(userId);
-      GetRoles();
-    }
+    if (!userId) return;
+    Promise.all([GetUserById(userId), GetRoles()]);
   }, [userId]);
 
   //! Función para obtener todos los roles
@@ -44,25 +39,27 @@ const UserUpdate = () => {
     try {
       const rolesData = await getAllRoles();
       setRoles(rolesData);
+      //console.log("Roles obtenidos:", rolesData);
     } catch (e) {
       toast.error("Error al obtener los roles", { theme: "colored" });
       console.error("Error al obtener los roles:", e);
     }
   };
 
-  //   //! Función para manejar el cambio del rol
-
+  //   //! Función para obtener el usuario por ID
   const GetUserById = async (id: string) => {
     try {
       const token = localStorage.getItem("token") || "";
       const userById = await GetByUserId(id, token);
-      setUsers(userById);
+      setUsers(userById[0]);
+      console.log("Usuario obtenido:", userById[0]); // Verifica que los datos realmente llegan aquí
     } catch (error) {
       console.error("Error al obtener el usuario por ID:", error);
       toast.error("Error al obtener el usuario", { theme: "colored" });
     }
   };
-  // Llamar a la función para obtener los roles al cargar el componente
+
+  //! Llamar a la función para obtener los roles al cargar el componente
   const handleRoleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedRoleId = e.target.value;
     setUsers((prev) => ({
@@ -104,7 +101,7 @@ const UserUpdate = () => {
         </div>
 
         {/* Fila de Apellido y Nombre + Username */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 mx-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 mx-10">
           {/* Apellido y Nombre */}
           <div className="flex flex-col">
             <label htmlFor="fullName" className="mb-1 text-sm font-medium">
@@ -127,6 +124,32 @@ const UserUpdate = () => {
               value={users.userName}
               className="input input-info w-full"
             />
+          </div>
+
+          {/* Rol */}
+          <div className="flex flex-col">
+            <label htmlFor="role" className="mb-1 text-sm font-medium">
+              Rol
+            </label>
+            <div className="relative">
+              <select
+                id="role"
+                name="role"
+                className="input input-info w-full pr-10 appearance-none"
+                onChange={handleRoleChange}
+                value={users.roleId || ""} // Si roleId es vacío o nulo, asigna un valor vacío
+              >
+                <option value="">Seleccione un rol</option>
+                {roles.map((role) => (
+                  <option key={role.id} value={role.id}>
+                    {role.name}
+                  </option>
+                ))}
+              </select>
+              <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
+                <FaCaretDown className="text-gray-500" />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -160,31 +183,24 @@ const UserUpdate = () => {
               placeholder="Ingrese una contraseña"
             />
           </div>
-
-          {/* Rol */}
           <div className="flex flex-col">
-            <label htmlFor="role" className="mb-1 text-sm font-medium">
-              Rol
-            </label>
-            <div className="relative">
-              <select
-                id="role"
-                name="role"
-                className="input input-info w-full pr-10 appearance-none"
-                onChange={handleRoleChange}
-                value={users.roleId || ""}
-              >
-                <option value="">Seleccione un rol</option>
-                {roles.map((role) => (
-                  <option key={role.id} value={role.id}>
-                    {role.name}
-                  </option>
-                ))}
-              </select>
-              <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
-                <FaCaretDown className="text-gray-500" />
-              </div>
-            </div>
+            <fieldset className="fieldset bg-base-100 border-base-300 rounded-box w-64 border p-4">
+              <legend className="fieldset-legend">Estado</legend>
+              <label className="label">
+                <input
+                  type="checkbox"
+                  checked={users.isActive}
+                  onChange={(e) =>
+                    setUsers((prevState) => ({
+                      ...prevState,
+                      isActive: e.target.checked,
+                    }))
+                  }
+                  className="checkbox"
+                />
+                Activo
+              </label>
+            </fieldset>
           </div>
         </div>
 
@@ -235,5 +251,4 @@ const UserUpdate = () => {
     </>
   );
 };
-
 export default UserUpdate;
