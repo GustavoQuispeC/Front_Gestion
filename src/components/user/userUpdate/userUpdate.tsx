@@ -8,7 +8,6 @@ import { useState } from "react";
 import { FaBrush, FaCaretDown, FaSave } from "react-icons/fa";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { toast, ToastContainer } from "react-toastify";
-
 import { useEffect } from "react";
 
 const UserUpdate = ({ userId }: { userId: string }) => {
@@ -184,23 +183,31 @@ const UserUpdate = ({ userId }: { userId: string }) => {
             />
           </div>
           <div className="flex flex-col">
-            <fieldset className="fieldset bg-base-100 border-base-300 rounded-box w-64 border p-4">
-              <legend className="fieldset-legend">Estado</legend>
-              <label className="label">
-                <input
-                  type="checkbox"
-                  checked={users.isActive}
-                  onChange={(e) =>
-                    setUsers((prevState) => ({
-                      ...prevState,
-                      isActive: e.target.checked,
-                    }))
-                  }
-                  className="checkbox"
-                />
-                Activo
-              </label>
-            </fieldset>
+            <label htmlFor="isActive" className="mb-1 text-sm font-medium">
+              Estado
+            </label>
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                checked={users.isActive}
+                onChange={(e) =>
+                  setUsers((prevState) => ({
+                    ...prevState,
+                    isActive: e.target.checked,
+                  }))
+                }
+                className={`checkbox ${
+                  users.isActive ? "checkbox-success" : "checkbox-error"
+                }`}
+              />
+              <span
+                className={`${
+                  users.isActive ? "text-green-500" : "text-red-500"
+                }`}
+              >
+                {users.isActive ? "Activo" : "Inactivo"}
+              </span>
+            </div>
           </div>
         </div>
 
