@@ -56,7 +56,7 @@ export async function GetByUserId(userId: string, token: string) {
   }
 }
 
-//!Login user
+//Login user
 export async function loginUser(email: string, password: string) {
   try {
     const response = await fetch(`${apiUrl}/user/login`, {
@@ -79,7 +79,7 @@ export async function loginUser(email: string, password: string) {
   }
 }
 
-//!Register user
+//Register user
 export async function registerUser(userData: UserRegisterProps) {
   try {
     const response = await fetch(`${apiUrl}/user`, {
@@ -124,6 +124,30 @@ export async function deleteUser(userId: string, token: string) {
     return json;
   } catch (error) {
     console.error("Error al eliminar el usuario:", error);
+    throw error;
+  }
+}
+
+//Update user
+export async function updateUser(userId: string, userData: UserRegisterProps, token: string) {
+  try {
+    const response = await fetch(`${apiUrl}/user/${userId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(userData),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error en la solicitud: " + response.statusText);
+    }
+
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    console.error("Error al actualizar el usuario:", error);
     throw error;
   }
 }

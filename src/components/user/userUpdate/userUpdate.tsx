@@ -1,6 +1,6 @@
 "use client";
 import { getAllRoles } from "@/helpers/role.helper";
-import { GetByUserId } from "@/helpers/user.helpers";
+import { GetByUserId, updateUser } from "@/helpers/user.helpers";
 import { RoleListProps } from "@/types/role";
 import { UserListByIdProps } from "@/types/user";
 import Link from "next/link";
@@ -11,7 +11,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { useEffect } from "react";
 
 const UserUpdate = ({ userId }: { userId: string }) => {
-  const [hasPermission, setHasPermission] = useState<boolean>(true); //? Para mostrar u ocultar el formulario
+  const [hasPermission] = useState<boolean>(true); //? Para mostrar u ocultar el formulario
 
   const [roles, setRoles] = useState<RoleListProps[]>([]);
 
@@ -26,6 +26,7 @@ const UserUpdate = ({ userId }: { userId: string }) => {
     lastNameFather: "",
     lastNameMother: "",
     roleId: "",
+    password: "",
   });
 
   useEffect(() => {
@@ -45,7 +46,7 @@ const UserUpdate = ({ userId }: { userId: string }) => {
     }
   };
 
-  //   //! Función para obtener el usuario por ID
+  //! Función para obtener el usuario por ID
   const GetUserById = async (id: string) => {
     try {
       const token = localStorage.getItem("token") || "";
@@ -66,6 +67,32 @@ const UserUpdate = ({ userId }: { userId: string }) => {
       roleId: selectedRoleId,
     }));
   };
+
+  //! actualizar el usuario
+  const handleUpadateUser = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem("token") || "";
+      const updatedUser = {
+        ...users,
+        userName: e.currentTarget.userName.value,
+        password: e.currentTarget.password.value || undefined, // Si no se proporciona una contraseña, se envía como undefined
+      };
+      const response = await updateUser(users.id, updatedUser, token);
+      if (response) {
+        toast.success("Usuario actualizado correctamente", {
+          theme: "colored",
+        });
+        // Redirigir o actualizar el estado según sea necesario
+      }
+    } catch (error) {
+      console.error("Error al actualizar el usuario:", error);
+      toast.error("Error al actualizar el usuario", { theme: "colored" });
+    }
+  };
+
+
+
 
   if (!hasPermission) {
     return (
@@ -89,7 +116,7 @@ const UserUpdate = ({ userId }: { userId: string }) => {
 
   return (
     <>
-      <form className="w-full max-w-5xl mx-auto mt-10 p-6 bg-gray-50 shadow-lg rounded-xl">
+      <form className="w-full max-w-5xl mx-auto mt-10 p-6 bg-gray-50 shadow-lg rounded-xl" onSubmit={handleUpadateUser}>
         <h2 className="text-2xl font-semibold mb-6 text-left mx-10">
           Registro de usuario
         </h2>

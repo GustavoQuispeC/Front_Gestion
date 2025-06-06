@@ -25,14 +25,17 @@ export interface UserListByIdProps {
     lastNameFather: string;
     lastNameMother: string;
     roleId: string;
+    password?: string;
 }
 
 export interface UserRegisterProps {
+  id: string;
   employeeId: number;
   userName: string;
   email: string;
   password: string;
   roleId: string;
+  isActive: boolean;
 }
 
 export interface UserRegisterErrorProps {
@@ -54,7 +57,6 @@ export interface UserUpdateProps {
 export interface UserUpdateErrorProps {
   id: string;
   userName: string;
-
   isActive: boolean;
   employeeId: number;
   password?: string;
