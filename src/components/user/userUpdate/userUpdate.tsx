@@ -69,30 +69,37 @@ const UserUpdate = ({ userId }: { userId: string }) => {
   };
 
   //! actualizar el usuario
-  const handleUpadateUser = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      const token = localStorage.getItem("token") || "";
-      const updatedUser = {
-        ...users,
-        userName: e.currentTarget.userName.value,
-        password: e.currentTarget.password.value || undefined, // Si no se proporciona una contraseña, se envía como undefined
-      };
-      const response = await updateUser(users.id, updatedUser, token);
-      if (response) {
-        toast.success("Usuario actualizado correctamente", {
-          theme: "colored",
-        });
-        // Redirigir o actualizar el estado según sea necesario
-      }
-    } catch (error) {
-      console.error("Error al actualizar el usuario:", error);
-      toast.error("Error al actualizar el usuario", { theme: "colored" });
+ const handleUpadateUser = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  try {
+    const token = localStorage.getItem("token") || "";
+    const updatedUser = {
+      ...users,
+      password: users.password || undefined,
+    };
+    const response = await updateUser(users.id,updatedUser, token);
+    if (response) {
+      toast.success("Usuario actualizado correctamente", {
+        theme: "colored",
+      });
     }
+  } catch (error) {
+    console.error("Error al actualizar el usuario:", error);
+    toast.error("Error al actualizar el usuario", { theme: "colored" });
+  }
+};
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const target = e.target as HTMLInputElement | HTMLSelectElement;
+    const { name, value, type } = target;
+    setUsers((prevState) => ({
+      ...prevState,
+      [name]:
+        type === "checkbox" ? (target as HTMLInputElement).checked : value,
+    }));
   };
-
-
-
 
   if (!hasPermission) {
     return (
@@ -116,7 +123,10 @@ const UserUpdate = ({ userId }: { userId: string }) => {
 
   return (
     <>
-      <form className="w-full max-w-5xl mx-auto mt-10 p-6 bg-gray-50 shadow-lg rounded-xl" onSubmit={handleUpadateUser}>
+      <form
+        className="w-full max-w-5xl mx-auto mt-10 p-6 bg-gray-50 shadow-lg rounded-xl"
+        onSubmit={handleUpadateUser}
+      >
         <h2 className="text-2xl font-semibold mb-6 text-left mx-10">
           Registro de usuario
         </h2>
@@ -187,11 +197,11 @@ const UserUpdate = ({ userId }: { userId: string }) => {
               Correo Electrónico
             </label>
             <input
-              type="email"
-              id="email"
-              name="email"
-              value={users.email}
-              readOnly
+              type="text"
+              id="userName"
+              name="userName" // necesario para handleInputChange
+              value={users.userName}
+              onChange={handleInputChange} // <-- Esto es lo que faltaba
               className="input input-info w-full"
             />
           </div>
@@ -205,6 +215,8 @@ const UserUpdate = ({ userId }: { userId: string }) => {
               type="password"
               id="password"
               name="password"
+              value={users.password || ""}
+              onChange={handleInputChange}
               className="input input-info w-full"
               placeholder="Ingrese una contraseña"
             />
@@ -216,13 +228,10 @@ const UserUpdate = ({ userId }: { userId: string }) => {
             <div className="flex items-center space-x-2">
               <input
                 type="checkbox"
+                id="isActive"
+                name="isActive"
                 checked={users.isActive}
-                onChange={(e) =>
-                  setUsers((prevState) => ({
-                    ...prevState,
-                    isActive: e.target.checked,
-                  }))
-                }
+                onChange={handleInputChange}
                 className={`checkbox ${
                   users.isActive ? "checkbox-success" : "checkbox-error"
                 }`}
