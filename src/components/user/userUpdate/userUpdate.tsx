@@ -5,13 +5,21 @@ import { RoleListProps } from "@/types/role";
 import { UserListByIdProps } from "@/types/user";
 import Link from "next/link";
 import { useState } from "react";
-import { FaBrush, FaCaretDown, FaSave } from "react-icons/fa";
+import {
+  FaBrush,
+  FaCaretDown,
+  FaEye,
+  FaEyeSlash,
+  FaSave,
+} from "react-icons/fa";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { toast, ToastContainer } from "react-toastify";
 import { useEffect } from "react";
 
 const UserUpdate = ({ userId }: { userId: string }) => {
   const [hasPermission] = useState<boolean>(true); //? Para mostrar u ocultar el formulario
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const [roles, setRoles] = useState<RoleListProps[]>([]);
 
@@ -29,8 +37,8 @@ const UserUpdate = ({ userId }: { userId: string }) => {
     password: "",
     currentPassword: "", // Para manejar la contraseña actual
   });
-  console.log("ID del usuario:", users.Id);
 
+  //! Efecto para obtener el usuario y los roles al cargar el componente
   useEffect(() => {
     if (!userId) return;
     Promise.all([GetUserById(userId), GetRoles()]);
@@ -54,7 +62,7 @@ const UserUpdate = ({ userId }: { userId: string }) => {
       const token = localStorage.getItem("token") || "";
       const userById = await GetByUserId(id, token);
       setUsers(userById[0]);
-      //console.log("Usuario obtenido:", userById[0]); // Verifica que los datos realmente llegan aquí
+      console.log("Usuario obtenido:", userById[0]); // Verifica que los datos realmente llegan aquí
     } catch (error) {
       console.error("Error al obtener el usuario por ID:", error);
       toast.error("Error al obtener el usuario", { theme: "colored" });
@@ -83,7 +91,7 @@ const UserUpdate = ({ userId }: { userId: string }) => {
         employeeId: users.employeeId,
         currentPassword: users.currentPassword, // Si necesitas la contraseña actual para la actualización
       };
-      console.log("Datos del usuario a actualizar:", updatedUser);
+      //console.log("Datos del usuario a actualizar:", updatedUser);
       const response = await updateUser(userId, updatedUser, token);
       if (response) {
         toast.success("Usuario actualizado correctamente", {
@@ -96,6 +104,7 @@ const UserUpdate = ({ userId }: { userId: string }) => {
     }
   };
 
+  //! Manejar cambios en los campos de entrada
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -108,6 +117,7 @@ const UserUpdate = ({ userId }: { userId: string }) => {
     }));
   };
 
+  //! Verificar si el usuario tiene permisos
   if (!hasPermission) {
     return (
       <div className="p-6">
@@ -142,7 +152,7 @@ const UserUpdate = ({ userId }: { userId: string }) => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 mx-10">
           {/* Apellido y Nombre */}
           <div className="flex flex-col">
-            <label htmlFor="fullName" className="mb-1 text-sm font-medium">
+            <label htmlFor="fullName" className="mb-1 text-sm font-bold">
               Apellido y Nombres:{" "}
             </label>
             <span id="fullName" className="text-gray-700">
@@ -196,17 +206,20 @@ const UserUpdate = ({ userId }: { userId: string }) => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 mx-10">
           {/* Correo */}
           <div className="flex flex-col">
-            <label htmlFor="email" className="mb-1 text-sm font-medium">
+            <label htmlFor="email" className="mb-1 text-sm font-bold">
               Correo Electrónico
             </label>
-            <input
+            {/* <input
               type="text"
               id="email"
               name="email" // necesario para handleInputChange
               value={users.email}
               className="input input-info w-full"
               onChange={handleInputChange}
-            />
+            /> */}
+            <span id="email" className="text-gray-700">
+              {users.email || "No disponible"}
+            </span>
           </div>
 
           {/* Contraseña actual */}
@@ -218,7 +231,7 @@ const UserUpdate = ({ userId }: { userId: string }) => {
               Contraseña actual
             </label>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               id="currentPassword"
               name="currentPassword"
               value={users.currentPassword || ""}
@@ -242,10 +255,16 @@ const UserUpdate = ({ userId }: { userId: string }) => {
               className="input input-info w-full"
               placeholder="Ingrese una nueva contraseña"
             />
+            <span
+              className="absolute right-3 top-3.5 text-gray-400 cursor-pointer"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+            </span>
           </div>
 
           <div className="flex flex-col">
-            <label htmlFor="isActive" className="mb-1 text-sm font-medium">
+            <label htmlFor="isActive" className="mb-1 text-sm font-bold">
               Estado
             </label>
             <div className="flex items-center space-x-2">
