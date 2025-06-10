@@ -16,7 +16,7 @@ const UserUpdate = ({ userId }: { userId: string }) => {
   const [roles, setRoles] = useState<RoleListProps[]>([]);
 
   const [users, setUsers] = useState<UserListByIdProps>({
-    id: "",
+    Id: "",
     userName: "",
     email: "",
     createdAt: new Date(),
@@ -27,7 +27,9 @@ const UserUpdate = ({ userId }: { userId: string }) => {
     lastNameMother: "",
     roleId: "",
     password: "",
+    currentPassword: "", // Para manejar la contraseña actual
   });
+  console.log("ID del usuario:", users.Id);
 
   useEffect(() => {
     if (!userId) return;
@@ -52,7 +54,7 @@ const UserUpdate = ({ userId }: { userId: string }) => {
       const token = localStorage.getItem("token") || "";
       const userById = await GetByUserId(id, token);
       setUsers(userById[0]);
-      console.log("Usuario obtenido:", userById[0]); // Verifica que los datos realmente llegan aquí
+      //console.log("Usuario obtenido:", userById[0]); // Verifica que los datos realmente llegan aquí
     } catch (error) {
       console.error("Error al obtener el usuario por ID:", error);
       toast.error("Error al obtener el usuario", { theme: "colored" });
@@ -69,25 +71,30 @@ const UserUpdate = ({ userId }: { userId: string }) => {
   };
 
   //! actualizar el usuario
- const handleUpadateUser = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  try {
-    const token = localStorage.getItem("token") || "";
-    const updatedUser = {
-      ...users,
-      password: users.password || undefined,
-    };
-    const response = await updateUser(users.id,updatedUser, token);
-    if (response) {
-      toast.success("Usuario actualizado correctamente", {
-        theme: "colored",
-      });
+  const handleUpadateUser = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem("token") || "";
+      const updatedUser = {
+        userName: users.userName,
+        password: users.password,
+        roleId: users.roleId,
+        isActive: users.isActive,
+        employeeId: users.employeeId,
+        currentPassword: users.currentPassword, // Si necesitas la contraseña actual para la actualización
+      };
+      console.log("Datos del usuario a actualizar:", updatedUser);
+      const response = await updateUser(userId, updatedUser, token);
+      if (response) {
+        toast.success("Usuario actualizado correctamente", {
+          theme: "colored",
+        });
+      }
+    } catch (error) {
+      console.error("Error al actualizar el usuario:", error);
+      toast.error("Error al actualizar el usuario", { theme: "colored" });
     }
-  } catch (error) {
-    console.error("Error al actualizar el usuario:", error);
-    toast.error("Error al actualizar el usuario", { theme: "colored" });
-  }
-};
+  };
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -131,11 +138,6 @@ const UserUpdate = ({ userId }: { userId: string }) => {
           Registro de usuario
         </h2>
 
-        {/* Buscar empleado por número de documento */}
-        <div className="flex flex-col mb-6 mx-10">
-          <div className="relative"></div>
-        </div>
-
         {/* Fila de Apellido y Nombre + Username */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 mx-10">
           {/* Apellido y Nombre */}
@@ -158,6 +160,7 @@ const UserUpdate = ({ userId }: { userId: string }) => {
               id="userName"
               name="userName"
               value={users.userName}
+              onChange={handleInputChange}
               className="input input-info w-full"
             />
           </div>
@@ -198,18 +201,37 @@ const UserUpdate = ({ userId }: { userId: string }) => {
             </label>
             <input
               type="text"
-              id="userName"
-              name="userName" // necesario para handleInputChange
-              value={users.userName}
-              onChange={handleInputChange} // <-- Esto es lo que faltaba
+              id="email"
+              name="email" // necesario para handleInputChange
+              value={users.email}
               className="input input-info w-full"
+              onChange={handleInputChange}
             />
           </div>
 
-          {/* Contraseña */}
+          {/* Contraseña actual */}
+          <div className="flex flex-col">
+            <label
+              htmlFor="currentPassword"
+              className="mb-1 text-sm font-medium"
+            >
+              Contraseña actual
+            </label>
+            <input
+              type="password"
+              id="currentPassword"
+              name="currentPassword"
+              value={users.currentPassword || ""}
+              onChange={handleInputChange}
+              className="input input-info w-full"
+              placeholder="Ingrese la contraseña actual"
+            />
+          </div>
+
+          {/* Contraseña nueva */}
           <div className="flex flex-col">
             <label htmlFor="password" className="mb-1 text-sm font-medium">
-              Contraseña
+              Contraseña nueva
             </label>
             <input
               type="password"
@@ -218,9 +240,10 @@ const UserUpdate = ({ userId }: { userId: string }) => {
               value={users.password || ""}
               onChange={handleInputChange}
               className="input input-info w-full"
-              placeholder="Ingrese una contraseña"
+              placeholder="Ingrese una nueva contraseña"
             />
           </div>
+
           <div className="flex flex-col">
             <label htmlFor="isActive" className="mb-1 text-sm font-medium">
               Estado
@@ -253,7 +276,7 @@ const UserUpdate = ({ userId }: { userId: string }) => {
             <button
               type="button"
               className="flex items-center justify-center gap-1.5 text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium 
-              rounded-md text-xs px-4 py-2 w-[80%] mx-auto disabled:opacity-50"
+        rounded-md text-xs px-4 py-2 w-[80%] mx-auto disabled:opacity-50"
             >
               <IoMdArrowRoundBack className="text-base" />
               Volver
@@ -263,7 +286,7 @@ const UserUpdate = ({ userId }: { userId: string }) => {
           <button
             type="submit"
             className="flex items-center justify-center gap-1.5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium 
-            rounded-md text-xs px-4 py-2 w-[80%] mx-auto disabled:opacity-50"
+      rounded-md text-xs px-4 py-2 w-[80%] mx-auto disabled:opacity-50"
           >
             <FaSave className="text-base" />
             Registrar
@@ -272,7 +295,7 @@ const UserUpdate = ({ userId }: { userId: string }) => {
           <button
             type="reset"
             className="flex items-center justify-center gap-1.5 text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium
-            rounded-md text-xs px-4 py-2 w-[80%] mx-auto disabled:opacity-50"
+      rounded-md text-xs px-4 py-2 w-[80%] mx-auto disabled:opacity-50"
           >
             <FaBrush className="text-base" />
             Limpiar

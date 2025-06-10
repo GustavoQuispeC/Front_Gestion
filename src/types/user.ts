@@ -15,7 +15,7 @@ export interface UserListProps {
 }
 
 export interface UserListByIdProps {
-  id: string;
+  Id: string;
   userName: string;
   email: string;
   createdAt: Date;
@@ -26,10 +26,11 @@ export interface UserListByIdProps {
   lastNameMother: string;
   roleId: string;
   password: string;
+  currentPassword?: string;
 }
 
 export interface UserRegisterProps {
-  id: string;
+
   employeeId: number;
   userName: string;
   password: string;
@@ -52,6 +53,7 @@ export interface UserUpdateProps {
   employeeId: number;
   roleId: string;
   password?: string;
+  currentPassword?: string;
 }
 export interface UserUpdateErrorProps {
   id: string;

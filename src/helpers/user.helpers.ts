@@ -23,7 +23,7 @@ export async function getAllUsers(token: string) {
       throw new Error("Error en la solicitud: " + response.statusText);
     }
     const json = await response.json();
-    console.log("Respuesta del backend:", json);
+    //console.log("Respuesta del backend:", json);
 
     return json;
   } catch (error) {
