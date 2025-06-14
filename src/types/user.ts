@@ -47,7 +47,6 @@ export interface UserRegisterErrorProps {
 }
 
 export interface UserUpdateProps {
-  id: string;
   userName: string;
   isActive: boolean;
   employeeId: number;
@@ -56,12 +55,12 @@ export interface UserUpdateProps {
   currentPassword?: string;
 }
 export interface UserUpdateErrorProps {
-  id: string;
   userName: string;
   isActive: boolean;
   employeeId: number;
-  password?: string;
   roleId: string;
+  password?: string;
+  currentPassword?: string;
 }
 
 export interface UserLoginProps {

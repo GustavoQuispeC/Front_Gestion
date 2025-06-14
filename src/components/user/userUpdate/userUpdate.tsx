@@ -5,13 +5,7 @@ import { RoleListProps } from "@/types/role";
 import { UserListByIdProps } from "@/types/user";
 import Link from "next/link";
 import { useState } from "react";
-import {
-  FaBrush,
-  FaCaretDown,
-  FaEye,
-  FaEyeSlash,
-  FaSave,
-} from "react-icons/fa";
+import { FaBrush, FaEye, FaEyeSlash, FaSave } from "react-icons/fa";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { toast, ToastContainer } from "react-toastify";
 import { useEffect } from "react";
@@ -19,7 +13,8 @@ import { useEffect } from "react";
 const UserUpdate = ({ userId }: { userId: string }) => {
   const [hasPermission] = useState<boolean>(true); //? Para mostrar u ocultar el formulario
 
-  const [showPassword, setShowPassword] = useState(false);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
 
   const [roles, setRoles] = useState<RoleListProps[]>([]);
 
@@ -79,7 +74,7 @@ const UserUpdate = ({ userId }: { userId: string }) => {
   };
 
   //! actualizar el usuario
-  const handleUpadateUser = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleUpdateUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token") || "";
@@ -141,28 +136,34 @@ const UserUpdate = ({ userId }: { userId: string }) => {
   return (
     <>
       <form
-        className="w-full max-w-5xl mx-auto mt-10 p-6 bg-gray-50 shadow-lg rounded-xl"
-        onSubmit={handleUpadateUser}
+        className="w-full max-w-5xl mx-auto mt-10 p-8 bg-white shadow-xl rounded-lg border border-gray-200"
+        onSubmit={handleUpdateUser}
       >
-        <h2 className="text-2xl font-semibold mb-6 text-left mx-10">
+        <h2 className="text-2xl font-semibold mb-6 text-left text-gray-800">
           Registro de usuario
         </h2>
 
         {/* Fila de Apellido y Nombre + Username */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 mx-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
           {/* Apellido y Nombre */}
           <div className="flex flex-col">
-            <label htmlFor="fullName" className="mb-1 text-sm font-bold">
+            <label
+              htmlFor="fullName"
+              className="mb-2 text-sm font-semibold text-gray-700"
+            >
               Apellido y Nombres:{" "}
             </label>
-            <span id="fullName" className="text-gray-700">
+            <span id="fullName" className="text-gray-600">
               {`${users.lastNameFather} ${users.lastNameMother} ${users.firstName}`}
             </span>
           </div>
 
           {/* Username */}
           <div className="flex flex-col">
-            <label htmlFor="userName" className="mb-1 text-sm font-medium">
+            <label
+              htmlFor="userName"
+              className="mb-2 text-sm font-semibold text-gray-700"
+            >
               Nombre de Usuario
             </label>
             <input
@@ -171,100 +172,109 @@ const UserUpdate = ({ userId }: { userId: string }) => {
               name="userName"
               value={users.userName}
               onChange={handleInputChange}
-              className="input input-info w-full"
+              className="input w-full border border-gray-300 focus:ring-2 focus:ring-blue-500 rounded-md p-2"
             />
           </div>
 
           {/* Rol */}
           <div className="flex flex-col">
-            <label htmlFor="role" className="mb-1 text-sm font-medium">
+            <label
+              htmlFor="role"
+              className="mb-2 text-sm font-semibold text-gray-700"
+            >
               Rol
             </label>
-            <div className="relative">
-              <select
-                id="role"
-                name="role"
-                className="input input-info w-full pr-10 appearance-none"
-                onChange={handleRoleChange}
-                value={users.roleId || ""} // Si roleId es vacío o nulo, asigna un valor vacío
-              >
-                <option value="">Seleccione un rol</option>
-                {roles.map((role) => (
-                  <option key={role.id} value={role.id}>
-                    {role.name}
-                  </option>
-                ))}
-              </select>
-              <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
-                <FaCaretDown className="text-gray-500" />
-              </div>
-            </div>
+            <select
+              id="role"
+              name="role"
+              className="input w-full border border-gray-300 focus:ring-2 focus:ring-blue-500 rounded-md p-2"
+              onChange={handleRoleChange}
+              value={users.roleId || ""}
+            >
+              <option value="">Seleccione un rol</option>
+              {roles.map((role) => (
+                <option key={role.id} value={role.id}>
+                  {role.name}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 
         {/* Fila de Correo, Contraseña y Rol */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 mx-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
           {/* Correo */}
           <div className="flex flex-col">
-            <label htmlFor="email" className="mb-1 text-sm font-bold">
+            <label
+              htmlFor="email"
+              className="mb-2 text-sm font-semibold text-gray-700"
+            >
               Correo Electrónico
             </label>
-            {/* <input
-              type="text"
-              id="email"
-              name="email" // necesario para handleInputChange
-              value={users.email}
-              className="input input-info w-full"
-              onChange={handleInputChange}
-            /> */}
-            <span id="email" className="text-gray-700">
+            <span id="email" className="text-gray-600">
               {users.email || "No disponible"}
             </span>
           </div>
 
           {/* Contraseña actual */}
-          <div className="flex flex-col">
+          <div className="flex flex-col relative">
             <label
               htmlFor="currentPassword"
-              className="mb-1 text-sm font-medium"
+              className="mb-2 text-sm font-semibold text-gray-700"
             >
               Contraseña actual
             </label>
             <input
-              type={showPassword ? "text" : "password"}
+              type={showCurrentPassword ? "text" : "password"}
               id="currentPassword"
               name="currentPassword"
               value={users.currentPassword || ""}
               onChange={handleInputChange}
-              className="input input-info w-full"
+              className="input w-full border border-gray-300 focus:ring-2 focus:ring-blue-500 rounded-md p-2 pr-10"
               placeholder="Ingrese la contraseña actual"
             />
+            <span
+              className="absolute right-3 bottom-3 text-gray-400 cursor-pointer"
+              onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+            >
+              {showCurrentPassword ? (
+                <FaEyeSlash size={18} />
+              ) : (
+                <FaEye size={18} />
+              )}
+            </span>
           </div>
 
           {/* Contraseña nueva */}
-          <div className="flex flex-col">
-            <label htmlFor="password" className="mb-1 text-sm font-medium">
+          <div className="flex flex-col relative">
+            <label
+              htmlFor="password"
+              className="mb-2 text-sm font-semibold text-gray-700"
+            >
               Contraseña nueva
             </label>
             <input
-              type="password"
+              type={showNewPassword ? "text" : "password"}
               id="password"
               name="password"
               value={users.password || ""}
               onChange={handleInputChange}
-              className="input input-info w-full"
+              className="input w-full border border-gray-300 focus:ring-2 focus:ring-blue-500 rounded-md p-2 pr-10"
               placeholder="Ingrese una nueva contraseña"
             />
             <span
-              className="absolute right-3 top-3.5 text-gray-400 cursor-pointer"
-              onClick={() => setShowPassword(!showPassword)}
+             className="absolute right-3 bottom-3 text-gray-400 cursor-pointer"
+              onClick={() => setShowNewPassword(!showNewPassword)}
             >
-              {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+              {showNewPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
             </span>
           </div>
 
           <div className="flex flex-col">
-            <label htmlFor="isActive" className="mb-1 text-sm font-bold">
+            <label
+              htmlFor="isActive"
+              className="mb-2 text-sm font-semibold text-gray-700"
+            >
               Estado
             </label>
             <div className="flex items-center space-x-2">
@@ -290,33 +300,30 @@ const UserUpdate = ({ userId }: { userId: string }) => {
         </div>
 
         {/* Botones */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 mx-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
           <Link href="/dashboard/userList">
             <button
               type="button"
-              className="flex items-center justify-center gap-1.5 text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium 
-        rounded-md text-xs px-4 py-2 w-[80%] mx-auto disabled:opacity-50"
+              className="flex items-center justify-center gap-2 text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 rounded-md text-xs px-6 py-3 w-full"
             >
-              <IoMdArrowRoundBack className="text-base" />
+              <IoMdArrowRoundBack className="text-lg" />
               Volver
             </button>
           </Link>
 
           <button
             type="submit"
-            className="flex items-center justify-center gap-1.5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium 
-      rounded-md text-xs px-4 py-2 w-[80%] mx-auto disabled:opacity-50"
+            className="flex items-center justify-center gap-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 rounded-md text-xs px-6 py-3 w-full"
           >
-            <FaSave className="text-base" />
+            <FaSave className="text-lg" />
             Registrar
           </button>
 
           <button
             type="reset"
-            className="flex items-center justify-center gap-1.5 text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium
-      rounded-md text-xs px-4 py-2 w-[80%] mx-auto disabled:opacity-50"
+            className="flex items-center justify-center gap-2 text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-md text-xs px-6 py-3 w-full"
           >
-            <FaBrush className="text-base" />
+            <FaBrush className="text-lg" />
             Limpiar
           </button>
         </div>

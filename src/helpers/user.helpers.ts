@@ -1,4 +1,4 @@
-import { UserRegisterProps } from "@/types/user";
+import { UserRegisterProps, UserUpdateProps } from "@/types/user";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -129,7 +129,7 @@ export async function deleteUser(userId: string, token: string) {
 }
 
 //Update user
-export async function updateUser(userId: string, userData: UserRegisterProps, token: string) {
+export async function updateUser(userId: string, userData: UserUpdateProps, token: string) {
   try {
     const response = await fetch(`${apiUrl}/user/${userId}`, {
       method: "PUT",
