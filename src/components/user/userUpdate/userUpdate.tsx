@@ -13,6 +13,8 @@ import { useEffect } from "react";
 const UserUpdate = ({ userId }: { userId: string }) => {
   const [hasPermission] = useState<boolean>(true); //? Para mostrar u ocultar el formulario
 
+  const [isSubmitting, setIsSubmitting] = useState(false); // Estado para manejar el envío del formulario
+
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
 
@@ -75,29 +77,32 @@ const UserUpdate = ({ userId }: { userId: string }) => {
 
   //! actualizar el usuario
   const handleUpdateUser = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      const token = localStorage.getItem("token") || "";
-      const updatedUser = {
-        userName: users.userName,
-        password: users.password,
-        roleId: users.roleId,
-        isActive: users.isActive,
-        employeeId: users.employeeId,
-        currentPassword: users.currentPassword, // Si necesitas la contraseña actual para la actualización
-      };
-      //console.log("Datos del usuario a actualizar:", updatedUser);
-      const response = await updateUser(userId, updatedUser, token);
-      if (response) {
-        toast.success("Usuario actualizado correctamente", {
-          theme: "colored",
-        });
-      }
-    } catch (error) {
-      console.error("Error al actualizar el usuario:", error);
-      toast.error("Error al actualizar el usuario", { theme: "colored" });
+  e.preventDefault();
+  if (isSubmitting) return;
+  setIsSubmitting(true);
+  try {
+    const token = localStorage.getItem("token") || "";
+    const updatedUser = {
+      userName: users.userName,
+      password: users.password,
+      roleId: users.roleId,
+      isActive: users.isActive,
+      employeeId: users.employeeId,
+      currentPassword: users.currentPassword,
+    };
+    const response = await updateUser(userId, updatedUser, token);
+    if (response) {
+      toast.success("Usuario actualizado correctamente", {
+        theme: "colored",
+      });
     }
-  };
+  } catch (error) {
+    toast.error("Error al actualizar el usuario", { theme: "colored" });
+    console.error("Error al actualizar el usuario:", error);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   //! Manejar cambios en los campos de entrada
   const handleInputChange = (
