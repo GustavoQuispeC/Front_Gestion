@@ -1,4 +1,8 @@
-import { EmployeeListProps, EmployeeRegisterApiProps } from "@/types/employee";
+import {
+  EmployeeListProps,
+  EmployeeRegisterApiProps,
+  EmployeeSearchProps,
+} from "@/types/employee";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -97,3 +101,30 @@ export async function employeeCreate(formData: EmployeeRegisterApiProps) {
     throw error;
   }
 }
+
+//get employee by full name
+export const getEmployeeByFullname = async (
+  fullname: string
+): Promise<EmployeeSearchProps[]> => {
+  try {
+    const response = await fetch(
+      `${apiUrl}/employee/fullname?query=${encodeURIComponent(fullname)}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Error al obtener empleados: ${response.statusText}`);
+    }
+
+    const employeeData = await response.json();
+    return employeeData;
+  } catch (error) {
+    console.error("Error al obtener empleados:", error);
+    throw error;
+  }
+};

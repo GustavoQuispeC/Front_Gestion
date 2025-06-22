@@ -1,9 +1,31 @@
 "use client";
+import AsyncSelect from "react-select/async";
 import { useState } from "react";
-import { FcSearch } from "react-icons/fc";
+import { EmployeeSearchProps } from "@/types/employee";
+import { getEmployeeByFullname } from "@/helpers/employee.helpers";
 
 export default function EmployeeControl() {
-  const [nombres, setNombres] = useState("");
+  const [selectedEmployee, setSelectedEmployee] =
+    useState<EmployeeSearchProps | null>(null);
+
+  const loadOptions = async (inputValue: string) => {
+    if (inputValue.length < 1) return [];
+
+    try {
+      const data = await getEmployeeByFullname(inputValue);
+      if (!data || data.length === 0) return [];
+
+      // Formatear los datos para react-select
+      return data.map((empleado) => ({
+        label: `${empleado.firstName} ${empleado.lastNameFather} ${empleado.lastNameMother}`,
+        value: empleado.id,
+        ...empleado,
+      }));
+    } catch (error) {
+      console.error("Error cargando empleados", error);
+      return [];
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
@@ -19,39 +41,53 @@ export default function EmployeeControl() {
             >
               Apellidos y Nombres
             </label>
-            <input
-              type="text"
-              id="nombres"
-              value={nombres}
-              onChange={(e) => setNombres(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              placeholder="Ingrese nombre completo"
+            <AsyncSelect
+              cacheOptions
+              defaultOptions
+              loadOptions={loadOptions}
+              onChange={setSelectedEmployee}
+              placeholder="Ingrese apellidos o nombres"
+              className="mt-1"
+              styles={{
+                control: (base) => ({
+                  ...base,
+                  borderColor: "#d1d5db",
+                  boxShadow: "none",
+                }),
+              }}
             />
-          </div>
-          <div className="flex items-end">
-            <button className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">
-              Buscar1
-              <FcSearch className="text-xl" />
-            </button>
           </div>
         </div>
 
         {/* Datos del Empleado */}
-        <div className="mb-6">
-          <h5 className="text-lg font-semibold mb-2">Datos del Empleado</h5>
-          <p>
-            <strong>Nombre:</strong> Juan Pérez Gómez
-          </p>
-          <p>
-            <strong>DNI:</strong> 12345678
-          </p>
-          <p>
-            <strong>Cargo:</strong> Analista
-          </p>
-          <p>
-            <strong>Email:</strong> juan.perez@mail.com
-          </p>
-        </div>
+        {selectedEmployee && (
+          <div className="mb-6">
+            <h5 className="text-lg font-semibold mb-4">Datos del Empleado</h5>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <p>
+                  <strong>Nombre:</strong> {selectedEmployee.lastNameFather}{" "}
+                  {selectedEmployee.lastNameMother},{" "}
+                  {selectedEmployee.firstName}
+                </p>
+                <p>
+                  <strong>DNI:</strong>{" "}
+                  {selectedEmployee.documentNumber || "No disponible"}
+                </p>
+              </div>
+              <div>
+                <p>
+                  <strong>Cargo:</strong>{" "}
+                  {selectedEmployee.position || "No disponible"}
+                </p>
+                <p>
+                  <strong>Email:</strong>{" "}
+                  {selectedEmployee.email || "No disponible"}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Tabs */}
         <div className="tabs tabs-border">
@@ -124,6 +160,7 @@ export default function EmployeeControl() {
           <div className="tab-content border-base-300 bg-base-100 p-10">
             Tab content 3
           </div>
+
           <input
             type="radio"
             name="my_tabs_2"
@@ -133,6 +170,7 @@ export default function EmployeeControl() {
           <div className="tab-content border-base-300 bg-base-100 p-10">
             Tab content 3
           </div>
+
           <input
             type="radio"
             name="my_tabs_2"
