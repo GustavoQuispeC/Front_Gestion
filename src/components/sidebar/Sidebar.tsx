@@ -27,6 +27,12 @@ const menuItems = [
     title: "Usuarios",
     subTitle: "",
   },
+  {
+    path: "/dashboard/employeeControl",
+    icon: <FaUserCog size={28} />,
+    title: "Control de Empleados",
+    subTitle: "Gestión de empleados",
+  },
 ];
 
 type User = {
@@ -36,16 +42,16 @@ type User = {
 };
 
 export const Sidebar = () => {
-  const [user, setUser] = useState<User | null>(null); 
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     //obtenemos el usuario del localStorage
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser); 
+      setUser(parsedUser);
     }
-  }, []); 
+  }, []);
 
   if (!user) {
     return null; // Si no se ha cargado el usuario, no renderizamos nada
@@ -67,7 +73,7 @@ export const Sidebar = () => {
         <Link href="/perfil" className="inline-flex items-center space-x-2">
           <Image
             className="w-8 h-8 rounded-full"
-            src={user.photoUrl || "/images/default-avatar.png"} 
+            src={user.photoUrl || "/images/default-avatar.png"}
             alt="User avatar"
             width={50}
             height={50}
