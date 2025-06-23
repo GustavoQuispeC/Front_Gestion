@@ -101,6 +101,14 @@ export default function EmployeeControl() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700">
+                  Cantidad de dias:
+                </label>
+                <input
+                  type="number"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  
+                />
+                <label className="block text-sm font-medium text-gray-700">
                   Fecha Inicio
                 </label>
                 <input
