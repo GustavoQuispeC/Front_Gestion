@@ -128,3 +128,43 @@ export const getEmployeeByFullname = async (
     throw error;
   }
 };
+
+//Obtener el numero de dias de vacaciones de un empleado
+export const getEmployeeVacationDays = async (
+  employeeId: string
+): Promise<number> => {
+  try {
+    const response = await fetch(
+      `${apiUrl}/employee/vacation-days/${employeeId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        `Error al obtener los días de vacaciones: ${response.statusText}`
+      );
+    }
+
+    const data = await response.json();
+
+    // Ajuste: leer propiedad "VacationDays" del objeto
+    if (typeof data?.vacationDays !== "number") {
+      throw new Error(
+        "La respuesta del servidor no contiene un número válido de días de vacaciones"
+      );
+    }
+
+    return data.vacationDays;
+  } catch (error) {
+    console.error(
+      `Error al obtener los días de vacaciones para el empleado ${employeeId}:`,
+      error
+    );
+    throw error;
+  }
+};

@@ -1,13 +1,18 @@
 "use client";
 import AsyncSelect from "react-select/async";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { EmployeeSearchProps } from "@/types/employee";
-import { getEmployeeByFullname } from "@/helpers/employee.helpers";
+import {
+  getEmployeeByFullname,
+  getEmployeeVacationDays,
+} from "@/helpers/employee.helpers";
 
 export default function EmployeeControl() {
   const [selectedEmployee, setSelectedEmployee] =
     useState<EmployeeSearchProps | null>(null);
+  const [vacationDays, setVacationDays] = useState<number>(0);
 
+  // Función para cargar los empleados según el nombre completo ingresado
   const loadOptions = async (inputValue: string) => {
     if (inputValue.length < 1) return [];
 
@@ -26,6 +31,34 @@ export default function EmployeeControl() {
       return [];
     }
   };
+
+  //Obtener el numero de días de vacaciones del empleado seleccionado
+  const getVacationDays = async (employeeId: string): Promise<number> => {
+    try {
+      const vacationDays = await getEmployeeVacationDays(employeeId);
+      return vacationDays;
+    } catch (error) {
+      console.error(
+        "Error al obtener los días de vacaciones para el empleado ${employeeId}:",
+        error
+      );
+      return 0; // Retornar 0 en caso de error
+    }
+  };
+
+  // Efecto para obtener los días de vacaciones del empleado seleccionado
+  useEffect(() => {
+    const fetchVacationDays = async () => {
+      if (selectedEmployee) {
+        const days = await getVacationDays(selectedEmployee.id);
+        setVacationDays(days);
+      } else {
+        setVacationDays(0);
+      }
+    };
+
+    fetchVacationDays();
+  }, [selectedEmployee]);
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
@@ -85,6 +118,18 @@ export default function EmployeeControl() {
                   {selectedEmployee.email || "No disponible"}
                 </p>
               </div>
+              <div>
+                <strong>Fecha de Ingreso: </strong>
+                {selectedEmployee.hireDate
+                  ? new Date(selectedEmployee.hireDate).toLocaleDateString()
+                  : "No disponible"}
+              </div>
+              <div>
+                <p>
+                  <strong>Cantidad de dias de vacaciones: </strong>{" "}
+                </p>
+                {vacationDays} {vacationDays === 1 ? "día" : "días"}
+              </div>
             </div>
           </div>
         )}
@@ -100,14 +145,6 @@ export default function EmployeeControl() {
           <div className="tab-content border-base-300 bg-base-100 p-10">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Cantidad de dias:
-                </label>
-                <input
-                  type="number"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  
-                />
                 <label className="block text-sm font-medium text-gray-700">
                   Fecha Inicio
                 </label>

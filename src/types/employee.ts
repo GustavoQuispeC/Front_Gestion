@@ -74,12 +74,13 @@ export interface EmployeeListProps {
 }
 
 export interface EmployeeSearchProps {
-  id: number;
+  id: string;
   firstName: string;
   lastNameFather: string;
   lastNameMother: string;
   documentNumber: string;
   position: string;
   email: string;
+  hireDate : Date;
   
 }
