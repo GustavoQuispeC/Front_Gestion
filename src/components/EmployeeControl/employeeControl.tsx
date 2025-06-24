@@ -4,23 +4,31 @@ import AsyncSelect from "react-select/async";
 import { useEffect, useState } from "react";
 import { EmployeeSearchProps } from "@/types/employee";
 import { getEmployeeByFullname } from "@/helpers/employee.helper";
-import { GetVacationSummaryById } from "@/helpers/vacation.helper";
-import { VacationSummary } from "@/types/vacation";
+import {
+  GetVacationSummaryById,
+  VacationRegister,
+} from "@/helpers/vacation.helper";
+import { VacationRegisterProps, VacationSummary } from "@/types/vacation";
 
 export default function EmployeeControl() {
   const [selectedEmployee, setSelectedEmployee] =
     useState<EmployeeSearchProps | null>(null);
   const [vacationSummary, setVacationSummary] =
     useState<VacationSummary | null>(null);
+  const [isApproved, setIsApproved] = useState(false);
+  const [formData, setFormData] = useState({
+    startDate: "",
+    endDate: "",
+    reason: "",
+  });
+  const [token, setToken] = useState<string | null>(null);
 
-  // Obtener token local
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  useEffect(() => {
+    setToken(localStorage.getItem("token"));
+  }, []);
 
-  // Buscar empleados por nombre
   const loadOptions = async (inputValue: string) => {
     if (inputValue.length < 1) return [];
-
     try {
       const data = await getEmployeeByFullname(inputValue);
       return data.map((empleado) => ({
@@ -34,35 +42,76 @@ export default function EmployeeControl() {
     }
   };
 
-  // Obtener resumen de vacaciones
-  const fetchVacationSummary = async (employeeId: string) => {
-    try {
-      const summary = await GetVacationSummaryById(employeeId, token || "");
-      setVacationSummary(summary);
-    } catch (error) {
-      console.error(
-        `Error al obtener resumen de vacaciones para el empleado ${employeeId}:`,
-        error
-      );
-      setVacationSummary(null);
-    }
-  };
-
-  // Efecto al seleccionar empleado
   useEffect(() => {
+    const fetchVacationSummary = async (employeeId: string) => {
+      try {
+        const summary = await GetVacationSummaryById(employeeId, token || "");
+        setVacationSummary(summary);
+      } catch (error) {
+        console.error(
+          `Error al obtener resumen de vacaciones para el empleado ${employeeId}:`,
+          error
+        );
+        setVacationSummary(null);
+      }
+    };
+
     if (selectedEmployee) {
       fetchVacationSummary(selectedEmployee.id);
     } else {
       setVacationSummary(null);
     }
-  }, [selectedEmployee]);
+  }, [selectedEmployee, token]);
+
+  const calculateDaysRequested = (start: string, end: string): number => {
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    const diffTime = endDate.getTime() - startDate.getTime();
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+    return diffDays > 0 ? diffDays : 0;
+  };
+
+  const handleVacationRegister = async () => {
+    if (!selectedEmployee) return;
+
+    const daysRequested = calculateDaysRequested(
+      formData.startDate,
+      formData.endDate
+    );
+
+    const data: VacationRegisterProps = {
+      employeeId: selectedEmployee.id,
+      startDate: new Date(formData.startDate),
+      endDate: new Date(formData.endDate),
+      isApproved,
+      reason: formData.reason,
+      daysRequested,
+      daysTaken: daysRequested,
+      daysRemaining: 0,
+    };
+
+    try {
+      await VacationRegister(data, token || "");
+      console.log("Vacaciones registradas:", data);
+      alert("Vacaciones registradas con éxito.");
+      setFormData({ startDate: "", endDate: "", reason: "" });
+      setIsApproved(false);
+    } catch (error) {
+      console.error("Error al registrar vacaciones:", error);
+      alert(
+        "Error: " +
+          (error && typeof error === "object" && "message" in error
+            ? (error as { message: string }).message
+            : "Error al registrar vacaciones.")
+      );
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
       <div className="max-w-4xl mx-auto bg-white p-6 rounded-2xl shadow-md">
         <h2 className="text-2xl font-bold mb-6">Control de Personal</h2>
 
-        {/* Buscar Empleado */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div className="md:col-span-1">
             <label
@@ -89,7 +138,6 @@ export default function EmployeeControl() {
           </div>
         </div>
 
-        {/* Datos del Empleado */}
         {selectedEmployee && (
           <div className="mb-6">
             <h5 className="text-lg font-semibold mb-4">Datos del Empleado</h5>
@@ -133,7 +181,6 @@ export default function EmployeeControl() {
           </div>
         )}
 
-        {/* Tabs de gestión */}
         <div className="tabs tabs-border">
           <input
             type="radio"
@@ -149,6 +196,10 @@ export default function EmployeeControl() {
                 </label>
                 <input
                   type="date"
+                  value={formData.startDate}
+                  onChange={(e) =>
+                    setFormData({ ...formData, startDate: e.target.value })
+                  }
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 />
               </div>
@@ -158,6 +209,10 @@ export default function EmployeeControl() {
                 </label>
                 <input
                   type="date"
+                  value={formData.endDate}
+                  onChange={(e) =>
+                    setFormData({ ...formData, endDate: e.target.value })
+                  }
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 />
               </div>
@@ -167,17 +222,29 @@ export default function EmployeeControl() {
                 </label>
                 <input
                   type="text"
+                  value={formData.reason}
+                  onChange={(e) =>
+                    setFormData({ ...formData, reason: e.target.value })
+                  }
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 />
               </div>
               <div className="md:col-span-3">
                 <label className="inline-flex items-center">
-                  <input type="checkbox" className="form-checkbox" />
+                  <input
+                    type="checkbox"
+                    checked={isApproved}
+                    onChange={() => setIsApproved(!isApproved)}
+                    className="form-checkbox"
+                  />
                   <span className="ml-2 text-sm text-gray-700">Aprobado</span>
                 </label>
               </div>
               <div className="md:col-span-3">
-                <button className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700">
+                <button
+                  onClick={handleVacationRegister}
+                  className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700"
+                >
                   Guardar Vacaciones
                 </button>
               </div>
