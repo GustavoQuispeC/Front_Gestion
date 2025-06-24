@@ -1,7 +1,7 @@
 "use client";
 import { EmployeeListProps } from "@/types/employee";
 import { useState, useEffect } from "react";
-import { getAllEmployees } from "@/helpers/employee.helpers";
+import { getAllEmployees } from "@/helpers/employee.helper";
 import { toast } from "react-toastify";
 import { MdModeEditOutline } from "react-icons/md";
 import { FaEye, FaRegTrashAlt } from "react-icons/fa";

@@ -10,7 +10,7 @@ import {
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 
-import { employeeCreate } from "@/helpers/employee.helpers";
+import { employeeCreate } from "@/helpers/employee.helper";
 import { employeeValidateRegister } from "@/utils/employeeRegisterValidation";
 
 export default function RegisterEmployee() {

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { getEmployeeById } from "@/helpers/employee.helpers";
+import { getEmployeeById } from "@/helpers/employee.helper";
 import { EmployeeListProps } from "@/types/employee";
 import { useRouter } from "next/navigation";
 import Image from "next/image";

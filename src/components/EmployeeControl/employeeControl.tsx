@@ -1,63 +1,60 @@
 "use client";
+
 import AsyncSelect from "react-select/async";
 import { useEffect, useState } from "react";
 import { EmployeeSearchProps } from "@/types/employee";
-import {
-  getEmployeeByFullname,
-  getEmployeeVacationDays,
-} from "@/helpers/employee.helpers";
+import { getEmployeeByFullname } from "@/helpers/employee.helper";
+import { GetVacationSummaryById } from "@/helpers/vacation.helper";
+import { VacationSummary } from "@/types/vacation";
 
 export default function EmployeeControl() {
   const [selectedEmployee, setSelectedEmployee] =
     useState<EmployeeSearchProps | null>(null);
-  const [vacationDays, setVacationDays] = useState<number>(0);
+  const [vacationSummary, setVacationSummary] =
+    useState<VacationSummary | null>(null);
 
-  // Función para cargar los empleados según el nombre completo ingresado
+  // Obtener token local
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+  // Buscar empleados por nombre
   const loadOptions = async (inputValue: string) => {
     if (inputValue.length < 1) return [];
 
     try {
       const data = await getEmployeeByFullname(inputValue);
-      if (!data || data.length === 0) return [];
-
-      // Formatear los datos para react-select
       return data.map((empleado) => ({
         label: `${empleado.firstName} ${empleado.lastNameFather} ${empleado.lastNameMother}`,
         value: empleado.id,
         ...empleado,
       }));
     } catch (error) {
-      console.error("Error cargando empleados", error);
+      console.error("Error cargando empleados:", error);
       return [];
     }
   };
 
-  //Obtener el numero de días de vacaciones del empleado seleccionado
-  const getVacationDays = async (employeeId: string): Promise<number> => {
+  // Obtener resumen de vacaciones
+  const fetchVacationSummary = async (employeeId: string) => {
     try {
-      const vacationDays = await getEmployeeVacationDays(employeeId);
-      return vacationDays;
+      const summary = await GetVacationSummaryById(employeeId, token || "");
+      setVacationSummary(summary);
     } catch (error) {
       console.error(
-        "Error al obtener los días de vacaciones para el empleado ${employeeId}:",
+        `Error al obtener resumen de vacaciones para el empleado ${employeeId}:`,
         error
       );
-      return 0; // Retornar 0 en caso de error
+      setVacationSummary(null);
     }
   };
 
-  // Efecto para obtener los días de vacaciones del empleado seleccionado
+  // Efecto al seleccionar empleado
   useEffect(() => {
-    const fetchVacationDays = async () => {
-      if (selectedEmployee) {
-        const days = await getVacationDays(selectedEmployee.id);
-        setVacationDays(days);
-      } else {
-        setVacationDays(0);
-      }
-    };
-
-    fetchVacationDays();
+    if (selectedEmployee) {
+      fetchVacationSummary(selectedEmployee.id);
+    } else {
+      setVacationSummary(null);
+    }
   }, [selectedEmployee]);
 
   return (
@@ -126,15 +123,17 @@ export default function EmployeeControl() {
               </div>
               <div>
                 <p>
-                  <strong>Cantidad de dias de vacaciones: </strong>{" "}
+                  <strong>Vacaciones:</strong>
                 </p>
-                {vacationDays} {vacationDays === 1 ? "día" : "días"}
+                <p>Días acumulados: {vacationSummary?.accumulatedDays ?? 0}</p>
+                <p>Días tomados: {vacationSummary?.takenDays ?? 0}</p>
+                <p>Días disponibles: {vacationSummary?.remainingDays ?? 0}</p>
               </div>
             </div>
           </div>
         )}
 
-        {/* Tabs */}
+        {/* Tabs de gestión */}
         <div className="tabs tabs-border">
           <input
             type="radio"
@@ -213,7 +212,7 @@ export default function EmployeeControl() {
             aria-label="Descanso Médico"
           />
           <div className="tab-content border-base-300 bg-base-100 p-10">
-            Tab content 3
+            Tab content 4
           </div>
 
           <input
@@ -223,7 +222,7 @@ export default function EmployeeControl() {
             aria-label="Adelanto de Sueldo"
           />
           <div className="tab-content border-base-300 bg-base-100 p-10">
-            Tab content 3
+            Tab content 5
           </div>
         </div>
       </div>

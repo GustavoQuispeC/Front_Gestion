@@ -1,6 +1,6 @@
 "use client";
 
-import { getEmployeeByDocumentNumber } from "@/helpers/employee.helpers";
+import { getEmployeeByDocumentNumber } from "@/helpers/employee.helper";
 import { getAllRoles } from "@/helpers/role.helper";
 import { registerUser } from "@/helpers/user.helpers";
 import { RoleListProps } from "@/types/role";
@@ -119,10 +119,10 @@ const UserRegister = () => {
 
     //? Asignar datos de empleado a userRegister antes de enviar
     const userRegisterData: UserRegisterProps = {
-      employeeId: employeeData.employeeId, 
-      userName: userRegister.userName, 
-      email: employeeData.email, 
-      password: userRegister.password, 
+      employeeId: employeeData.employeeId,
+      userName: userRegister.userName,
+      email: employeeData.email,
+      password: userRegister.password,
       roleId: userRegister.roleId,
     };
 
@@ -132,7 +132,6 @@ const UserRegister = () => {
 
       if (response && response.message === "Usuario creado correctamente") {
         toast.success("Usuario registrado con éxito", { theme: "colored" });
-       
       } else {
         toast.error("Error al registrar el usuario", { theme: "colored" });
       }
