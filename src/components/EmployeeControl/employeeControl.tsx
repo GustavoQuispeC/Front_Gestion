@@ -9,6 +9,7 @@ import {
   VacationRegister,
 } from "@/helpers/vacation.helper";
 import { VacationRegisterProps, VacationSummary } from "@/types/vacation";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function EmployeeControl() {
   const [selectedEmployee, setSelectedEmployee] =
@@ -17,9 +18,14 @@ export default function EmployeeControl() {
     useState<VacationSummary | null>(null);
   const [isApproved, setIsApproved] = useState(false);
   const [formData, setFormData] = useState({
+    employeeId: 0,
     startDate: "",
     endDate: "",
     reason: "",
+    isApproved: false,
+    daysRequested: 0,
+    daysTaken: 0,
+    daysRemaining: 0,
   });
   const [token, setToken] = useState<string | null>(null);
 
@@ -80,7 +86,7 @@ export default function EmployeeControl() {
     );
 
     const data: VacationRegisterProps = {
-      employeeId: selectedEmployee.id,
+      employeeId: Number(selectedEmployee.id),
       startDate: new Date(formData.startDate),
       endDate: new Date(formData.endDate),
       isApproved,
@@ -92,18 +98,38 @@ export default function EmployeeControl() {
 
     try {
       await VacationRegister(data, token || "");
-      console.log("Vacaciones registradas:", data);
-      alert("Vacaciones registradas con éxito.");
-      setFormData({ startDate: "", endDate: "", reason: "" });
+
+      // 🟢 Toast de éxito
+      toast.success("Vacaciones registradas con éxito.");
+
+      // Obtener resumen actualizado
+      const summary = await GetVacationSummaryById(
+        selectedEmployee.id,
+        token || ""
+      );
+      setVacationSummary(summary);
+
+      // Limpiar formulario
+      setFormData({
+        employeeId: 0,
+        startDate: "",
+        endDate: "",
+        reason: "",
+        isApproved: false,
+        daysRequested: 0,
+        daysTaken: 0,
+        daysRemaining: 0,
+      });
       setIsApproved(false);
     } catch (error) {
       console.error("Error al registrar vacaciones:", error);
-      alert(
-        "Error: " +
-          (error && typeof error === "object" && "message" in error
-            ? (error as { message: string }).message
-            : "Error al registrar vacaciones.")
-      );
+
+      // 🔴 Toast de error
+      const errorMsg =
+        error && typeof error === "object" && "message" in error
+          ? (error as { message: string }).message
+          : "Error al registrar vacaciones.";
+      toast.error(errorMsg);
     }
   };
 
@@ -293,6 +319,7 @@ export default function EmployeeControl() {
           </div>
         </div>
       </div>
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 }

@@ -48,12 +48,23 @@ export async function VacationRegister(
       }),
     });
 
-   if (!response.ok) {
-  const error = await response.json(); 
-  throw new Error(error.message || "Error desconocido");
-}
+    const contentType = response.headers.get("content-type");
 
-    return await response.json();
+    if (!response.ok) {
+      if (contentType && contentType.includes("application/json")) {
+        const error = await response.json();
+        throw new Error(error.message || "Error desconocido");
+      } else {
+        const text = await response.text();
+        throw new Error(text || "Error desconocido");
+      }
+    }
+
+    if (contentType && contentType.includes("application/json")) {
+      return await response.json();
+    } else {
+      return await response.text(); // por si solo devuelve texto como "Vacaciones registradas correctamente"
+    }
   } catch (error) {
     console.error("Error al registrar las vacaciones:", error);
     throw error;

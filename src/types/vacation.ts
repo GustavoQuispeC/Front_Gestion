@@ -6,17 +6,6 @@ export interface VacationSummary {
 }
 
 export interface VacationRegisterProps {
-  employeeId: string;
-  startDate: Date;
-  endDate: Date;
-  isApproved: boolean;
-  daysRequested: number;
-  daysTaken: number;
-  daysRemaining: number;
-  reason: string;
-}
-
-export interface VacationRegisterErrorProps {
   employeeId: number;
   startDate: Date;
   endDate: Date;
@@ -26,3 +15,14 @@ export interface VacationRegisterErrorProps {
   daysRemaining: number;
   reason: string;
 }
+
+// export interface VacationRegisterErrorProps {
+//   employeeId: number;
+//   startDate: Date;
+//   endDate: Date;
+//   isApproved: boolean;
+//   daysRequested: number;
+//   daysTaken: number;
+//   daysRemaining: number;
+//   reason: string;
+// }
