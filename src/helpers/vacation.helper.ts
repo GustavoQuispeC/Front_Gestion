@@ -70,3 +70,29 @@ export async function VacationRegister(
     throw error;
   }
 }
+
+//Listar vacaciones por id de empleado
+export async function GetVacationsByEmployeeId(
+  userId: string,
+  token: string
+): Promise<VacationRegisterProps[]> {
+  try {
+    const response = await fetch(`${apiUrl}/Vacation/employee/${userId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error en la solicitud: " + response.statusText);
+    }
+
+    const json = (await response.json()) as VacationRegisterProps[];
+    return json;
+  } catch (error) {
+    console.error("Error al obtener las vacaciones:", error);
+    throw error;
+  }
+}

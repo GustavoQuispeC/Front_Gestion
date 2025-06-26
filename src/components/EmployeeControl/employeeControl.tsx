@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { EmployeeSearchProps } from "@/types/employee";
 import { getEmployeeByFullname } from "@/helpers/employee.helper";
 import {
+  GetVacationsByEmployeeId,
   GetVacationSummaryById,
   VacationRegister,
 } from "@/helpers/vacation.helper";
@@ -28,6 +29,9 @@ export default function EmployeeControl() {
     daysRemaining: 0,
   });
   const [token, setToken] = useState<string | null>(null);
+  const [employeeVacations, setEmployeeVacations] = useState<
+    VacationRegisterProps[]
+  >([]);
 
   useEffect(() => {
     setToken(localStorage.getItem("token"));
@@ -48,6 +52,16 @@ export default function EmployeeControl() {
     }
   };
 
+  const fetchEmployeeVacations = async (employeeId: string) => {
+    try {
+      const vacations = await GetVacationsByEmployeeId(employeeId, token || "");
+      setEmployeeVacations(vacations);
+    } catch (error) {
+      console.error("Error al obtener vacaciones del empleado:", error);
+      setEmployeeVacations([]);
+    }
+  };
+
   useEffect(() => {
     const fetchVacationSummary = async (employeeId: string) => {
       try {
@@ -64,8 +78,10 @@ export default function EmployeeControl() {
 
     if (selectedEmployee) {
       fetchVacationSummary(selectedEmployee.id);
+      fetchEmployeeVacations(selectedEmployee.id);
     } else {
       setVacationSummary(null);
+      setEmployeeVacations([]);
     }
   }, [selectedEmployee, token]);
 
@@ -99,17 +115,20 @@ export default function EmployeeControl() {
     try {
       await VacationRegister(data, token || "");
 
-      // 🟢 Toast de éxito
       toast.success("Vacaciones registradas con éxito.");
 
-      // Obtener resumen actualizado
       const summary = await GetVacationSummaryById(
         selectedEmployee.id,
         token || ""
       );
       setVacationSummary(summary);
 
-      // Limpiar formulario
+      const updatedVacations = await GetVacationsByEmployeeId(
+        selectedEmployee.id,
+        token || ""
+      );
+      setEmployeeVacations(updatedVacations);
+
       setFormData({
         employeeId: 0,
         startDate: "",
@@ -123,8 +142,6 @@ export default function EmployeeControl() {
       setIsApproved(false);
     } catch (error) {
       console.error("Error al registrar vacaciones:", error);
-
-      // 🔴 Toast de error
       const errorMsg =
         error && typeof error === "object" && "message" in error
           ? (error as { message: string }).message
@@ -273,6 +290,50 @@ export default function EmployeeControl() {
                 >
                   Guardar Vacaciones
                 </button>
+              </div>
+
+              <div className="md:col-span-3 overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200 mt-4">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+                        Fecha Inicio
+                      </th>
+                      <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+                        Fecha Fin
+                      </th>
+                      <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+                        Días Solicitados
+                      </th>
+                      <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+                        Motivo
+                      </th>
+                      <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+                        Aprobado
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {employeeVacations.map((vacation, index) => (
+                      <tr key={index}>
+                        <td className="px-4 py-2">
+                          {new Date(vacation.startDate).toLocaleDateString()}
+                        </td>
+                        <td className="px-4 py-2">
+                          {new Date(vacation.endDate).toLocaleDateString()}
+                        </td>
+                        <td className="px-4 py-2">{vacation.daysRequested}</td>
+                        <td className="px-4 py-2">{vacation.reason}</td>
+                        <td className="px-4 py-2">
+                          <input
+                            type="checkbox"
+                            checked={vacation.isApproved}
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
