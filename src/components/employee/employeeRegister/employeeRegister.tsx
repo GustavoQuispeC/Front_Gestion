@@ -1,5 +1,7 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { uploadImage } from "@/helpers/uploadImageToFirebase";
 import {
   EmployeeRegisterApiProps,
@@ -60,7 +62,7 @@ export default function RegisterEmployee() {
     return submitted && error[field] === "";
   };
 
-  // Funcion para manejar el cambio de los inputs
+  // Funcion para manejar el cambio de los Inputs
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -162,7 +164,7 @@ export default function RegisterEmployee() {
     }
   }, [formData, submitted]);
 
-  // Funcion para manejar el cambio de los input files
+  // Funcion para manejar el cambio de los Input files
   useEffect(() => {
     return () => {
       if (previewUrl) {
@@ -186,13 +188,13 @@ export default function RegisterEmployee() {
             <label htmlFor="firstName" className="mb-1 text-sm font-medium">
               Nombres
             </label>
-            <input
+            <Input
               type="text"
               id="firstName"
               name="firstName"
               value={formData.firstName}
               onChange={handleChange}
-              className="input input-info w-full"
+              className="w-full"
             />
             {submitted && error.firstName && (
               <p className="text-red-500 text-sm mt-1">{error.firstName}</p>
@@ -210,13 +212,13 @@ export default function RegisterEmployee() {
             >
               Apellido Paterno
             </label>
-            <input
+            <Input
               type="text"
               id="lastNameFather"
               name="lastNameFather"
               value={formData.lastNameFather}
               onChange={handleChange}
-              className="input input-info w-full"
+              className="Input Input-info w-full"
             />
             {submitted && error.lastNameFather && (
               <p className="text-red-500 text-sm mt-1">
@@ -236,13 +238,13 @@ export default function RegisterEmployee() {
             >
               Apellido Materno
             </label>
-            <input
+            <Input
               type="text"
               id="lastNameMother"
               name="lastNameMother"
               value={formData.lastNameMother}
               onChange={handleChange}
-              className="input input-info w-full"
+              className="Input Input-info w-full"
             />
             {submitted && error.lastNameMother && (
               <p className="text-red-500 text-sm mt-1">
@@ -259,13 +261,13 @@ export default function RegisterEmployee() {
             <label htmlFor="birthDate" className="mb-1 text-sm font-medium">
               Fecha de Nacimiento
             </label>
-            <input
+            <Input
               type="date"
               id="birthDate"
               name="birthDate"
               value={formData.birthDate.toISOString().split("T")[0]}
               onChange={handleChange}
-              className="input input-info w-full"
+              className="Input Input-info w-full"
               onKeyDown={(e) => e.preventDefault()}
             />
             {submitted && error.birthDate && (
@@ -286,7 +288,7 @@ export default function RegisterEmployee() {
               name="documentType"
               value={formData.documentType}
               onChange={handleChange}
-              className="input input-info w-full"
+              className="Input Input-info w-full"
             >
               <option value="">Seleccione</option>
               <option value="D.N.I.">DNI</option>
@@ -311,13 +313,13 @@ export default function RegisterEmployee() {
             >
               Número de Documento
             </label>
-            <input
+            <Input
               type="text"
               id="documentNumber"
               name="documentNumber"
               value={formData.documentNumber}
               onChange={handleChange}
-              className="input input-info w-full"
+              className="Input Input-info w-full"
               maxLength={8}
             />
             {submitted && error.documentNumber && (
@@ -340,7 +342,7 @@ export default function RegisterEmployee() {
               name="gender"
               value={formData.gender}
               onChange={handleChange}
-              className="input input-info w-full"
+              className="Input Input-info w-full"
             >
               <option value="">Seleccione</option>
               <option value="masculino">Masculino</option>
@@ -359,13 +361,13 @@ export default function RegisterEmployee() {
             <label htmlFor="phone" className="mb-1 text-sm font-medium">
               Teléfono
             </label>
-            <input
+            <Input
               type="text"
               id="phone"
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              className="input input-info w-full"
+              className="Input Input-info w-full"
               maxLength={9}
             />
             {submitted && error.phone && (
@@ -384,13 +386,13 @@ export default function RegisterEmployee() {
             >
               Teléfono de Emergencia
             </label>
-            <input
+            <Input
               type="text"
               id="emergencyPhone"
               name="emergencyPhone"
               value={formData.emergencyPhone}
               onChange={handleChange}
-              className="input input-info w-full"
+              className="Input Input-info w-full"
               maxLength={9}
             />
             {submitted && error.emergencyPhone && (
@@ -408,13 +410,13 @@ export default function RegisterEmployee() {
             <label htmlFor="correo" className="mb-1 text-sm font-medium">
               Correo Electrónico
             </label>
-            <input
+            <Input
               type="email"
               id="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="input input-info w-full"
+              className="Input Input-info w-full"
             />
             {submitted && error.email && (
               <p className="text-red-500 text-sm mt-1">{error.email}</p>
@@ -429,13 +431,13 @@ export default function RegisterEmployee() {
             <label htmlFor="direccion" className="mb-1 text-sm font-medium">
               Dirección
             </label>
-            <input
+            <Input
               type="text"
               id="address"
               name="address"
               value={formData.address}
               onChange={handleChange}
-              className="input input-info w-full"
+              className="Input Input-info w-full"
             />
             {submitted && error.address && (
               <p className="text-red-500 text-sm mt-1">{error.address}</p>
@@ -450,13 +452,13 @@ export default function RegisterEmployee() {
             <label htmlFor="position" className="mb-1 text-sm font-medium">
               Cargo
             </label>
-            <input
+            <Input
               type="text"
               id="position"
               name="position"
               value={formData.position}
               onChange={handleChange}
-              className="input input-info w-full"
+              className="Input Input-info w-full"
             />
             {submitted && error.position && (
               <p className="text-red-500 text-sm mt-1">{error.position}</p>
@@ -471,13 +473,13 @@ export default function RegisterEmployee() {
             <label htmlFor="hireDate" className="mb-1 text-sm font-medium">
               Fecha de Contratación
             </label>
-            <input
+            <Input
               type="date"
               id="hireDate"
               name="hireDate"
               value={formData.hireDate.toISOString().split("T")[0]}
               onChange={handleChange}
-              className="input input-info w-full"
+              className="Input Input-info w-full"
               onKeyDown={(e) => e.preventDefault()}
             />
             {submitted && error.hireDate && (
@@ -498,7 +500,7 @@ export default function RegisterEmployee() {
               name="contractType"
               value={formData.contractType}
               onChange={handleChange}
-              className="input input-info w-full"
+              className="Input Input-info w-full"
             >
               <option value="">Seleccione</option>
               <option value="indeterminado">Indeterminado</option>
@@ -523,14 +525,14 @@ export default function RegisterEmployee() {
             Adjuntar Foto de Empleado
           </label>
 
-          <input
+          <Input
             type="file"
             id="photoUrl"
             name="photoUrl"
             accept="image/*"
             onChange={handleChange}
-            className={`file-input file-input-info w-full ${
-              submitted && error.photoUrl ? "input-error" : "input-info"
+            className={`file-Input file-Input-info w-full ${
+              submitted && error.photoUrl ? "Input-error" : "Input-info"
             }`}
           />
 
@@ -562,13 +564,13 @@ export default function RegisterEmployee() {
 
         {/* Botón de enviar */}
         <div className="mt-6 text-center">
-          <button
+          <Button
             type="submit"
             disabled={isLoading}
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 disabled:opacity-50"
+            // className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 disabled:opacity-50"
           >
             {isLoading ? "Guardando..." : "Registrar"}
-          </button>
+          </Button>
         </div>
       </form>
       <ToastContainer
