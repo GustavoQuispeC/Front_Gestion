@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { uploadImage } from "@/helpers/uploadImageToFirebase";
@@ -14,12 +13,32 @@ import { toast, ToastContainer } from "react-toastify";
 
 import { employeeCreate } from "@/helpers/employee.helper";
 import { employeeValidateRegister } from "@/utils/employeeRegisterValidation";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { ChevronDownIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
 
 export default function RegisterEmployee() {
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
+  const [open2, setOpen2] = useState(false);
+  const [date, setDate] = useState<Date | undefined>(undefined);
+  const [date2, setDate2] = useState<Date | undefined>(undefined);
 
   const [formData, setFormData] = useState<EmployeeRegisterProps>({
     firstName: "",
@@ -185,9 +204,9 @@ export default function RegisterEmployee() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 mx-10">
           {/* Nombres */}
           <div className="flex flex-col">
-            <label htmlFor="firstName" className="mb-1 text-sm font-medium">
+            <Label htmlFor="firstName" className="mb-1 text-sm font-medium">
               Nombres
-            </label>
+            </Label>
             <Input
               type="text"
               id="firstName"
@@ -206,12 +225,12 @@ export default function RegisterEmployee() {
 
           {/* Apellido Paterno */}
           <div className="flex flex-col">
-            <label
+            <Label
               htmlFor="lastNameFather"
               className="mb-1 text-sm font-medium"
             >
               Apellido Paterno
-            </label>
+            </Label>
             <Input
               type="text"
               id="lastNameFather"
@@ -232,12 +251,12 @@ export default function RegisterEmployee() {
 
           {/* Apellido Materno */}
           <div className="flex flex-col">
-            <label
+            <Label
               htmlFor="lastNameMother"
               className="mb-1 text-sm font-medium"
             >
               Apellido Materno
-            </label>
+            </Label>
             <Input
               type="text"
               id="lastNameMother"
@@ -258,18 +277,43 @@ export default function RegisterEmployee() {
 
           {/* Fecha de Nacimiento */}
           <div className="flex flex-col">
-            <label htmlFor="birthDate" className="mb-1 text-sm font-medium">
+            <Label htmlFor="birthDate" className="mb-1 text-sm font-medium">
               Fecha de Nacimiento
-            </label>
-            <Input
-              type="date"
-              id="birthDate"
-              name="birthDate"
-              value={formData.birthDate.toISOString().split("T")[0]}
-              onChange={handleChange}
-              className="Input Input-info w-full"
-              onKeyDown={(e) => e.preventDefault()}
-            />
+            </Label>
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  id="date"
+                  className="w-full justify-between font-normal"
+                >
+                  {formData.birthDate
+                    ? new Date(formData.birthDate).toLocaleDateString()
+                    : "Seleccione la fecha"}
+                  <ChevronDownIcon />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent
+                className="w-auto overflow-hidden p-0"
+                align="start"
+              >
+                <Calendar
+                  mode="single"
+                  selected={date}
+                  captionLayout="dropdown"
+                  onSelect={(selectedDate) => {
+                    setDate(selectedDate);
+                    // Al seleccionar una fecha, actualizamos formData.birthDate
+                    setFormData((prev) => ({
+                      ...prev,
+                      birthDate: selectedDate || prev.birthDate,
+                    }));
+                    setOpen(false);
+                  }}
+                />
+              </PopoverContent>
+            </Popover>
+
             {submitted && error.birthDate && (
               <p className="text-red-500 text-sm mt-1">{error.birthDate}</p>
             )}
@@ -280,23 +324,31 @@ export default function RegisterEmployee() {
 
           {/* Tipo de Documento */}
           <div className="flex flex-col">
-            <label htmlFor="documentType" className="mb-1 text-sm font-medium">
+            <Label htmlFor="documentType" className="mb-1 text-sm font-medium">
               Tipo de Documento
-            </label>
-            <select
-              id="documentType"
-              name="documentType"
+            </Label>
+            <Select
               value={formData.documentType}
-              onChange={handleChange}
-              className="Input Input-info w-full"
+              onValueChange={(value) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  documentType: value,
+                }))
+              }
             >
-              <option value="">Seleccione</option>
-              <option value="D.N.I.">DNI</option>
-              <option value="pasaporte">Pasaporte</option>
-              <option value="carnet de Extranjeria">
-                Carnet de Extranjería
-              </option>
-            </select>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Seleccione documento" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="DNI">DNI</SelectItem>
+                  <SelectItem value="Pasaporte">Pasaporte</SelectItem>
+                  <SelectItem value="Carnet de Extranjeria">
+                    Carnet de Extranjeria
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
             {submitted && error.documentType && (
               <p className="text-red-500 text-sm mt-1">{error.documentType}</p>
             )}
@@ -307,12 +359,12 @@ export default function RegisterEmployee() {
 
           {/* Documento */}
           <div className="flex flex-col">
-            <label
+            <Label
               htmlFor="documentNumber"
               className="mb-1 text-sm font-medium"
             >
               Número de Documento
-            </label>
+            </Label>
             <Input
               type="text"
               id="documentNumber"
@@ -334,33 +386,41 @@ export default function RegisterEmployee() {
 
           {/* Género */}
           <div className="flex flex-col">
-            <label htmlFor="gender" className="mb-1 text-sm font-medium">
+            <Label htmlFor="documentType" className="mb-1 text-sm font-medium">
               Género
-            </label>
-            <select
-              id="gender"
-              name="gender"
+            </Label>
+            <Select
               value={formData.gender}
-              onChange={handleChange}
-              className="Input Input-info w-full"
+              onValueChange={(value) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  documentType: value,
+                }))
+              }
             >
-              <option value="">Seleccione</option>
-              <option value="masculino">Masculino</option>
-              <option value="femenino">Femenino</option>
-            </select>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Seleccione género" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="masculino">Masculino</SelectItem>
+                  <SelectItem value="femenino">Femenino</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
             {submitted && error.gender && (
               <p className="text-red-500 text-sm mt-1">{error.gender}</p>
             )}
-            {isValidField("gender") && (
+            {isValidField("documentType") && (
               <p className="text-green-600 text-sm mt-1">Completado ✅</p>
             )}
           </div>
 
           {/* Teléfono */}
           <div className="flex flex-col">
-            <label htmlFor="phone" className="mb-1 text-sm font-medium">
+            <Label htmlFor="phone" className="mb-1 text-sm font-medium">
               Teléfono
-            </label>
+            </Label>
             <Input
               type="text"
               id="phone"
@@ -380,12 +440,12 @@ export default function RegisterEmployee() {
 
           {/* Teléfono Emergencia */}
           <div className="flex flex-col">
-            <label
+            <Label
               htmlFor="emergencyPhone"
               className="mb-1 text-sm font-medium"
             >
               Teléfono de Emergencia
-            </label>
+            </Label>
             <Input
               type="text"
               id="emergencyPhone"
@@ -407,9 +467,9 @@ export default function RegisterEmployee() {
 
           {/* Correo */}
           <div className="flex flex-col">
-            <label htmlFor="correo" className="mb-1 text-sm font-medium">
+            <Label htmlFor="correo" className="mb-1 text-sm font-medium">
               Correo Electrónico
-            </label>
+            </Label>
             <Input
               type="email"
               id="email"
@@ -428,9 +488,9 @@ export default function RegisterEmployee() {
 
           {/* Dirección */}
           <div className="flex flex-col">
-            <label htmlFor="direccion" className="mb-1 text-sm font-medium">
+            <Label htmlFor="direccion" className="mb-1 text-sm font-medium">
               Dirección
-            </label>
+            </Label>
             <Input
               type="text"
               id="address"
@@ -449,9 +509,9 @@ export default function RegisterEmployee() {
 
           {/* Cargo */}
           <div className="flex flex-col">
-            <label htmlFor="position" className="mb-1 text-sm font-medium">
+            <Label htmlFor="position" className="mb-1 text-sm font-medium">
               Cargo
-            </label>
+            </Label>
             <Input
               type="text"
               id="position"
@@ -469,48 +529,82 @@ export default function RegisterEmployee() {
           </div>
 
           {/* Fecha de Contratación */}
+
           <div className="flex flex-col">
-            <label htmlFor="hireDate" className="mb-1 text-sm font-medium">
+            <Label htmlFor="hireDate" className="mb-1 text-sm font-medium">
               Fecha de Contratación
-            </label>
-            <Input
-              type="date"
-              id="hireDate"
-              name="hireDate"
-              value={formData.hireDate.toISOString().split("T")[0]}
-              onChange={handleChange}
-              className="Input Input-info w-full"
-              onKeyDown={(e) => e.preventDefault()}
-            />
+            </Label>
+            <Popover open={open2} onOpenChange={setOpen2}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  id="date"
+                  className="w-full justify-between font-normal"
+                >
+                  {formData.hireDate
+                    ? new Date(formData.hireDate).toLocaleDateString()
+                    : "Seleccione fecha"}
+                  <ChevronDownIcon />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent
+                className="w-auto overflow-hidden p-0"
+                align="start"
+              >
+                <Calendar
+                  mode="single"
+                  selected={date2}
+                  captionLayout="dropdown"
+                  onSelect={(selectedDate) => {
+                    setDate2(selectedDate);
+                    // Al seleccionar una fecha, actualizamos formData.birthDate
+                    setFormData((prev) => ({
+                      ...prev,
+                      hireDate: selectedDate || prev.hireDate,
+                    }));
+                    setOpen2(false);
+                  }}
+                />
+              </PopoverContent>
+            </Popover>
+
             {submitted && error.hireDate && (
               <p className="text-red-500 text-sm mt-1">{error.hireDate}</p>
             )}
-            {isValidField("hireDate") && (
+            {isValidField("birthDate") && (
               <p className="text-green-600 text-sm mt-1">Completado ✅</p>
             )}
           </div>
 
           {/* Tipo de Contrato */}
           <div className="flex flex-col">
-            <label htmlFor="contractType" className="mb-1 text-sm font-medium">
+            <Label htmlFor="documentType" className="mb-1 text-sm font-medium">
               Tipo de Contrato
-            </label>
-            <select
-              id="contractType"
-              name="contractType"
+            </Label>
+            <Select
               value={formData.contractType}
-              onChange={handleChange}
-              className="Input Input-info w-full"
+              onValueChange={(value) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  documentType: value,
+                }))
+              }
             >
-              <option value="">Seleccione</option>
-              <option value="indeterminado">Indeterminado</option>
-              <option value="plazoFijo">Plazo Fijo</option>
-              <option value="practicas">Prácticas</option>
-            </select>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Seleccione tipo" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="indeterminado">Indeterminado</SelectItem>
+                  <SelectItem value="plazoFijo">Plazo Fijo</SelectItem>
+                  <SelectItem value="prácticas">Prácticas</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
             {submitted && error.contractType && (
               <p className="text-red-500 text-sm mt-1">{error.contractType}</p>
             )}
-            {isValidField("contractType") && (
+            {isValidField("documentType") && (
               <p className="text-green-600 text-sm mt-1">Completado ✅</p>
             )}
           </div>
@@ -518,12 +612,9 @@ export default function RegisterEmployee() {
 
         {/* Adjuntar Foto de Empleado */}
         <div className="flex flex-col mx-10">
-          <label
-            htmlFor="photoUrl"
-            className="text-base text-slate-900 font-medium mb-3 block"
-          >
-            Adjuntar Foto de Empleado
-          </label>
+          <Label htmlFor="photoUrl" className="font-medium mb-3 block">
+            Adjuntar foto de Empleado
+          </Label>
 
           <Input
             type="file"
