@@ -3,10 +3,27 @@ import { EmployeeListProps } from "@/types/employee";
 import { useState, useEffect } from "react";
 import { getAllEmployees } from "@/helpers/employee.helper";
 import { toast } from "react-toastify";
-import { MdModeEditOutline } from "react-icons/md";
-import { FaEye, FaRegTrashAlt } from "react-icons/fa";
 import Link from "next/link";
-import { IoAddCircle } from "react-icons/io5";
+
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import {
+  BadgeCheckIcon,
+  BadgeX,
+  CirclePlus,
+  Eye,
+  Pencil,
+  Trash2,
+} from "lucide-react";
 
 export default function EmployeeList() {
   const [employees, setEmployees] = useState<EmployeeListProps[]>([]);
@@ -30,94 +47,87 @@ export default function EmployeeList() {
   return (
     <div className="p-6">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-slate-800 mb-2">
-          Lista de empleados
-        </h1>
+        <h2 className="text-xl font-bold mb-2">Lista de empleados</h2>
 
         <Link
           href="/dashboard/employeeRegister"
-          className=" inline-flex items-center text-orange-600 hover:underline font-small font-semibold text-base"
+          className=" inline-flex items-center text-blue-600 hover:underline font-small font-semibold text-base"
         >
-          <IoAddCircle size={24} color="#e74c3c" className="mr-1" />
+          <CirclePlus size={24} color="#1f58db" className="mr-1" />
           Nuevo
         </Link>
       </div>
 
       <div className="overflow-x-auto bg-white shadow-lg rounded-lg p-4">
-        <table className="min-w-full">
-          <thead className="bg-blue-700 text-white">
-            <tr>
-              <th className="p-1 text-left text-sm font-small">Id</th>
-              <th className="p-1 text-left text-sm font-small">A. Paterno</th>
-              <th className="p-1 text-left text-sm font-small">A. Materno</th>
-              <th className="p-1 text-left text-sm font-small">Nombres</th>
-              <th className="p-1 text-left text-sm font-small">
-                F. Nacimiento
-              </th>
-              <th className="p-1 text-left text-sm font-small">T. documento</th>
-              <th className="p-1 text-left text-sm font-small">
-                Num. documento
-              </th>
-              <th className="p-1 text-left text-sm font-small">Teléfono</th>
-              <th className="p-1 text-left text-sm font-small">Estado</th>
-              <th className="p-1 text-left text-sm font-small">Acciones</th>
-            </tr>
-          </thead>
-          <tbody className="whitespace-nowrap">
-            {employees.map((employee) => (
-              <tr className="hover:bg-gray-100" key={employee.id}>
-                <td className="p-1 text-slate-900 font-small">{employee.id}</td>
-                <td className="p-1 text-slate-900 font-small">
-                  {employee.lastNameFather}
-                </td>
-                <td className="p-1 text-slate-900 font-small">
-                  {employee.lastNameMother}
-                </td>
-                <td className="p-1 text-slate-900 font-small">
-                  {employee.firstName}
-                </td>
-                <td className="p-1 text-slate-900 font-small">
-                  {new Date(employee.birthDate).toLocaleDateString()}
-                </td>
-                <td className="p-1 text-slate-900 font-small">
-                  {employee.documentType}
-                </td>
-                <td className="p-1 text-slate-900 font-small">
-                  {employee.documentNumber}
-                </td>
-                <td className="p-1 text-slate-900 font-small">
-                  {employee.phone}
-                </td>
-                <td className="p-1 text-slate-900 font-small">
-                  <button
-                    className={`px-2 py-0.5 rounded-xl border-2 ${
-                      employee.isActive
+        <Table>
+          <TableCaption>Listado de empleados</TableCaption>
+          <TableHeader className="font-extrabold">
+            <TableRow>
+              <TableHead className="w-[100px]">Id</TableHead>
+              <TableHead>A. Paterno</TableHead>
+              <TableHead>A. Materno</TableHead>
+              <TableHead>Nombres</TableHead>
+              <TableHead>F. Nacimiento</TableHead>
+              <TableHead>T. documento</TableHead>
+              <TableHead>Num. documento</TableHead>
+              <TableHead>Teléfono</TableHead>
+              <TableHead>Estado</TableHead>
+              <TableHead className="text-center">Acciones</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {employees.map((e) => (
+              <TableRow key={e.id}>
+                <TableCell className="font-medium">{e.id}</TableCell>
+                <TableCell>{e.lastNameFather}</TableCell>
+                <TableCell>{e.lastNameMother}</TableCell>
+                <TableCell>{e.firstName}</TableCell>
+                <TableCell>
+                  {new Date(e.birthDate).toLocaleDateString()}
+                </TableCell>
+                <TableCell>{e.documentType}</TableCell>
+                <TableCell>{e.documentNumber}</TableCell>
+                <TableCell>{e.phone}</TableCell>
+
+                <TableCell>
+                  <Badge
+                    className={`mt-0.5${
+                      e.isActive
                         ? "border-green-200 text-green-500 bg-green-50 font-semibold"
-                        : "border-red-500 text-red-500 bg-red-50"
+                        : "border-red-200 text-red-500 bg-red-50 font-semibold"
                     }`}
                   >
-                    {employee.isActive ? "Activo" : "Inactivo"}
-                  </button>
-                </td>
-                <td className="p-1 text-slate-900 font-small">
-                  <div className="flex items-center">
-                    <Link href={`/dashboard/employeeView/${employee.id}`}>
+                    {e.isActive ? <BadgeCheckIcon /> : <BadgeX />}
+                    {e.isActive ? "Activo" : "Inactivo"}
+                  </Badge>
+                </TableCell>
+                <TableCell className="text-right">
+                  <div className="flex items-center justify-end space-x-2">
+                    <Link href={`/dashboard/employeeView/${e.id}`}>
                       <button className="mr-3" title="Ver">
-                        <FaEye size={18} color="#575553" />
+                        <Eye size={18} />
                       </button>
                     </Link>
                     <button className="mr-3" title="Editar">
-                      <MdModeEditOutline size={18} color="#16cfe4" />
+                      <Pencil size={18} color="#1f58db" />
                     </button>
                     <button title="Eliminar">
-                      <FaRegTrashAlt size={18} color="#f3240d" />
+                      <Trash2 size={18} color="#f3240d" />
                     </button>
                   </div>
-                </td>
-              </tr>
+                </TableCell>
+
+                <TableCell className="text-right">{""}</TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TableCell colSpan={3}></TableCell>
+              <TableCell className="text-right"></TableCell>
+            </TableRow>
+          </TableFooter>
+        </Table>
       </div>
     </div>
   );
