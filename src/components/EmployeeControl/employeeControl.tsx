@@ -15,6 +15,18 @@ import { VacationRegisterProps, VacationSummary } from "@/types/vacation";
 import EmployeeSelect from "./subcomponentes/EmployeeSelect";
 import EmployeeDetails from "./subcomponentes/EmployeeDetails";
 import VacationTable from "./subcomponentes/VacationTable";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 
 export default function EmployeeControl() {
   const [selectedEmployee, setSelectedEmployee] =
@@ -222,49 +234,49 @@ export default function EmployeeControl() {
                 </button>
               </div>
             </div>
-
-            <VacationTable vacations={employeeVacations} />
-          </div>
-
-          <input
-            type="radio"
-            name="my_tabs_2"
-            className="tab"
-            aria-label="Faltas"
-            defaultChecked
-          />
-          <div className="tab-content border-base-300 bg-base-100 p-10">
-            Tab content 2
-          </div>
-
-          <input
-            type="radio"
-            name="my_tabs_2"
-            className="tab"
-            aria-label="Permisos"
-          />
-          <div className="tab-content border-base-300 bg-base-100 p-10">
-            Tab content 3
-          </div>
-
-          <input
-            type="radio"
-            name="my_tabs_2"
-            className="tab"
-            aria-label="Descanso Médico"
-          />
-          <div className="tab-content border-base-300 bg-base-100 p-10">
-            Tab content 4
-          </div>
-
-          <input
-            type="radio"
-            name="my_tabs_2"
-            className="tab"
-            aria-label="Adelanto de Sueldo"
-          />
-          <div className="tab-content border-base-300 bg-base-100 p-10">
-            Tab content 5
+            <Tabs defaultValue="account">
+              <TabsList>
+                <TabsTrigger value="vacation">Vacaciones</TabsTrigger>
+                <TabsTrigger value="absence">Faltas</TabsTrigger>
+              </TabsList>
+              <TabsContent value="vacation">
+                  
+                <Card>
+                  <CardHeader>
+                    <CardDescription>
+                      Detalle de las vacaciones del empleado seleccionado.
+                    </CardDescription>
+                  </CardHeader>
+                  <VacationTable vacations={employeeVacations} />
+                </Card>
+              </TabsContent>
+              <TabsContent value="absence">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Password</CardTitle>
+                    <CardDescription>
+                      Change your password here. After saving, you&apos;ll be
+                      logged out.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="grid gap-6">
+                    <div className="grid gap-3">
+                      <Label htmlFor="tabs-demo-current">
+                        Current password
+                      </Label>
+                      <Input id="tabs-demo-current" type="password" />
+                    </div>
+                    <div className="grid gap-3">
+                      <Label htmlFor="tabs-demo-new">New password</Label>
+                      <Input id="tabs-demo-new" type="password" />
+                    </div>
+                  </CardContent>
+                  <CardFooter>
+                    <Button>Save password</Button>
+                  </CardFooter>
+                </Card>
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
       </div>

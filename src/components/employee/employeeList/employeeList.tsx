@@ -10,7 +10,6 @@ import {
   TableBody,
   TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -24,6 +23,11 @@ import {
   Pencil,
   Trash2,
 } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function EmployeeList() {
   const [employees, setEmployees] = useState<EmployeeListProps[]>([]);
@@ -47,14 +51,14 @@ export default function EmployeeList() {
   return (
     <div className="p-6">
       <div className="mb-6">
-        <h2 className="text-xl font-bold mb-2">Lista de empleados</h2>
+        <h2 className="text-xl font-bold mb-2">Listado de empleados</h2>
 
         <Link
           href="/dashboard/employeeRegister"
           className=" inline-flex items-center text-blue-600 hover:underline font-small font-semibold text-base"
         >
-          <CirclePlus size={24} color="#1f58db" className="mr-1" />
-          Nuevo
+          <CirclePlus size={18} color="#1f58db" className="mr-1" />
+          Agregar
         </Link>
       </div>
 
@@ -101,19 +105,40 @@ export default function EmployeeList() {
                     {e.isActive ? "Activo" : "Inactivo"}
                   </Badge>
                 </TableCell>
-                <TableCell className="text-right">
+                <TableCell className="text-center">
                   <div className="flex items-center justify-end space-x-2">
-                    <Link href={`/dashboard/employeeView/${e.id}`}>
-                      <button className="mr-3" title="Ver">
-                        <Eye size={18} />
-                      </button>
-                    </Link>
-                    <button className="mr-3" title="Editar">
-                      <Pencil size={18} color="#1f58db" />
-                    </button>
-                    <button title="Eliminar">
-                      <Trash2 size={18} color="#f3240d" />
-                    </button>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Link href={`/dashboard/employeeView/${e.id}`}>
+                          <button className="mr-3" title="Ver">
+                            <Eye size={18} />
+                          </button>
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Ver detalle</p>
+                      </TooltipContent>
+                    </Tooltip>
+
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button className="mr-3" title="Editar">
+                          <Pencil size={18} color="#2e5ecf" />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Editar</p>
+                      </TooltipContent>
+                    </Tooltip>
+
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button title="Eliminar">
+                          <Trash2 size={18} color="#f2341b" />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>Eliminar</TooltipContent>
+                    </Tooltip>
                   </div>
                 </TableCell>
 
@@ -121,12 +146,12 @@ export default function EmployeeList() {
               </TableRow>
             ))}
           </TableBody>
-          <TableFooter>
+          {/* <TableFooter>
             <TableRow>
               <TableCell colSpan={3}></TableCell>
               <TableCell className="text-right"></TableCell>
             </TableRow>
-          </TableFooter>
+          </TableFooter> */}
         </Table>
       </div>
     </div>

@@ -1,14 +1,33 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { deleteUser, getAllUsers } from "@/helpers/user.helpers";
 import { UserListProps } from "@/types/user";
+import {
+  BadgeCheckIcon,
+  BadgeX,
+  CirclePlus,
+  Eye,
+  Pencil,
+  Trash2,
+} from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { FaEye, FaRegTrashAlt } from "react-icons/fa";
-import { IoAddCircle } from "react-icons/io5";
-import { MdModeEditOutline } from "react-icons/md";
 import { toast } from "react-toastify";
-
 import Swal from "sweetalert2";
 
 export default function UserList() {
@@ -112,103 +131,132 @@ export default function UserList() {
       ) : (
         <>
           <div className="mb-6">
-            <h1 className="text-3xl font-bold text-slate-800 mb-2">
+            <h2 className="text-xl font-bold text-slate-800 mb-2">
               Listado de Usuarios
-            </h1>
+            </h2>
 
             <Link
               href="/dashboard/userRegister"
-              className="inline-flex text-orange-600 items-cente hover:underline font-semibold text-base"
+              className=" inline-flex items-center text-blue-600 hover:underline font-small font-semibold text-base"
             >
-              <IoAddCircle size={24} color="#e74c3c" className="mr-1" />
-              Nuevo
+              <CirclePlus size={18} color="#1f58db" className="mr-1" />
+              Agregar
             </Link>
           </div>
 
           <div className="overflow-x-auto bg-white shadow-lg rounded-lg p-4">
-            <table className="min-w-full">
-              <thead className="bg-blue-700 text-white">
-                <tr>
-                  <th className="p-1 text-left text-sm font-small">Id</th>
-                  <th className="p-1 text-left text-sm font-small">
-                    Apellidos y Nombres
-                  </th>
-                  <th className="p-1 text-left text-sm font-small">Correo</th>
-                  <th className="p-1 text-left text-sm font-small">Estado</th>
-                  <th className="p-1 text-left text-sm font-small">Rol</th>
-                  <th className="p-1 text-left text-sm font-small">Cargo</th>
-                  <th className="p-1 text-left text-sm font-small">Creado</th>
-                  <th className="p-1 text-left text-sm font-small">Acciones</th>
-                </tr>
-              </thead>
-              <tbody className="whitespace-nowrap">
-                {users.map((user) => (
-                  <tr className="hover:bg-gray-100" key={user.id}>
-                    <td className="p-1 text-slate-900 font-small">
-                      {user.employeeId}
-                    </td>
-                    <td className="p-1 text-slate-900 font-small">
-                      {user.lastNameFather} {user.lastNameMother}{" "}
-                      {user.firstName}
-                    </td>
-                    <td className="p-1 text-slate-900 font-medium">
-                      {user.email || user.email}
-                    </td>
-                    <td className="p-3 text-slate-900 font-medium">
-                      <button
-                        className={`px-2 py-0.5 rounded-xl border-2 font-semibold ${
-                          user.isActive
-                            ? "border-green-200 text-green-500 bg-green-50"
-                            : "border-red-500 text-red-500 bg-red-50"
+            <Table>
+              <TableCaption>Listado de usuarios</TableCaption>
+              <TableHeader className="font-extrabold">
+                <TableRow>
+                  <TableHead className="w-[100px]">Id</TableHead>
+                  <TableHead> Apellidos y Nombres</TableHead>
+                  <TableHead>Correo</TableHead>
+                  <TableHead>Estado</TableHead>
+                  <TableHead>Rol</TableHead>
+                  <TableHead>Cargo</TableHead>
+                  <TableHead>Creado</TableHead>
+                  <TableHead className="text-center">Acciones</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {users.map((u) => (
+                  <TableRow key={u.id}>
+                    <TableCell className="font-medium">
+                      {u.employeeId}
+                    </TableCell>
+                    <TableCell>
+                      {u.lastNameFather} {u.lastNameMother} {u.firstName}
+                    </TableCell>
+                    <TableCell>{u.email || u.email}</TableCell>
+                    <TableCell>
+                      <Badge
+                        className={`mt-0.5${
+                          u.isActive
+                            ? "border-green-200 text-green-500 bg-green-50 font-semibold"
+                            : "border-red-200 text-red-500 bg-red-50 font-semibold"
                         }`}
                       >
-                        {user.isActive ? "Activo" : "Inactivo"}
-                      </button>
-                    </td>
-                    <td className="p-1 text-slate-900 font-small">
-                      {user.roleName}
-                    </td>
-                    <td className="p-1 text-slate-900 font-small">
-                      {user.position}
-                    </td>
-                    <td className="p-1 text-slate-900 font-small">
-                      {new Date(user.createdAt).toLocaleDateString()}
-                    </td>
-                    <td className="p-1 text-slate-900 font-small">
-                      <div className="flex items-center">
-                        <Link href={`/dashboard/employeeView/${user.id}`}>
-                          <button className="mr-3" title="Ver">
-                            <FaEye size={18} color="#575553" />
-                          </button>
-                        </Link>
+                        {u.isActive ? <BadgeCheckIcon /> : <BadgeX />}
+                        {u.isActive ? "Activo" : "Inactivo"}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>{u.roleName}</TableCell>
+                    <TableCell>{u.position}</TableCell>
+                    <TableCell>
+                      {new Date(u.createdAt).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <div className="flex items-center justify-end space-x-2">
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Link href={`/dashboard/employeeView/${u.id}`}>
+                              <button className="mr-3" title="Ver">
+                                <Eye size={18} />
+                              </button>
+                            </Link>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Ver detalle</p>
+                          </TooltipContent>
+                        </Tooltip>
 
-                        <Link href={`/dashboard/userUpdate/${user.id}`}>
-                          <button className="mr-3" title="Editar">
-                            <MdModeEditOutline size={18} color="#16cfe4" />
-                          </button>
-                        </Link>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Link href={`/dashboard/userUpdate/${u.id}`}>
+                              <button className="mr-3" title="Editar">
+                                <Pencil size={18} color="#2e5ecf" />
+                              </button>
+                            </Link>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Editar</p>
+                          </TooltipContent>
+                        </Tooltip>
 
-                        {user.isActive ? (
-                          <span
-                            onClick={() => handleDeleteUser(user.id)}
-                            className="cursor-pointer"
-                            title="Eliminar"
-                          >
-                            <FaRegTrashAlt size={18} color="#f3240d" />
-                          </span>
+                        {u.isActive ? (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <span
+                                onClick={() => handleDeleteUser(u.id)}
+                                className="cursor-pointer"
+                                tabIndex={0}
+                                role="button"
+                                aria-label="Eliminar"
+                              >
+                                <Trash2 size={18} color="#f3240d" />
+                              </span>
+                            </TooltipTrigger>
+                            <TooltipContent>Eliminar</TooltipContent>
+                          </Tooltip>
                         ) : (
-                          <FaRegTrashAlt
-                            size={18}
-                            className="opacity-30 cursor-not-allowed"
-                            title="Usuario inactivo"
-                          />
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <span
+                                className="opacity-30 cursor-not-allowed"
+                                tabIndex={-1}
+                                aria-disabled="true"
+                              >
+                                <Trash2 size={18} />
+                              </span>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              No se puede eliminar
+                            </TooltipContent>
+                          </Tooltip>
                         )}
                       </div>
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+              {/* <TableFooter>
+                <TableRow>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
+                </TableRow>
+              </TableFooter> */}
+            </Table>
           </div>
         </>
       )}

@@ -5,6 +5,7 @@ import {
   AudioWaveform,
   CircleUserRound,
   Command,
+  FolderCog,
   Frame,
   GalleryVerticalEnd,
   Map,
@@ -88,6 +89,17 @@ const data = {
         {
           title: "Registro de Usuarios",
           url: "/dashboard/userRegister",
+        },
+      ],
+    },
+    {
+      title: "Control",
+      url: "#",
+      icon: FolderCog,
+      items: [
+        {
+          title: "Control de empleados",
+          url: "/dashboard/employeeControl",
         },
       ],
     },
