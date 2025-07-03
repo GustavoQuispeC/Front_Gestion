@@ -3,7 +3,11 @@
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { getEmployeeByFullname } from "@/helpers/employee.helper";
-import {GetVacationSummaryById,GetVacationsByEmployeeId,VacationRegister,} from "@/helpers/vacation.helper";
+import {
+  GetVacationSummaryById,
+  GetVacationsByEmployeeId,
+  VacationRegister,
+} from "@/helpers/vacation.helper";
 import { EmployeeSearchProps } from "@/types/employee";
 import { VacationRegisterProps, VacationSummary } from "@/types/vacation";
 import {
@@ -34,7 +38,7 @@ export default function EmployeeControl() {
   const [date1, setDate1] = useState<Date | undefined>(undefined);
   const [open2, setOpen2] = useState(false);
   const [date2, setDate2] = useState<Date | undefined>(undefined);
-// Estados para manejar el empleado seleccionado, resumen de vacaciones y lista de vacaciones
+  // Estados para manejar el empleado seleccionado, resumen de vacaciones y lista de vacaciones
   const [selectedEmployee, setSelectedEmployee] =
     useState<EmployeeSearchProps | null>(null);
   const [vacationSummary, setVacationSummary] =
@@ -165,179 +169,209 @@ export default function EmployeeControl() {
   };
 
   return (
-    <div className="min-h-screen  py-8 ">
-      <div className="max-w-4xl mx-auto bg-white p-6 rounded-2xl shadow-md">
-        <h2 className="text-2xl font-bold mb-6">Control de Personal</h2>
+    <>
+      <form className="w-full mx-auto mt-6 p-6 min-h-screen flex flex-col mb-24">
+        <div className="mx-24 p-12 bg-gray-50 rounded-2xl">
+          <h2 className="text-2xl font-bold mb-2">Control de Personal</h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <EmployeeSelect
-            onChange={setSelectedEmployee}
-            loadOptions={loadOptions}
-          />
-        </div>
+          {/* Employee Select */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <EmployeeSelect
+              onChange={setSelectedEmployee}
+              loadOptions={loadOptions}
+            />
+          </div>
 
-        {selectedEmployee && (
-          <EmployeeDetails
-            employee={selectedEmployee}
-            summary={vacationSummary}
-          />
-        )}
+          {selectedEmployee && (
+            <EmployeeDetails
+              employee={selectedEmployee}
+              summary={vacationSummary}
+            />
+          )}
 
-        <div className="tabs tabs-border">
-          <div className="tab-content border-base-300 bg-base-100 p-10">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              {/* Fecha de inicio */}
-              <div>
-                <Label htmlFor="start-date" className="px-1">
-                  Fecha de inicio
-                </Label>
-                <Popover open={open1} onOpenChange={setOpen1}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      id="start-date"
-                      className="w-full justify-between font-normal"
+          {/* Main Form */}
+          <div className="tabs tabs-border flex-1">
+            <div className="tab-content border-base-300 bg-base-100">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                {/* Fecha de inicio */}
+                <div>
+                  <Label htmlFor="start-date" className="py-2">
+                    Fecha de inicio
+                  </Label>
+                  <Popover open={open1} onOpenChange={setOpen1}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        id="start-date"
+                        className="w-full justify-between font-normal"
+                      >
+                        {date1
+                          ? date1.toLocaleDateString()
+                          : "Seleccionar fecha"}
+                        <ChevronDownIcon />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent
+                      className="w-auto overflow-hidden p-0"
+                      align="start"
                     >
-                      {date1 ? date1.toLocaleDateString() : "Seleccionar fecha"}
-                      <ChevronDownIcon />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent
-                    className="w-auto overflow-hidden p-0"
-                    align="start"
-                  >
-                    <Calendar
-                      mode="single"
-                      selected={date1}
-                      captionLayout="dropdown"
-                      onSelect={(selectedDate) => {
-                        if (selectedDate) {
-                          setDate1(selectedDate);
-                          setFormData((prev) => ({
-                            ...prev,
-                            startDate: selectedDate.toLocaleDateString("sv-SE"), // 'YYYY-MM-DD'
-                          }));
-                        }
-                        setOpen1(false);
-                      }}
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
+                      <Calendar
+                        mode="single"
+                        selected={date1}
+                        captionLayout="dropdown"
+                        onSelect={(selectedDate) => {
+                          if (selectedDate) {
+                            setDate1(selectedDate);
+                            setFormData((prev) => ({
+                              ...prev,
+                              startDate:
+                                selectedDate.toLocaleDateString("sv-SE"), // 'YYYY-MM-DD'
+                            }));
+                          }
+                          setOpen1(false);
+                        }}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
 
-              {/* Fecha de fin */}
-              <div>
-                <Label htmlFor="end-date" className="px-1">
-                  Fecha de fin
-                </Label>
-                <Popover open={open2} onOpenChange={setOpen2}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      id="end-date"
-                      className="w-full justify-between font-normal"
+                {/* Fecha de fin */}
+                <div>
+                  <Label htmlFor="end-date" className="py-2">
+                    Fecha de fin
+                  </Label>
+                  <Popover open={open2} onOpenChange={setOpen2}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        id="end-date"
+                        className="w-full justify-between font-normal"
+                      >
+                        {date2
+                          ? date2.toLocaleDateString()
+                          : "Seleccionar fecha"}
+                        <ChevronDownIcon />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent
+                      className="w-auto overflow-hidden p-0"
+                      align="start"
                     >
-                      {date2 ? date2.toLocaleDateString() : "Seleccionar fecha"}
-                      <ChevronDownIcon />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent
-                    className="w-auto overflow-hidden p-0"
-                    align="start"
-                  >
-                    <Calendar
-                      mode="single"
-                      selected={date2}
-                      captionLayout="dropdown"
-                      onSelect={(selectedDate) => {
-                        if (selectedDate) {
-                          setDate2(selectedDate);
-                          setFormData((prev) => ({
-                            ...prev,
-                            endDate: selectedDate.toLocaleDateString("sv-SE"), // 'YYYY-MM-DD'
-                          }));
-                        }
-                        setOpen2(false);
-                      }}
-                    />
-                  </PopoverContent>
-                </Popover>
+                      <Calendar
+                        mode="single"
+                        selected={date2}
+                        captionLayout="dropdown"
+                        onSelect={(selectedDate) => {
+                          if (selectedDate) {
+                            setDate2(selectedDate);
+                            setFormData((prev) => ({
+                              ...prev,
+                              endDate: selectedDate.toLocaleDateString("sv-SE"), // 'YYYY-MM-DD'
+                            }));
+                          }
+                          setOpen2(false);
+                        }}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
+                {/* Motivo */}
+                <div>
+                  <Label htmlFor="reason" className="py-2">
+                    Motivo
+                  </Label>
+                  <Input
+                    type="text"
+                    value={formData.reason}
+                    onChange={(e) =>
+                      setFormData({ ...formData, reason: e.target.value })
+                    }
+                  />
+                </div>
+
+                {/* Checkbox de Aprobado */}
+                <div className="flex items-center gap-3 mb-4">
+                  <Checkbox
+                    id="aprobado"
+                    checked={isApproved}
+                    onCheckedChange={() => setIsApproved(!isApproved)}
+                  />
+                  <Label htmlFor="aprobado">Aprobado</Label>
+                </div>
+
+                {/* Botón para guardar vacaciones */}
+                <div className="md:col-span-3 mb-4">
+                  <Button onClick={handleVacationRegister}>
+                    Guardar Vacaciones
+                  </Button>
+                </div>
               </div>
 
-              <div>
-                <Label htmlFor="reason" className="px-1">
-                  Motivo
-                </Label>
-                <Input
-                  type="text"
-                  value={formData.reason}
-                  onChange={(e) =>
-                    setFormData({ ...formData, reason: e.target.value })
-                  }
-                  
-                />
-              </div>
-              <div className="flex items-center gap-3">
-                <Checkbox
-                  id="aprobado"
-                  checked={isApproved}
-                  onCheckedChange={() => setIsApproved(!isApproved)}
-                />
-                <Label htmlFor="aprobado">Aprobado</Label>
-              </div>
+              {/* Sección de Tabs */}
+              <Tabs defaultValue="vacation">
+                <TabsList>
+                  <TabsTrigger value="vacation">Vacaciones</TabsTrigger>
+                  <TabsTrigger value="absence">Faltas</TabsTrigger>
+                </TabsList>
 
-              <div className="md:col-span-3">
-                <Button onClick={handleVacationRegister}>
-                  Guardar Vacaciones
-                </Button>
-              </div>
+                {/* Tab de Vacaciones */}
+                <TabsContent value="vacation">
+                  <Card>
+                    <CardHeader>
+                      <CardDescription>
+                        Detalle de las vacaciones del empleado seleccionado.
+                      </CardDescription>
+                    </CardHeader>
+                    <VacationTable vacations={employeeVacations} />
+                  </Card>
+                </TabsContent>
+
+                {/* Tab de Faltas */}
+                <TabsContent value="absence">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Faltas</CardTitle>
+                      <CardDescription>
+                        Cambia tu contraseña aquí. Después de guardar, se
+                        cerrará la sesión.
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="grid gap-6">
+                      <div className="grid gap-3">
+                        <Label htmlFor="tabs-demo-current">
+                          Contraseña actual
+                        </Label>
+                        <Input id="tabs-demo-current" type="password" />
+                      </div>
+                      <div className="grid gap-3">
+                        <Label htmlFor="tabs-demo-new">Nueva contraseña</Label>
+                        <Input id="tabs-demo-new" type="password" />
+                      </div>
+                    </CardContent>
+                    <CardFooter>
+                      <Button>Guardar contraseña</Button>
+                    </CardFooter>
+                  </Card>
+                </TabsContent>
+              </Tabs>
             </div>
-            <Tabs defaultValue="account">
-              <TabsList>
-                <TabsTrigger value="vacation">Vacaciones</TabsTrigger>
-                <TabsTrigger value="absence">Faltas</TabsTrigger>
-              </TabsList>
-              <TabsContent value="vacation">
-                <Card>
-                  <CardHeader>
-                    <CardDescription>
-                      Detalle de las vacaciones del empleado seleccionado.
-                    </CardDescription>
-                  </CardHeader>
-                  <VacationTable vacations={employeeVacations} />
-                </Card>
-              </TabsContent>
-              <TabsContent value="absence">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Password</CardTitle>
-                    <CardDescription>
-                      Change your password here. After saving, you&apos;ll be
-                      logged out.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="grid gap-6">
-                    <div className="grid gap-3">
-                      <Label htmlFor="tabs-demo-current">
-                        Current password
-                      </Label>
-                      <Input id="tabs-demo-current" type="password" />
-                    </div>
-                    <div className="grid gap-3">
-                      <Label htmlFor="tabs-demo-new">New password</Label>
-                      <Input id="tabs-demo-new" type="password" />
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button>Save password</Button>
-                  </CardFooter>
-                </Card>
-              </TabsContent>
-            </Tabs>
           </div>
         </div>
-      </div>
-      <ToastContainer position="top-right" autoClose={3000} />
-    </div>
+
+        {/* Toast Notification */}
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+      </form>
+    </>
   );
 }
