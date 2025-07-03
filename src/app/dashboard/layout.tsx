@@ -1,12 +1,12 @@
 "use client";
 
 import { ReactNode } from "react";
-import { AppSidebar } from "@/components/app-sidebar"; 
+import { AppSidebar } from "@/components/app-sidebar";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar"; 
+} from "@/components/ui/sidebar";
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <SidebarProvider>
@@ -18,11 +18,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-          <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min">
-            <div className="flex flex-col w-full">
-              {children}
-            </div>
-          </div>
+          {/* <div className="bg-muted/50 flex-1 rounded-xl md:min-h-min overflow-auto"> */}
+          <div className="flex flex-col w-full">{children}</div>
+          {/* </div> */}
         </div>
       </SidebarInset>
     </SidebarProvider>
