@@ -18,7 +18,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           </div>
         </header>
 
-        <div >{children}</div>
+        <div className="m-4">{children}</div>
 
       </SidebarInset>
     </SidebarProvider>

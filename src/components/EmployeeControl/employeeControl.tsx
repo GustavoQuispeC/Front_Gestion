@@ -1,6 +1,6 @@
 "use client";
-
 import { useEffect, useState } from "react";
+import { useCallback } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { getEmployeeByFullname } from "@/helpers/employee.helper";
 import {
@@ -18,15 +18,15 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { Checkbox } from "../ui/checkbox";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { ChevronDownIcon } from "lucide-react";
-import { Calendar } from "../ui/calendar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Label } from "../ui/label";
+import { Calendar } from "../ui/calendar";
 import { Input } from "../ui/input";
+import { Checkbox } from "../ui/checkbox";
 import { Button } from "../ui/button";
-import { useCallback } from "react";
+
 // Subcomponentes
 import EmployeeSelect from "./subcomponentes/EmployeeSelect";
 import EmployeeDetails from "./subcomponentes/EmployeeDetails";
@@ -170,12 +170,14 @@ export default function EmployeeControl() {
 
   return (
     <>
-      <form className="w-full mx-auto mt-6 p-6 min-h-screen flex flex-col mb-24">
-        <div className="mx-24 p-12 bg-gray-50 rounded-2xl">
-          <h2 className="text-2xl font-bold mb-2">Control de Personal</h2>
+      <form className="w-full mx-auto mt-6 p-10 min-h-screen flex flex-col mb-24">
+        <div className="mx-4 sm:mx-8 md:mx-12 p-4 sm:p-6 md:p-12 bg-gray-50 rounded-2xl">
+          <h2 className="text-2xl font-bold mb-4 text-center md:text-left">
+            Control de Personal
+          </h2>
 
           {/* Employee Select */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
             <EmployeeSelect
               onChange={setSelectedEmployee}
               loadOptions={loadOptions}
@@ -192,7 +194,7 @@ export default function EmployeeControl() {
           {/* Main Form */}
           <div className="tabs tabs-border flex-1">
             <div className="tab-content border-base-300 bg-base-100">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
                 {/* Fecha de inicio */}
                 <div>
                   <Label htmlFor="start-date" className="py-2">
@@ -291,20 +293,13 @@ export default function EmployeeControl() {
                 </div>
 
                 {/* Checkbox de Aprobado */}
-                <div className="flex items-center gap-3 mb-4">
+                <div className="flex items-center gap-3 mb-4 col-span-1 sm:col-span-2 md:col-span-1">
                   <Checkbox
                     id="aprobado"
                     checked={isApproved}
                     onCheckedChange={() => setIsApproved(!isApproved)}
                   />
                   <Label htmlFor="aprobado">Aprobado</Label>
-                </div>
-
-                {/* Botón para guardar vacaciones */}
-                <div className="md:col-span-3 mb-4">
-                  <Button onClick={handleVacationRegister}>
-                    Guardar Vacaciones
-                  </Button>
                 </div>
               </div>
 
@@ -323,7 +318,13 @@ export default function EmployeeControl() {
                         Detalle de las vacaciones del empleado seleccionado.
                       </CardDescription>
                     </CardHeader>
-                    <VacationTable vacations={employeeVacations} />
+                    {/* Botón para guardar vacaciones */}
+                    <div className="col-span-1 sm:col-span-2 md:col-span-3 mb-4 mx-5">
+                      <Button onClick={handleVacationRegister}>
+                        Guardar Vacaciones
+                      </Button>
+                      <VacationTable vacations={employeeVacations} />
+                    </div>
                   </Card>
                 </TabsContent>
 
