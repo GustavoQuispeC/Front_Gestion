@@ -7,6 +7,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { ToastContainer } from "react-toastify";
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <SidebarProvider>
@@ -21,6 +22,17 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         <div className="m-4">{children}</div>
 
       </SidebarInset>
+       <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </SidebarProvider>
   );
 }

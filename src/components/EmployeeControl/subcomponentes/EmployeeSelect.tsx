@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import AsyncSelect from "react-select/async";
 import { EmployeeSearchProps } from "@/types/employee";
 
@@ -7,6 +8,17 @@ interface Props {
 }
 
 export default function EmployeeSelect({ onChange, loadOptions }: Props) {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    // Set isClient to true once the component is mounted in the client
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return null; // O renderiza un loader/placeholder si lo deseas
+  }
+
   return (
     <div className="md:col-span-1">
       <label

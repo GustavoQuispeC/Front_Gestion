@@ -7,6 +7,24 @@ interface Props {
 }
 
 export default function EmployeeDetails({ employee, summary }: Props) {
+  const formatHireDate = (date: string | Date | undefined) => {
+    if (!date) return "No disponible";
+    const dateObj = typeof date === "string" ? new Date(date) : date;
+    return dateObj.toLocaleDateString("es-ES");
+  };
+
+  const getVacationDetails = (summary: VacationSummary | null) => {
+    if (!summary) return <p>No disponible</p>;
+    
+    return (
+      <>
+        <p>Días acumulados: {summary.accumulatedDays ?? 0}</p>
+        <p>Días tomados: {summary.takenDays ?? 0}</p>
+        <p>Días disponibles: {summary.remainingDays ?? 0}</p>
+      </>
+    );
+  };
+
   return (
     <div className="mb-6">
       <h5 className="text-lg font-semibold mb-4">Datos del Empleado</h5>
@@ -14,8 +32,7 @@ export default function EmployeeDetails({ employee, summary }: Props) {
         {/* Información del empleado */}
         <div>
           <p>
-            <strong>Nombre:</strong> {employee.lastNameFather}{" "}
-            {employee.lastNameMother}, {employee.firstName}
+            <strong>Nombre:</strong> {employee.lastNameFather} {employee.lastNameMother}, {employee.firstName}
           </p>
           <p>
             <strong>DNI:</strong> {employee.documentNumber || "No disponible"}
@@ -34,23 +51,13 @@ export default function EmployeeDetails({ employee, summary }: Props) {
         {/* Fecha de Ingreso */}
         <div>
           <strong>Fecha de Ingreso: </strong>
-          {employee.hireDate
-            ? new Date(employee.hireDate).toLocaleDateString("es-ES")
-            : "No disponible"}
+          {formatHireDate(employee.hireDate)}
         </div>
 
         {/* Vacaciones */}
         <div>
           <strong>Vacaciones:</strong>
-          {summary ? (
-            <>
-              <p>Días acumulados: {summary.accumulatedDays ?? 0}</p>
-              <p>Días tomados: {summary.takenDays ?? 0}</p>
-              <p>Días disponibles: {summary.remainingDays ?? 0}</p>
-            </>
-          ) : (
-            <p>No disponible</p>
-          )}
+          {getVacationDetails(summary)}
         </div>
       </div>
     </div>

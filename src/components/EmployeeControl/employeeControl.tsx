@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useCallback } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { getEmployeeByFullname } from "@/helpers/employee.helper";
 import {
   GetVacationSummaryById,
@@ -170,8 +170,8 @@ export default function EmployeeControl() {
 
   return (
     <>
-      <form className="w-full mx-auto mt-6 p-10 min-h-screen flex flex-col mb-24">
-        <div className="mx-4 sm:mx-8 md:mx-12 p-4 sm:p-6 md:p-12 bg-gray-50 rounded-2xl">
+      <form className="w-full mx-auto mt-6 p-4 min-h-screen flex flex-col mb-24">
+        <div className="mx-4 sm:mx-8 md:mx-12 p-4 sm:p-2 md:p-6 bg-gray-100 rounded-2xl">
           <h2 className="text-2xl font-bold mb-4 text-center md:text-left">
             Control de Personal
           </h2>
@@ -320,7 +320,7 @@ export default function EmployeeControl() {
                     </CardHeader>
                     {/* Botón para guardar vacaciones */}
                     <div className="col-span-1 sm:col-span-2 md:col-span-3 mb-4 mx-5">
-                      <Button onClick={handleVacationRegister}>
+                      <Button className="my-2" onClick={handleVacationRegister}>
                         Guardar Vacaciones
                       </Button>
                       <VacationTable vacations={employeeVacations} />
@@ -359,19 +359,6 @@ export default function EmployeeControl() {
             </div>
           </div>
         </div>
-
-        {/* Toast Notification */}
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-        />
       </form>
     </>
   );
