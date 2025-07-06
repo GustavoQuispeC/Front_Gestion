@@ -1,30 +1,42 @@
+import { AbsenceSummary } from "@/types/absence";
 import { EmployeeSearchProps } from "@/types/employee";
 import { VacationSummary } from "@/types/vacation";
 
 interface Props {
   employee: EmployeeSearchProps;
-  summary: VacationSummary | null;
+  summaryVacation: VacationSummary | null;
+  summaryAbsence: AbsenceSummary | null;
 }
 
-export default function EmployeeDetails({ employee, summary }: Props) {
-  const formatHireDate = (date: string | Date | undefined) => {
-    if (!date) return "No disponible";
-    const dateObj = typeof date === "string" ? new Date(date) : date;
-    return dateObj.toLocaleDateString("es-ES");
-  };
+function VacationInfo({ summary }: { summary: VacationSummary | null }) {
+  if (!summary) return <p>No disponible</p>;
 
-  const getVacationDetails = (summary: VacationSummary | null) => {
-    if (!summary) return <p>No disponible</p>;
-    
-    return (
-      <>
-        <p>Días acumulados: {summary.accumulatedDays ?? 0}</p>
-        <p>Días tomados: {summary.takenDays ?? 0}</p>
-        <p>Días disponibles: {summary.remainingDays ?? 0}</p>
-      </>
-    );
-  };
+  return (
+    <>
+      <p>Días acumulados: {summary.accumulatedDays ?? 0}</p>
+      <p>Días tomados: {summary.takenDays ?? 0}</p>
+      <p>Días disponibles: {summary.remainingDays ?? 0}</p>
+    </>
+  );
+}
 
+function AbsenceInfo({ summary }: { summary: AbsenceSummary | null }) {
+  if (!summary) return <p>No disponible</p>;
+
+  return <p>Total de faltas: {summary.totalAbsences ?? 0}</p>;
+}
+
+const formatHireDate = (date: string | Date | undefined) => {
+  if (!date) return "No disponible";
+  const dateObj = typeof date === "string" ? new Date(date) : date;
+  return isNaN(dateObj.getTime()) ? "Fecha inválida" : dateObj.toLocaleDateString("es-ES");
+};
+
+export default function EmployeeDetails({
+  employee,
+  summaryVacation,
+  summaryAbsence,
+}: Props) {
   return (
     <div className="mb-6">
       <h5 className="text-lg font-semibold mb-4">Datos del Empleado</h5>
@@ -32,7 +44,8 @@ export default function EmployeeDetails({ employee, summary }: Props) {
         {/* Información del empleado */}
         <div>
           <p>
-            <strong>Nombre:</strong> {employee.lastNameFather} {employee.lastNameMother}, {employee.firstName}
+            <strong>Nombre:</strong> {employee.lastNameFather}{" "}
+            {employee.lastNameMother}, {employee.firstName}
           </p>
           <p>
             <strong>DNI:</strong> {employee.documentNumber || "No disponible"}
@@ -57,7 +70,13 @@ export default function EmployeeDetails({ employee, summary }: Props) {
         {/* Vacaciones */}
         <div>
           <strong>Vacaciones:</strong>
-          {getVacationDetails(summary)}
+          <VacationInfo summary={summaryVacation} />
+        </div>
+
+        {/* Faltas */}
+        <div>
+          <strong>Faltas:</strong>
+          <AbsenceInfo summary={summaryAbsence} />
         </div>
       </div>
     </div>
