@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState, useCallback } from "react";
 import { toast } from "react-toastify";
 import { getEmployeeByFullname } from "@/helpers/employee.helper";
@@ -7,13 +8,16 @@ import {
   GetVacationsByEmployeeId,
   VacationRegister,
 } from "@/helpers/vacation.helper";
+import { GetAbsenceSummaryById } from "@/helpers/absence.helper";
+
 import { EmployeeSearchProps } from "@/types/employee";
 import { VacationRegisterProps, VacationSummary } from "@/types/vacation";
+import { AbsenceRegisterProps, AbsenceSummary } from "@/types/absence";
+
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "../ui/card";
@@ -29,40 +33,49 @@ import { Button } from "../ui/button";
 import EmployeeSelect from "./subcomponentes/EmployeeSelect";
 import EmployeeDetails from "./subcomponentes/EmployeeDetails";
 import VacationTable from "./subcomponentes/VacationTable";
-import { AbsenceSummary } from "../../types/absence";
-import { AbsenceSummary } from '@/types/absence';
+import AbsenceTable from "./subcomponentes/AbsenceTable";
 
 export default function EmployeeControl() {
-  // Estados para manejar fechas y datos del formulario
   const [open1, setOpen1] = useState(false);
-  const [date1, setDate1] = useState<Date | undefined>(undefined);
+  const [date1, setDate1] = useState<Date | null>(null);
   const [open2, setOpen2] = useState(false);
-  const [date2, setDate2] = useState<Date | undefined>(undefined);
+  const [date2, setDate2] = useState<Date | null>(null);
 
-  // Estados para manejar el empleado seleccionado, resumen de vacaciones y lista de vacaciones
   const [selectedEmployee, setSelectedEmployee] =
     useState<EmployeeSearchProps | null>(null);
   const [vacationSummary, setVacationSummary] =
     useState<VacationSummary | null>(null);
+  const [absenceSummary, setAbsenceSummary] = useState<AbsenceSummary | null>(
+    null
+  );
   const [isApproved, setIsApproved] = useState(false);
+
   const [employeeVacations, setEmployeeVacations] = useState<
     VacationRegisterProps[]
   >([]);
+  const [employeeAbsence, setEmployeeAbsence] = useState<
+    AbsenceRegisterProps[]
+  >([]);
   const [token, setToken] = useState<string | null>(null);
 
-  // Estado para manejar los datos del formulario de registro de vacaciones
-  const [formData, setFormData] = useState({
-    startDate: "",
-    endDate: "",
+  const [formData, setFormData] = useState<{
+    startDate: Date | null;
+    endDate: Date | null;
+    reason: string;
+  }>({
+    startDate: null,
+    endDate: null,
     reason: "",
   });
 
-  // Efecto para cargar el token desde localStorage al montar el componente
   useEffect(() => {
-    setToken(localStorage.getItem("token"));
+    const storedToken = localStorage.getItem("token");
+    if (!storedToken) {
+      toast.warning("No se encontró el token de autenticación.");
+    }
+    setToken(storedToken);
   }, []);
 
-  // Función para cargar las opciones de empleados basadas en el nombre completo
   const loadOptions = async (inputValue: string) => {
     if (inputValue.length < 1) return [];
     try {
@@ -78,59 +91,52 @@ export default function EmployeeControl() {
     }
   };
 
-  // Función para obtener los datos del empleado seleccionado
   const fetchEmployeeData = useCallback(
     async (employeeId: string) => {
       try {
-        const [summary, vacations] = await Promise.all([
+        const [summary, vacations, absences] = await Promise.all([
           GetVacationSummaryById(employeeId, token || ""),
           GetVacationsByEmployeeId(employeeId, token || ""),
+          GetAbsenceSummaryById(employeeId, token || ""),
         ]);
         setVacationSummary(summary);
         setEmployeeVacations(vacations);
+        setEmployeeAbsence(absences);
+        setAbsenceSummary(absences);
       } catch (error) {
         console.error("Error al obtener datos del empleado:", error);
         setVacationSummary(null);
         setEmployeeVacations([]);
+        setEmployeeAbsence([]);
+        setAbsenceSummary(null);
       }
     },
     [token]
   );
 
-  // Efecto para cargar los datos del empleado seleccionado cuando cambia
   useEffect(() => {
     if (selectedEmployee) {
       fetchEmployeeData(selectedEmployee.id);
     } else {
       setVacationSummary(null);
       setEmployeeVacations([]);
+      setEmployeeAbsence([]);
     }
   }, [selectedEmployee, token, fetchEmployeeData]);
 
-  // Formato seguro para renderizar fecha (ISO)
-  const renderDate = (date: Date | undefined) =>
+  const renderDate = (date: Date | null) =>
     date ? date.toISOString().slice(0, 10) : "Seleccionar fecha";
 
-  // Función para calcular los días solicitados entre dos fechas
-  const calculateDaysRequested = (start: string, end: string): number => {
-    if (!start || !end) return 0;
-    const startDate = new Date(start);
-    const endDate = new Date(end);
-    const diffTime = endDate.getTime() - startDate.getTime();
+  const calculateDaysRequested = (start: Date, end: Date): number => {
+    const diffTime = end.getTime() - start.getTime();
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
     return diffDays > 0 ? diffDays : 0;
   };
 
-  // Función para manejar el registro de vacaciones
   const handleVacationRegister = async () => {
-    if (!selectedEmployee) {
-      toast.error("Debe seleccionar un empleado.");
-      return;
-    }
-    if (!formData.startDate || !formData.endDate) {
-      toast.error("Debe seleccionar ambas fechas.");
-      return;
-    }
+    if (!selectedEmployee) return toast.error("Debe seleccionar un empleado.");
+    if (!formData.startDate || !formData.endDate)
+      return toast.error("Debe seleccionar ambas fechas.");
 
     const daysRequested = calculateDaysRequested(
       formData.startDate,
@@ -139,8 +145,8 @@ export default function EmployeeControl() {
 
     const data: VacationRegisterProps = {
       employeeId: Number(selectedEmployee.id),
-      startDate: new Date(formData.startDate),
-      endDate: new Date(formData.endDate),
+      startDate: formData.startDate,
+      endDate: formData.endDate,
       isApproved,
       reason: formData.reason,
       daysRequested,
@@ -152,15 +158,9 @@ export default function EmployeeControl() {
       await VacationRegister(data, token || "");
       toast.success("Vacaciones registradas con éxito.");
       await fetchEmployeeData(selectedEmployee.id);
-
-      // Solo limpiar fechas seleccionadas y razón (no el empleado, ni la tabla)
-      setFormData({
-        startDate: "",
-        endDate: "",
-        reason: "",
-      });
-      setDate1(undefined);
-      setDate2(undefined);
+      setFormData({ startDate: null, endDate: null, reason: "" });
+      setDate1(null);
+      setDate2(null);
       setIsApproved(false);
     } catch (error) {
       console.error("Error al registrar vacaciones:", error);
@@ -169,7 +169,6 @@ export default function EmployeeControl() {
           ? (error as { message: string }).message
           : "Error al registrar vacaciones.";
       toast.error(errorMsg);
-      // No limpiamos nada, el usuario puede corregir y volver a intentar
     }
   };
 
@@ -180,7 +179,6 @@ export default function EmployeeControl() {
           Control de Personal
         </h2>
 
-        {/* Employee Select */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
           <EmployeeSelect
             onChange={setSelectedEmployee}
@@ -193,15 +191,13 @@ export default function EmployeeControl() {
           <EmployeeDetails
             employee={selectedEmployee}
             summaryVacation={vacationSummary}
-            summaryAbsence= {AbsenceSummary}
+            summaryAbsence={absenceSummary}
           />
         )}
 
-        {/* Main Form */}
         <div className="tabs tabs-border flex-1">
           <div className="tab-content border-base-300 bg-base-100">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-              {/* Fecha de inicio */}
               <div>
                 <Label htmlFor="start-date" className="py-2">
                   Fecha de inicio
@@ -218,20 +214,17 @@ export default function EmployeeControl() {
                       <ChevronDownIcon />
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent
-                    className="w-auto overflow-hidden p-0"
-                    align="start"
-                  >
+                  <PopoverContent className="w-auto overflow-hidden p-0">
                     <Calendar
                       mode="single"
-                      selected={date1}
+                      selected={date1 ?? undefined}
                       captionLayout="dropdown"
                       onSelect={(selectedDate) => {
                         if (selectedDate) {
                           setDate1(selectedDate);
                           setFormData((prev) => ({
                             ...prev,
-                            startDate: selectedDate.toISOString().slice(0, 10), // ISO seguro
+                            startDate: selectedDate,
                           }));
                         }
                         setOpen1(false);
@@ -241,7 +234,6 @@ export default function EmployeeControl() {
                 </Popover>
               </div>
 
-              {/* Fecha de fin */}
               <div>
                 <Label htmlFor="end-date" className="py-2">
                   Fecha de fin
@@ -258,20 +250,17 @@ export default function EmployeeControl() {
                       <ChevronDownIcon />
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent
-                    className="w-auto overflow-hidden p-0"
-                    align="start"
-                  >
+                  <PopoverContent className="w-auto overflow-hidden p-0">
                     <Calendar
                       mode="single"
-                      selected={date2}
+                      selected={date2 ?? undefined}
                       captionLayout="dropdown"
                       onSelect={(selectedDate) => {
                         if (selectedDate) {
                           setDate2(selectedDate);
                           setFormData((prev) => ({
                             ...prev,
-                            endDate: selectedDate.toISOString().slice(0, 10), // ISO seguro
+                            endDate: selectedDate,
                           }));
                         }
                         setOpen2(false);
@@ -281,7 +270,6 @@ export default function EmployeeControl() {
                 </Popover>
               </div>
 
-              {/* Motivo */}
               <div>
                 <Label htmlFor="reason" className="py-2">
                   Motivo (opcional)
@@ -297,25 +285,22 @@ export default function EmployeeControl() {
                 />
               </div>
 
-              {/* Checkbox de Aprobado */}
               <div className="flex items-center gap-3 mb-4 col-span-1 sm:col-span-2 md:col-span-1">
                 <Checkbox
                   id="aprobado"
                   checked={isApproved}
-                  onCheckedChange={() => setIsApproved((v) => !v)}
+                  onCheckedChange={(checked) => setIsApproved(checked === true)}
                 />
                 <Label htmlFor="aprobado">Aprobado (opcional)</Label>
               </div>
             </div>
 
-            {/* Sección de Tabs */}
             <Tabs defaultValue="vacation">
               <TabsList>
                 <TabsTrigger value="vacation">Vacaciones</TabsTrigger>
                 <TabsTrigger value="absence">Faltas</TabsTrigger>
               </TabsList>
 
-              {/* Tab de Vacaciones */}
               <TabsContent value="vacation">
                 <Card>
                   <CardHeader>
@@ -324,11 +309,7 @@ export default function EmployeeControl() {
                     </CardDescription>
                   </CardHeader>
                   <div className="col-span-1 sm:col-span-2 md:col-span-3 mb-4 mx-5">
-                    <Button
-                      className="my-2"
-                      onClick={handleVacationRegister}
-                      type="button"
-                    >
+                    <Button className="my-2" onClick={handleVacationRegister}>
                       Guardar Vacaciones
                     </Button>
                     <VacationTable vacations={employeeVacations} />
@@ -336,31 +317,26 @@ export default function EmployeeControl() {
                 </Card>
               </TabsContent>
 
-              {/* Tab de Faltas */}
               <TabsContent value="absence">
                 <Card>
                   <CardHeader>
                     <CardTitle>Faltas</CardTitle>
                     <CardDescription>
-                      Cambia tu contraseña aquí. Después de guardar, se cerrará
-                      la sesión.
+                      Detalle de las faltas del empleado seleccionado.
                     </CardDescription>
                   </CardHeader>
+                  <div className="col-span-1 sm:col-span-2 md:col-span-3 mb-4 mx-5">
+                    <Button
+                      className="my-2"
+                      type="button"
+                      onClick={() => toast.info("Funcionalidad en desarrollo")}
+                    >
+                      Registrar Falta
+                    </Button>
+                  </div>
                   <CardContent className="grid gap-6">
-                    <div className="grid gap-3">
-                      <Label htmlFor="tabs-demo-current">
-                        Contraseña actual
-                      </Label>
-                      <Input id="tabs-demo-current" type="password" />
-                    </div>
-                    <div className="grid gap-3">
-                      <Label htmlFor="tabs-demo-new">Nueva contraseña</Label>
-                      <Input id="tabs-demo-new" type="password" />
-                    </div>
+                    <AbsenceTable absences={employeeAbsence} />
                   </CardContent>
-                  <CardFooter>
-                    <Button>Guardar contraseña</Button>
-                  </CardFooter>
                 </Card>
               </TabsContent>
             </Tabs>

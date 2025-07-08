@@ -14,5 +14,6 @@ export interface VacationRegisterProps {
   daysTaken: number;
   daysRemaining: number;
   reason: string;
+  
 }
 
