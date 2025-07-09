@@ -3,10 +3,11 @@ export interface AbsenceSummary {
   totalAbsences: number;
 }
 
-export interface AbsenceRegisterProps {
+export interface AbsenceTableProps {
   employeeId: number;
   date: Date;
   reason : string;
   createdAt: Date;
   isJustified: boolean;
 }
+

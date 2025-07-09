@@ -1,34 +1,27 @@
 "use client";
-
 import { useEffect, useState, useCallback } from "react";
 import { toast } from "react-toastify";
 import { getEmployeeByFullname } from "@/helpers/employee.helper";
-import { GetAbsenceSummaryById } from "@/helpers/absence.helper";
-
-import { EmployeeSearchProps } from "@/types/employee";
-import { AbsenceRegisterProps, AbsenceSummary } from "@/types/absence";
-
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
+  GetVacationSummaryById,
+  GetVacationsByEmployeeId,
+  VacationRegister,
+} from "@/helpers/vacation.helper";
+import { EmployeeSearchProps } from "@/types/employee";
+import { VacationRegisterProps, VacationSummary } from "@/types/vacation";
+import { Card, CardContent, CardDescription, CardHeader } from "../ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { ChevronDownIcon } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Label } from "../ui/label";
 import { Calendar } from "../ui/calendar";
 import { Input } from "../ui/input";
 import { Checkbox } from "../ui/checkbox";
 import { Button } from "../ui/button";
+import EmployeeSelect from "../EmployeeControl/subcomponentes/EmployeeSelect";
+import EmployeeDetails from "../EmployeeControl/subcomponentes/EmployeeDetails";
+import VacationTable from "./subcomponent/VacationTable";
+import { ChevronDownIcon, SaveIcon } from "lucide-react";
 
-import EmployeeSelect from "./subcomponentes/EmployeeSelect";
-import EmployeeDetails from "./subcomponentes/EmployeeDetails";
-import AbsenceTable from "./employeeAbsence/subcomponent/AbsenceTable";
-
-export default function EmployeeControl() {
+export default function EmployeeVacation() {
   const [open1, setOpen1] = useState(false);
   const [date1, setDate1] = useState<Date | null>(null);
   const [open2, setOpen2] = useState(false);
@@ -36,14 +29,15 @@ export default function EmployeeControl() {
 
   const [selectedEmployee, setSelectedEmployee] =
     useState<EmployeeSearchProps | null>(null);
-  const [absenceSummary, setAbsenceSummary] = useState<AbsenceSummary | null>(
-    null
-  );
+  const [vacationSummary, setVacationSummary] =
+    useState<VacationSummary | null>(null);
+
   const [isApproved, setIsApproved] = useState(false);
 
-  const [employeeAbsence, setEmployeeAbsence] = useState<
-    AbsenceRegisterProps[]
+  const [employeeVacations, setEmployeeVacations] = useState<
+    VacationRegisterProps[]
   >([]);
+
   const [token, setToken] = useState<string | null>(null);
 
   const [formData, setFormData] = useState<{
@@ -56,7 +50,7 @@ export default function EmployeeControl() {
     reason: "",
   });
 
-  // Cargar el token del localStorage al iniciar el componente
+  //! Cargar el token del localStorage al iniciar el componente
   useEffect(() => {
     const storedToken = localStorage.getItem("user");
     if (!storedToken) {
@@ -65,6 +59,7 @@ export default function EmployeeControl() {
     setToken(storedToken);
   }, []);
 
+  //! Función para cargar opciones de empleados
   const loadOptions = async (inputValue: string) => {
     if (inputValue.length < 1) return [];
     try {
@@ -80,41 +75,61 @@ export default function EmployeeControl() {
     }
   };
 
+  //! Componente para mostrar la información de vacaciones
+  function VacationInfo({ summary }: { summary: VacationSummary | null }) {
+    if (!summary) return <p>No disponible</p>;
+
+    return (
+      <>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <p>Días acumulados: {summary.accumulatedDays ?? 0}</p>
+          <p>Días tomados: {summary.takenDays ?? 0}</p>
+          <p>Días disponibles: {summary.remainingDays ?? 0}</p>
+        </div>
+      </>
+    );
+  }
+
   const fetchEmployeeData = useCallback(
     async (employeeId: string) => {
       try {
-        const [summary] = await Promise.all([
-
-          GetAbsenceSummaryById(employeeId, token || ""),
+        const [summary, vacations] = await Promise.all([
+          GetVacationSummaryById(employeeId, token || ""),
+          GetVacationsByEmployeeId(employeeId, token || ""),
         ]);
-        setAbsenceSummary(absences);
+        setVacationSummary(summary);
+        setEmployeeVacations(vacations);
       } catch (error) {
-        console.error("Error al obtener datos del empleado:", error)
-        setAbsenceSummary(null);
+        console.error("Error al obtener datos del empleado:", error);
+        setVacationSummary(null);
+        setEmployeeVacations([]);
       }
     },
     [token]
   );
 
+  //! Efecto para cargar datos del empleado seleccionado
   useEffect(() => {
     if (selectedEmployee) {
       fetchEmployeeData(selectedEmployee.id);
     } else {
       setVacationSummary(null);
       setEmployeeVacations([]);
-      setEmployeeAbsence([]);
     }
   }, [selectedEmployee, token, fetchEmployeeData]);
 
+  //! Renderizar la fecha en formato ISO
   const renderDate = (date: Date | null) =>
     date ? date.toISOString().slice(0, 10) : "Seleccionar fecha";
 
+  //! Calcular los días solicitados entre dos fechas
   const calculateDaysRequested = (start: Date, end: Date): number => {
     const diffTime = end.getTime() - start.getTime();
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
     return diffDays > 0 ? diffDays : 0;
   };
 
+  //! Manejar el registro de vacaciones
   const handleVacationRegister = async () => {
     if (!selectedEmployee) return toast.error("Debe seleccionar un empleado.");
     if (!formData.startDate || !formData.endDate)
@@ -155,13 +170,14 @@ export default function EmployeeControl() {
   };
 
   return (
-    <form className="w-full mx-auto mt-6 p-4 min-h-screen flex flex-col mb-24">
-      <div className="mx-4 sm:mx-8 md:mx-12 p-4 sm:p-2 md:p-6 bg-gray-100 rounded-2xl">
-        <h2 className="text-2xl font-bold mb-4 text-center md:text-left">
+    <form className="w-full mx-auto mt-6 px-4 md:px-8 min-h-screen flex flex-col gap-6 mb-24">
+      <div className="bg-gray-100 rounded-2xl p-6 md:p-10 shadow-sm">
+        <h2 className="text-2xl font-bold mb-6 text-center md:text-left text-gray-800">
           Control de Personal
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+        {/* Selector de Empleado */}
+        <div className="mb-3">
           <EmployeeSelect
             onChange={setSelectedEmployee}
             loadOptions={loadOptions}
@@ -169,18 +185,33 @@ export default function EmployeeControl() {
           />
         </div>
 
-        {selectedEmployee && (
-          <EmployeeDetails
-            employee={selectedEmployee}
-            summaryAbsence={absenceSummary}
-          />
-        )}
+        {/* Detalles del empleado */}
 
-        <div className="tabs tabs-border flex-1">
-          <div className="tab-content border-base-300 bg-base-100">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-              <div>
-                <Label htmlFor="start-date" className="py-2">
+        <Card>
+          <CardHeader>
+            <CardDescription>
+              Información del empleado seleccionado.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {selectedEmployee && (
+              <EmployeeDetails employee={selectedEmployee} />
+            )}
+            {/* Vacaciones */}
+            <div>
+              <strong>Vacaciones:</strong>
+              <VacationInfo summary={vacationSummary} />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Formulario de Vacaciones */}
+        <div className="flex flex-col gap-6 mt-3">
+          <Card>
+            <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Fecha inicio */}
+              <div className="flex flex-col">
+                <Label htmlFor="start-date" className="mb-2">
                   Fecha de inicio
                 </Label>
                 <Popover open={open1} onOpenChange={setOpen1}>
@@ -215,8 +246,9 @@ export default function EmployeeControl() {
                 </Popover>
               </div>
 
-              <div>
-                <Label htmlFor="end-date" className="py-2">
+              {/* Fecha fin */}
+              <div className="flex flex-col">
+                <Label htmlFor="end-date" className="mb-2">
                   Fecha de fin
                 </Label>
                 <Popover open={open2} onOpenChange={setOpen2}>
@@ -251,8 +283,9 @@ export default function EmployeeControl() {
                 </Popover>
               </div>
 
-              <div>
-                <Label htmlFor="reason" className="py-2">
+              {/* Motivo */}
+              <div className="flex flex-col">
+                <Label htmlFor="reason" className="mb-2">
                   Motivo (opcional)
                 </Label>
                 <Input
@@ -263,65 +296,40 @@ export default function EmployeeControl() {
                     setFormData({ ...formData, reason: e.target.value })
                   }
                   placeholder="Motivo (opcional)"
+                  className="w-full"
                 />
               </div>
+            </CardContent>
+          </Card>
 
-              <div className="flex items-center gap-3 mb-4 col-span-1 sm:col-span-2 md:col-span-1">
-                <Checkbox
-                  id="aprobado"
-                  checked={isApproved}
-                  onCheckedChange={(checked) => setIsApproved(checked === true)}
-                />
-                <Label htmlFor="aprobado">Aprobado (opcional)</Label>
-              </div>
+          {/* Aprobación y botón */}
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <Checkbox
+                id="aprobado"
+                checked={isApproved}
+                onCheckedChange={(checked) => setIsApproved(checked === true)}
+              />
+              <Label htmlFor="aprobado">Aprobado (opcional)</Label>
             </div>
 
-            <Tabs defaultValue="vacation">
-              <TabsList>
-                <TabsTrigger value="vacation">Vacaciones</TabsTrigger>
-                <TabsTrigger value="absence">Faltas</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="vacation">
-                <Card>
-                  <CardHeader>
-                    <CardDescription>
-                      Detalle de las vacaciones del empleado seleccionado.
-                    </CardDescription>
-                  </CardHeader>
-                  <div className="col-span-1 sm:col-span-2 md:col-span-3 mb-4 mx-5">
-                    <Button className="my-2" onClick={handleVacationRegister}>
-                      Guardar Vacaciones
-                    </Button>
-                    <VacationTable vacations={employeeVacations} />
-                  </div>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="absence">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Faltas</CardTitle>
-                    <CardDescription>
-                      Detalle de las faltas del empleado seleccionado.
-                    </CardDescription>
-                  </CardHeader>
-                  <div className="col-span-1 sm:col-span-2 md:col-span-3 mb-4 mx-5">
-                    <Button
-                      className="my-2"
-                      type="button"
-                      onClick={() => toast.info("Funcionalidad en desarrollo")}
-                    >
-                      Registrar Falta
-                    </Button>
-                  </div>
-                  <CardContent className="grid gap-6">
-                    <AbsenceTable absences={employeeAbsence} />
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
+            <Button className="mt-2 md:mt-0" onClick={handleVacationRegister}>
+              <SaveIcon className="mr-2" />
+              Registrar Vacaciones
+            </Button>
           </div>
+
+          {/* Tabla de Vacaciones */}
+          <Card>
+            <CardHeader>
+              <CardDescription>
+                Historial de vacaciones del empleado.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <VacationTable vacations={employeeVacations} />
+            </CardContent>
+          </Card>
         </div>
       </div>
     </form>

@@ -101,6 +101,14 @@ const data = {
           title: "Control de empleados",
           url: "/dashboard/employeeControl",
         },
+        {
+          title: "Control de vacaciones",
+          url: "/dashboard/employeeVacation",
+        },
+        {
+          title: "Control de ausencias",
+          url: "/dashboard/employeeAbsence",
+        },
       ],
     },
   ],

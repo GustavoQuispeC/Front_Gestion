@@ -7,21 +7,21 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { AbsenceRegisterProps } from "@/types/absence";
+import { AbsenceTableProps } from "@/types/absence";
 
 interface Props {
-  absences: AbsenceRegisterProps[];
+  absences: AbsenceTableProps[];
 }
 
-export default function VacationTable({ absences }: Props) {
+export default function AbsenceTable({ absences }: Props) {
   return (
     <div className="md:col-span-3 overflow-x-auto w-full">
       <Table className="w-full">
         <TableCaption>Ausencias registradas</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">Fecha</TableHead>
-            <TableHead>Razón</TableHead>
+            <TableHead className="w-[100px]">Fecha de la usencia</TableHead>
+            <TableHead>Motivo</TableHead>
             <TableHead>Registrado el</TableHead>
             <TableHead className="text-center">Justificado</TableHead>
           </TableRow>
@@ -32,7 +32,9 @@ export default function VacationTable({ absences }: Props) {
               <TableRow key={`${a.employeeId}-${a.date.toString()}`}>
                 <TableCell>{new Date(a.date).toLocaleDateString()}</TableCell>
                 <TableCell>{a.reason}</TableCell>
-                <TableCell>{new Date(a.createdAt).toLocaleDateString()}</TableCell>
+                <TableCell>
+                  {new Date(a.createdAt).toLocaleDateString()}
+                </TableCell>
                 <TableCell className="text-center">
                   <input
                     type="checkbox"
