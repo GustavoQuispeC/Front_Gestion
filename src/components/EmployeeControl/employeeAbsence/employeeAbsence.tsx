@@ -111,7 +111,7 @@ export default function EmployeeVacation() {
     <form className="w-full mx-auto mt-6 px-4 md:px-8 min-h-screen flex flex-col gap-6 mb-24">
       <div className="bg-gray-100 rounded-2xl p-6 md:p-10 shadow-sm">
         <h2 className="text-2xl font-bold mb-6 text-center md:text-left text-gray-800">
-          Control de Personal
+          Control de Ausencias
         </h2>
 
         {/* Selector de Empleado */}

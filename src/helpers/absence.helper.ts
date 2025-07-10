@@ -1,4 +1,4 @@
-import {  AbsenceSummary, AbsenceTableProps } from "@/types/absence";
+import {  AbsenceRegisterProps, AbsenceSummary, AbsenceTableProps } from "@/types/absence";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -33,7 +33,7 @@ export async function GetAbsenceSummaryById(
 export async function GetAbsencesByEmployeeId(
   EmployeeId: string,
   token: string
-): Promise<AbsenceTableProps[]> {
+): Promise<AbsenceRegisterProps[]> {
   try {
     const response = await fetch(`${apiUrl}/Absence/employee/${EmployeeId}`, {
       method: "GET",
@@ -42,13 +42,13 @@ export async function GetAbsencesByEmployeeId(
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log("Response from absence by employee ID:", response);
+    console.log("Response from employee absences:", response);
 
     if (!response.ok) {
       throw new Error("Error en la solicitud: " + response.statusText);
     }
 
-    const json = (await response.json()) as AbsenceTableProps[];
+    const json = (await response.json()) as AbsenceRegisterProps[];
     return json;
   } catch (error) {
     console.error("Error al obtener las faltas del empleado:", error);

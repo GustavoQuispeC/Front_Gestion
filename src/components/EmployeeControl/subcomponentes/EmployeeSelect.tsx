@@ -29,7 +29,7 @@ export default function EmployeeSelect({
         htmlFor="nombres"
         className="block text-sm font-medium text-gray-700"
       >
-        Apellidos y Nombres
+        Búsqueda por Apellidos y Nombres
       </label>
       <AsyncSelect
         cacheOptions

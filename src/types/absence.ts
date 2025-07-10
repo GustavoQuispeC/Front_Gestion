@@ -6,8 +6,14 @@ export interface AbsenceSummary {
 export interface AbsenceTableProps {
   employeeId: number;
   date: Date;
-  reason : string;
+  reason: string;
   createdAt: Date;
   isJustified: boolean;
 }
 
+export interface AbsenceRegisterProps {
+  employeeId: number;
+  date: Date;
+  reason: string;
+  isJustified: boolean;
+}

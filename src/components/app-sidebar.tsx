@@ -93,14 +93,10 @@ const data = {
       ],
     },
     {
-      title: "Control",
+      title: "Control de Personal",
       url: "#",
       icon: FolderCog,
       items: [
-        {
-          title: "Control de empleados",
-          url: "/dashboard/employeeControl",
-        },
         {
           title: "Control de vacaciones",
           url: "/dashboard/employeeVacation",
