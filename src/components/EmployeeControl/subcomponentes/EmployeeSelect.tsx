@@ -34,9 +34,9 @@ export default function EmployeeSelect({
       <AsyncSelect
         cacheOptions
         defaultOptions
-        loadOptions={loadOptions}
-        value={value}
-        onChange={onChange}
+        loadOptions={loadOptions} // Asegúrate de que esta función esté trabajando correctamente
+        value={value} // El valor del empleado seleccionado
+        onChange={onChange} // Actualiza el valor al seleccionar un empleado
         placeholder="Ingrese apellidos o nombres"
         className="mt-1"
         isClearable
@@ -61,7 +61,7 @@ export default function EmployeeSelect({
         getOptionLabel={(option) =>
           `${option.firstName} ${option.lastNameFather} ${option.lastNameMother}`
         }
-        getOptionValue={(option) => option.id}
+        getOptionValue={(option) => option.id} // Usando `id` como valor único de la opción
       />
     </div>
   );

@@ -90,6 +90,7 @@ export default function EmployeeVacation() {
     );
   }
 
+  //! Función para obtener los datos del empleado seleccionado
   const fetchEmployeeData = useCallback(
     async (employeeId: string) => {
       try {
@@ -308,7 +309,7 @@ export default function EmployeeVacation() {
               <Checkbox
                 id="aprobado"
                 checked={isApproved}
-                onCheckedChange={(checked) => setIsApproved(checked === true)}
+                onCheckedChange={(checked) => setIsApproved(Boolean(checked))}
               />
               <Label htmlFor="aprobado">Aprobado (opcional)</Label>
             </div>

@@ -6,6 +6,7 @@ import { EmployeeSearchProps } from "@/types/employee";
 import { ChevronDownIcon, SaveIcon } from "lucide-react";
 import { AbsenceTableProps, AbsenceSummary } from "@/types/absence";
 import {
+  AbsenceRegister,
   GetAbsencesByEmployeeId,
   GetAbsenceSummaryById,
 } from "@/helpers/absence.helper";
@@ -28,6 +29,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import AbsenceTable from "./subcomponent/AbsenceTable";
+import { AbsenceRegisterProps } from "../../../types/absence";
 
 export default function EmployeeVacation() {
   const [open1, setOpen1] = useState(false);
@@ -37,17 +39,17 @@ export default function EmployeeVacation() {
   const [AbsenceSummary, setAbsenceSummary] = useState<AbsenceSummary | null>(
     null
   );
-  const [isJustified, setisJustified] = useState(false);
+  const [isJustified, setIsJustified] = useState(false);
   const [token, setToken] = useState<string | null>(null);
   const [employeeAbsences, setEmployeeAbsences] = useState<AbsenceTableProps[]>(
     []
   );
 
   const [formData, setFormData] = useState<{
-    startDate: Date | null;
+    date: Date | null;
     reason: string;
   }>({
-    startDate: null,
+    date: null,
     reason: "",
   });
 
@@ -106,6 +108,37 @@ export default function EmployeeVacation() {
   //! Efecto para manejar el cambio de fecha
   const renderDate = (date: Date | null) =>
     date ? date.toISOString().slice(0, 10) : "Seleccionar fecha";
+
+  //! Manejar el registro de ausencias
+  const handleAbsenceRegister = async () => {
+    if (!selectedEmployee) return toast.error("Debe seleccionar un empleado.");
+    if (!formData.date)
+      return toast.error("Debe seleccionar una fecha de ausencia.");
+
+    const data: AbsenceRegisterProps = {
+      employeeId: Number(selectedEmployee.id),
+      date: formData.date,
+      isJustified: isJustified,
+      reason: formData.reason,
+    };
+    console.log(data);
+
+    try {
+      await AbsenceRegister(data, token || "");
+      toast.success("Falta registrada con éxito.");
+      await fetchEmployeeData(selectedEmployee.id);
+      setFormData({ date: null, reason: "" });
+
+      setIsJustified(false);
+    } catch (error) {
+      console.error("Error al registrar la falta:", error);
+      const errorMsg =
+        error && typeof error === "object" && "message" in error
+          ? (error as { message: string }).message
+          : "Error al registrar la falta.";
+      toast.error(errorMsg);
+    }
+  };
 
   return (
     <form className="w-full mx-auto mt-6 px-4 md:px-8 min-h-screen flex flex-col gap-6 mb-24">
@@ -181,7 +214,7 @@ export default function EmployeeVacation() {
                           setDate1(selectedDate);
                           setFormData((prev) => ({
                             ...prev,
-                            startDate: selectedDate,
+                            date: selectedDate,
                           }));
                         }
                         setOpen1(false);
@@ -214,14 +247,14 @@ export default function EmployeeVacation() {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <Checkbox
-                id="justificado"
+                id="aprobado"
                 checked={isJustified}
-                onCheckedChange={(checked) => setisJustified(checked === true)}
+                onCheckedChange={(checked) => setIsJustified(Boolean(checked))}
               />
               <Label htmlFor="justificado">Justificado (opcional)</Label>
             </div>
 
-            <Button className="mt-2 md:mt-0">
+            <Button className="mt-2 md:mt-0" onClick={handleAbsenceRegister}>
               <SaveIcon className="mr-2" />
               Registrar Ausencia
             </Button>
