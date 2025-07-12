@@ -17,10 +17,10 @@ export default function AbsenceTable({ absences }: Props) {
   return (
     <div className="md:col-span-3 overflow-x-auto w-full">
       <Table className="w-full">
-        <TableCaption>Ausencias registradas</TableCaption>
+        <TableCaption> Inasistencias registradas</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">Fecha de la usencia</TableHead>
+            <TableHead className="w-[100px]">Fecha de inasistencia</TableHead>
             <TableHead>Motivo</TableHead>
             <TableHead>Registrado el</TableHead>
             <TableHead className="text-center">Justificado</TableHead>
@@ -28,8 +28,8 @@ export default function AbsenceTable({ absences }: Props) {
         </TableHeader>
         <TableBody>
           {absences && absences.length > 0 ? (
-            absences.map((a) => (
-              <TableRow key={`${a.employeeId}-${a.date.toString()}`}>
+            absences.map((a, index) => (
+              <TableRow key={index}>
                 <TableCell>{new Date(a.date).toLocaleDateString()}</TableCell>
                 <TableCell>{a.reason}</TableCell>
                 <TableCell>
@@ -48,7 +48,7 @@ export default function AbsenceTable({ absences }: Props) {
           ) : (
             <TableRow>
               <TableCell colSpan={4} className="text-center">
-                No hay faltas registradas.
+                No hay inasistencias registradas.
               </TableCell>
             </TableRow>
           )}

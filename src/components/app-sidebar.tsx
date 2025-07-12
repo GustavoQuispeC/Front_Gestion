@@ -102,7 +102,7 @@ const data = {
           url: "/dashboard/employeeVacation",
         },
         {
-          title: "Control de ausencias",
+          title: "Control de faltas",
           url: "/dashboard/employeeAbsence",
         },
       ],

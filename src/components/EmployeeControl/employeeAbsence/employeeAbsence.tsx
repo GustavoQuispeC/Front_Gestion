@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState, useCallback } from "react";
 import { toast } from "react-toastify";
 import { getEmployeeByFullname } from "@/helpers/employee.helper";
@@ -53,14 +54,21 @@ export default function EmployeeVacation() {
     reason: "",
   });
 
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true); // Establecer `mounted` a true cuando se monta el componente
+  }, []);
+
   //! Cargar el token del localStorage al iniciar el componente
   useEffect(() => {
+    if (!mounted) return; // Evitar ejecución en el servidor
     const storedToken = localStorage.getItem("user");
     if (!storedToken) {
       toast.warning("No se encontró el token de autenticación.");
     }
     setToken(storedToken);
-  }, []);
+  }, [mounted]);
 
   //! Función para cargar opciones de empleados
   const loadOptions = async (inputValue: string) => {
@@ -81,10 +89,11 @@ export default function EmployeeVacation() {
   //! Función para obtener los datos del empleado seleccionado
   const fetchEmployeeData = useCallback(
     async (employeeId: string) => {
+      if (!token) return;
       try {
         const [summary, absences] = await Promise.all([
-          GetAbsenceSummaryById(employeeId, token || ""),
-          GetAbsencesByEmployeeId(employeeId, token || ""),
+          GetAbsenceSummaryById(employeeId, token),
+          GetAbsencesByEmployeeId(employeeId, token),
         ]);
         setAbsenceSummary(summary);
         setEmployeeAbsences(absences);
@@ -97,13 +106,9 @@ export default function EmployeeVacation() {
 
   //! Efecto para cargar los datos del empleado seleccionado
   useEffect(() => {
-    if (selectedEmployee) {
-      fetchEmployeeData(selectedEmployee.id);
-    } else {
-      setAbsenceSummary(null);
-      setEmployeeAbsences([]);
-    }
-  }, [selectedEmployee, token, fetchEmployeeData]);
+    if (!mounted || !selectedEmployee) return; // Asegúrate de no renderizar si no se ha montado
+    fetchEmployeeData(selectedEmployee.id);
+  }, [selectedEmployee, mounted, fetchEmployeeData]);
 
   //! Efecto para manejar el cambio de fecha
   const renderDate = (date: Date | null) =>
@@ -121,14 +126,12 @@ export default function EmployeeVacation() {
       isJustified: isJustified,
       reason: formData.reason,
     };
-    console.log(data);
 
     try {
       await AbsenceRegister(data, token || "");
       toast.success("Falta registrada con éxito.");
       await fetchEmployeeData(selectedEmployee.id);
       setFormData({ date: null, reason: "" });
-
       setIsJustified(false);
     } catch (error) {
       console.error("Error al registrar la falta:", error);
@@ -139,6 +142,10 @@ export default function EmployeeVacation() {
       toast.error(errorMsg);
     }
   };
+
+  if (!mounted) {
+    return null; // Evita la renderización en el servidor
+  }
 
   return (
     <form className="w-full mx-auto mt-6 px-4 md:px-8 min-h-screen flex flex-col gap-6 mb-24">
@@ -157,7 +164,6 @@ export default function EmployeeVacation() {
         </div>
 
         {/* Detalles del empleado */}
-
         <Card>
           <CardHeader>
             <CardDescription>

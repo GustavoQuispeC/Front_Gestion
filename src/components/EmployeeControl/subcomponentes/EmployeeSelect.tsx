@@ -3,7 +3,7 @@ import AsyncSelect from "react-select/async";
 import { EmployeeSearchProps } from "@/types/employee";
 
 interface Props {
-  value: EmployeeSearchProps | null; // <-- AGREGA ESTO
+  value: EmployeeSearchProps | null; 
   onChange: (value: EmployeeSearchProps | null) => void;
   loadOptions: (inputValue: string) => Promise<EmployeeSearchProps[]>;
 }
@@ -13,14 +13,16 @@ export default function EmployeeSelect({
   onChange,
   loadOptions,
 }: Props) {
-  const [isClient, setIsClient] = useState(false);
+  // Se asegura de que el componente solo se renderice en el cliente
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setIsClient(true);
+    setMounted(true);
   }, []);
 
-  if (!isClient) {
-    return null; // O un loader si prefieres
+  // Solo renderiza el componente en el cliente, evitando problemas de hidratación
+  if (!mounted) {
+    return null; 
   }
 
   return (
@@ -34,9 +36,9 @@ export default function EmployeeSelect({
       <AsyncSelect
         cacheOptions
         defaultOptions
-        loadOptions={loadOptions} // Asegúrate de que esta función esté trabajando correctamente
-        value={value} // El valor del empleado seleccionado
-        onChange={onChange} // Actualiza el valor al seleccionar un empleado
+        loadOptions={loadOptions} 
+        value={value} 
+        onChange={onChange} 
         placeholder="Ingrese apellidos o nombres"
         className="mt-1"
         isClearable
@@ -61,7 +63,7 @@ export default function EmployeeSelect({
         getOptionLabel={(option) =>
           `${option.firstName} ${option.lastNameFather} ${option.lastNameMother}`
         }
-        getOptionValue={(option) => option.id} // Usando `id` como valor único de la opción
+        getOptionValue={(option) => option.id} 
       />
     </div>
   );
