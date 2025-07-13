@@ -1,5 +1,16 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { getEmployeeByDocumentNumber } from "@/helpers/employee.helper";
 import { getAllRoles } from "@/helpers/role.helper";
 import { registerUser } from "@/helpers/user.helpers";
@@ -7,7 +18,7 @@ import { RoleListProps } from "@/types/role";
 import { UserRegisterProps } from "@/types/user";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { FaBrush, FaCaretDown, FaSave } from "react-icons/fa";
+import { FaBrush, FaSave } from "react-icons/fa";
 import { FcSearch } from "react-icons/fc";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { toast, ToastContainer } from "react-toastify";
@@ -27,9 +38,9 @@ const UserRegister = () => {
   const [userRegister, setUserRegister] = useState<UserRegisterProps>({
     employeeId: 0,
     userName: "",
-    email: "",
     password: "",
     roleId: "",
+    isActive: true,
   });
 
   //! Función para obtener todos los roles
@@ -65,6 +76,7 @@ const UserRegister = () => {
           lastNameFather: empleadoData.lastNameFather,
           lastNameMother: empleadoData.lastNameMother,
           email: empleadoData.email,
+
           employeeId: empleadoData.id,
         });
 
@@ -121,9 +133,10 @@ const UserRegister = () => {
     const userRegisterData: UserRegisterProps = {
       employeeId: employeeData.employeeId,
       userName: userRegister.userName,
-      email: employeeData.email,
+
       password: userRegister.password,
       roleId: userRegister.roleId,
+      isActive: userRegister.isActive,
     };
 
     try {
@@ -153,9 +166,9 @@ const UserRegister = () => {
     setUserRegister({
       employeeId: 0,
       userName: "",
-      email: "",
       password: "",
       roleId: "",
+      isActive: false,
     });
   };
 
@@ -191,7 +204,7 @@ const UserRegister = () => {
         {/* Buscar empleado por número de documento */}
         <div className="flex flex-col mb-6 mx-10">
           <div className="relative">
-            <input
+            <Input
               type="text"
               id="documentNumber"
               name="documentNumber"
@@ -214,9 +227,9 @@ const UserRegister = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 mx-10">
           {/* Apellido y Nombre */}
           <div className="flex flex-col">
-            <label htmlFor="fullName" className="mb-1 text-sm font-medium">
+            <Label htmlFor="fullName" className="mb-1 text-sm font-medium">
               Apellido y Nombres:{" "}
-            </label>
+            </Label>
             <span id="fullName" className="text-gray-700">
               {`${employeeData.lastNameFather} ${employeeData.lastNameMother} ${employeeData.firstName}`}
             </span>
@@ -224,10 +237,10 @@ const UserRegister = () => {
 
           {/* Username */}
           <div className="flex flex-col">
-            <label htmlFor="userName" className="mb-1 text-sm font-medium">
+            <Label htmlFor="userName" className="mb-1 text-sm font-medium">
               Nombre de Usuario
-            </label>
-            <input
+            </Label>
+            <Input
               type="text"
               id="userName"
               name="userName"
@@ -244,10 +257,10 @@ const UserRegister = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 mx-10">
           {/* Correo */}
           <div className="flex flex-col">
-            <label htmlFor="email" className="mb-1 text-sm font-medium">
+            <Label htmlFor="email" className="mb-1 text-sm font-medium">
               Correo Electrónico
-            </label>
-            <input
+            </Label>
+            <Input
               type="email"
               id="email"
               name="email"
@@ -259,10 +272,10 @@ const UserRegister = () => {
 
           {/* Contraseña */}
           <div className="flex flex-col">
-            <label htmlFor="password" className="mb-1 text-sm font-medium">
+            <Label htmlFor="password" className="mb-1 text-sm font-medium">
               Contraseña
-            </label>
-            <input
+            </Label>
+            <Input
               type="password"
               id="password"
               name="password"
@@ -277,27 +290,29 @@ const UserRegister = () => {
 
           {/* Rol */}
           <div className="flex flex-col">
-            <label htmlFor="role" className="mb-1 text-sm font-medium">
+            <Label htmlFor="role" className="mb-1 text-sm font-medium">
               Rol
-            </label>
+            </Label>
             <div className="relative">
-              <select
-                id="role"
-                name="role"
-                className="input input-info w-full pr-10 appearance-none"
-                onChange={handleRoleChange}
+              <Select
                 value={userRegister.roleId}
+                onValueChange={(value) =>
+                  setUserRegister({ ...userRegister, roleId: value })
+                }
               >
-                <option value="">Seleccione un rol</option>
-                {roles.map((role) => (
-                  <option key={role.id} value={role.id}>
-                    {role.name}
-                  </option>
-                ))}
-              </select>
-              <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
-                <FaCaretDown className="text-gray-500" />
-              </div>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Seleccione un rol" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {roles.map((role) => (
+                      <SelectItem key={role.id} value={role.id}>
+                        {role.name}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </div>
@@ -305,34 +320,26 @@ const UserRegister = () => {
         {/* Botones */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 mx-10">
           <Link href="/dashboard/userList">
-            <button
-              type="button"
-              className="flex items-center justify-center gap-1.5 text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium 
-              rounded-md text-xs px-4 py-2 w-[80%] mx-auto disabled:opacity-50"
-            >
+            <Button variant="outline" className="w-full">
               <IoMdArrowRoundBack className="text-base" />
               Volver
-            </button>
+            </Button>
           </Link>
 
-          <button
-            type="submit"
-            className="flex items-center justify-center gap-1.5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium 
-            rounded-md text-xs px-4 py-2 w-[80%] mx-auto disabled:opacity-50"
-          >
+          <Button type="submit" className="w-full">
             <FaSave className="text-base" />
             Registrar
-          </button>
+          </Button>
 
-          <button
+          <Button
             type="reset"
             onClick={handleReset}
-            className="flex items-center justify-center gap-1.5 text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium
-            rounded-md text-xs px-4 py-2 w-[80%] mx-auto disabled:opacity-50"
+            variant="reset"
+            className="w-full"
           >
             <FaBrush className="text-base" />
             Limpiar
-          </button>
+          </Button>
         </div>
       </form>
 
