@@ -49,20 +49,20 @@ export default function EmployeeList() {
   }, []);
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-white dark:bg-black text-gray-900 dark:text-gray-100">
       <div className="mb-6">
         <h2 className="text-xl font-bold mb-2">Listado de empleados</h2>
 
         <Link
           href="/dashboard/employeeRegister"
-          className=" inline-flex items-center text-blue-600 hover:underline font-small font-semibold text-base"
+          className=" inline-flex items-center text-primary hover:underline font-small font-semibold text-base"
         >
-          <CirclePlus size={18} color="#1f58db" className="mr-1" />
+          <CirclePlus size={18}  className="mr-1" />
           Agregar
         </Link>
       </div>
 
-      <div className="overflow-x-auto bg-white shadow-lg rounded-lg p-4">
+      <div className="overflow-x-auto bg-white shadow-lg rounded-lg p-4 dark:bg-neutral-900" >
         <Table>
           <TableCaption>Listado de empleados</TableCaption>
           <TableHeader className="font-extrabold">
@@ -122,8 +122,8 @@ export default function EmployeeList() {
 
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <button className="mr-3" title="Editar">
-                          <Pencil size={18} color="#2e5ecf" />
+                        <button className="mr-3 text-blue-800 dark:text-primary" title="Editar">
+                          <Pencil size={18} />
                         </button>
                       </TooltipTrigger>
                       <TooltipContent>

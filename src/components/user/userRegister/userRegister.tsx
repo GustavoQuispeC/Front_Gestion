@@ -194,7 +194,7 @@ const UserRegister = () => {
   return (
     <>
       <form
-        className="w-full max-w-5xl mx-auto mt-10 p-6 bg-gray-50 shadow-lg rounded-xl"
+        className="w-full max-w-5xl mx-auto mt-10 p-6 bg-white dark:bg-neutral-900 shadow-lg rounded-xl"
         onSubmit={handleRegister}
       >
         <h2 className="text-2xl font-semibold mb-6 text-left mx-10">

@@ -171,9 +171,10 @@ export default function EmployeeVacation() {
   };
 
   return (
-    <form className="w-full mx-auto mt-6 px-4 md:px-8 min-h-screen flex flex-col gap-6 mb-24">
-      <div className="bg-gray-100 rounded-2xl p-6 md:p-10 shadow-sm">
-        <h2 className="text-2xl font-bold mb-6 text-center md:text-left text-gray-800">
+    <div className="w-full mx-auto mt-4 h-full">
+    <form className="dark:bg-neutral-900 text-black dark:text-white rounded-2xl px-12 pb-8 mx-8" >
+      <div className=" rounded-2xl p-6 md:p-10 shadow-sm">
+        <h2 className="text-2xl font-bold mb-6 text-center md:text-left">
           Control de Vacaciones
         </h2>
 
@@ -334,5 +335,6 @@ export default function EmployeeVacation() {
         </div>
       </div>
     </form>
+    </div>
   );
 }

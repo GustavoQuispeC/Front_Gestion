@@ -113,8 +113,8 @@ export default function UserList() {
   };
 
   return (
-    <div className="p-6">
-      {/* Si no tiene permisos, mostrar mensaje de error */}
+    <div className="p-6 bg-white dark:bg-black text-slate-900 dark:text-white transition-colors duration-300">
+    
       {!hasPermission ? (
         <div className="text-center">
           <h2 className="text-3xl font-semibold text-red-600 mb-4">
@@ -131,20 +131,20 @@ export default function UserList() {
       ) : (
         <>
           <div className="mb-6">
-            <h2 className="text-xl font-bold text-slate-800 mb-2">
+            <h2 className="text-xl font-bold mb-2">
               Listado de Usuarios
             </h2>
 
             <Link
               href="/dashboard/userRegister"
-              className=" inline-flex items-center text-blue-600 hover:underline font-small font-semibold text-base"
+              className=" inline-flex items-center text-primary hover:underline font-small font-semibold text-base"
             >
-              <CirclePlus size={18} color="#1f58db" className="mr-1" />
+              <CirclePlus size={18} className="mr-1" />
               Agregar
             </Link>
           </div>
 
-          <div className="overflow-x-auto bg-white shadow-lg rounded-lg p-4">
+          <div className="overflow-x-auto bg-white shadow-lg rounded-lg p-4 dark:bg-neutral-900">
             <Table>
               <TableCaption>Listado de usuarios</TableCaption>
               <TableHeader className="font-extrabold">
@@ -204,8 +204,8 @@ export default function UserList() {
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <Link href={`/dashboard/userUpdate/${u.id}`}>
-                              <button className="mr-3" title="Editar">
-                                <Pencil size={18} color="#2e5ecf" />
+                              <button className="mr-3 text-blue-700 dark:text-primary" title="Editar">
+                                <Pencil size={18}  />
                               </button>
                             </Link>
                           </TooltipTrigger>

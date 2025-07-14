@@ -148,137 +148,141 @@ export default function EmployeeVacation() {
   }
 
   return (
-    <form className="w-full mx-auto mt-6 px-4 md:px-8 min-h-screen flex flex-col gap-6 mb-24">
-      <div className="bg-gray-100 rounded-2xl p-6 md:p-10 shadow-sm">
-        <h2 className="text-2xl font-bold mb-6 text-center md:text-left text-gray-800">
-          Control de Ausencias
-        </h2>
+    <>
+      <section className="w-full mx-auto mt-4 h-full">
+        <div className="dark:bg-neutral-900 text-black dark:text-white rounded-2xl px-12 pb-8 mx-8">
+          <h2 className="text-2xl font-bold mb-6 text-center md:text-left">
+            Control de Ausencias
+          </h2>
 
-        {/* Selector de Empleado */}
-        <div className="mb-3">
-          <EmployeeSelect
-            onChange={setSelectedEmployee}
-            loadOptions={loadOptions}
-            value={selectedEmployee}
-          />
-        </div>
-
-        {/* Detalles del empleado */}
-        <Card>
-          <CardHeader>
-            <CardDescription>
-              Información del empleado seleccionado.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {selectedEmployee && (
-              <EmployeeDetails employee={selectedEmployee} />
-            )}
-            <div>
-              {AbsenceSummary && (
-                <div className="mt-4">
-                  <p className="font-bold">
-                    Total dias de Ausencias:{" "}
-                    <span className="font-normal">
-                      {AbsenceSummary.totalAbsences}
-                    </span>
-                  </p>
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Formulario de Vacaciones */}
-        <div className="flex flex-col gap-6 mt-3">
-          <Card>
-            <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Fecha inicio */}
-              <div className="flex flex-col">
-                <Label htmlFor="start-date" className="mb-2">
-                  Fecha de Ausencia
-                </Label>
-                <Popover open={open1} onOpenChange={setOpen1}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      id="start-date"
-                      className="w-full justify-between font-normal"
-                      type="button"
-                    >
-                      {renderDate(date1)}
-                      <ChevronDownIcon />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto overflow-hidden p-0">
-                    <Calendar
-                      mode="single"
-                      selected={date1 ?? undefined}
-                      captionLayout="dropdown"
-                      onSelect={(selectedDate) => {
-                        if (selectedDate) {
-                          setDate1(selectedDate);
-                          setFormData((prev) => ({
-                            ...prev,
-                            date: selectedDate,
-                          }));
-                        }
-                        setOpen1(false);
-                      }}
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-
-              {/* Motivo */}
-              <div className="flex flex-col">
-                <Label htmlFor="reason" className="mb-2">
-                  Motivo (opcional)
-                </Label>
-                <Input
-                  id="reason"
-                  type="text"
-                  value={formData.reason}
-                  onChange={(e) =>
-                    setFormData({ ...formData, reason: e.target.value })
-                  }
-                  placeholder="Motivo (opcional)"
-                  className="w-full"
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Aprobación y botón */}
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <Checkbox
-                id="aprobado"
-                checked={isJustified}
-                onCheckedChange={(checked) => setIsJustified(Boolean(checked))}
-              />
-              <Label htmlFor="justificado">Justificado (opcional)</Label>
-            </div>
-
-            <Button className="mt-2 md:mt-0" onClick={handleAbsenceRegister}>
-              <SaveIcon className="mr-2" />
-              Registrar Ausencia
-            </Button>
+          {/* Selector de Empleado */}
+          <div className="my-4">
+            <EmployeeSelect
+              onChange={setSelectedEmployee}
+              loadOptions={loadOptions}
+              value={selectedEmployee}
+            />
           </div>
 
-          {/* Tabla de Vacaciones */}
+          {/* Detalles del empleado */}
           <Card>
             <CardHeader>
               <CardDescription>
-                Historial de ausencias del empleado.
+                Información del empleado seleccionado.
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <AbsenceTable absences={employeeAbsences} />
+              {selectedEmployee && (
+                <EmployeeDetails employee={selectedEmployee} />
+              )}
+              <div>
+                {AbsenceSummary && (
+                  <div className="mt-4">
+                    <p className="font-bold">
+                      Total dias de Ausencias:{" "}
+                      <span className="font-normal">
+                        {AbsenceSummary.totalAbsences}
+                      </span>
+                    </p>
+                  </div>
+                )}
+              </div>
             </CardContent>
           </Card>
+
+          {/* Formulario de Vacaciones */}
+          <div className="flex flex-col gap-6 mt-3 pb-8">
+            <Card>
+              <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Fecha inicio */}
+                <div className="flex flex-col">
+                  <Label htmlFor="start-date" className="mb-2">
+                    Fecha de Ausencia
+                  </Label>
+                  <Popover open={open1} onOpenChange={setOpen1}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        id="start-date"
+                        className="w-full justify-between font-normal"
+                        type="button"
+                      >
+                        {renderDate(date1)}
+                        <ChevronDownIcon />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto overflow-hidden p-0">
+                      <Calendar
+                        mode="single"
+                        selected={date1 ?? undefined}
+                        captionLayout="dropdown"
+                        onSelect={(selectedDate) => {
+                          if (selectedDate) {
+                            setDate1(selectedDate);
+                            setFormData((prev) => ({
+                              ...prev,
+                              date: selectedDate,
+                            }));
+                          }
+                          setOpen1(false);
+                        }}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
+                {/* Motivo */}
+                <div className="flex flex-col">
+                  <Label htmlFor="reason" className="mb-2">
+                    Motivo (opcional)
+                  </Label>
+                  <Input
+                    id="reason"
+                    type="text"
+                    value={formData.reason}
+                    onChange={(e) =>
+                      setFormData({ ...formData, reason: e.target.value })
+                    }
+                    placeholder="Motivo (opcional)"
+                    className="w-full"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Aprobación y botón */}
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <Checkbox
+                  id="aprobado"
+                  checked={isJustified}
+                  onCheckedChange={(checked) =>
+                    setIsJustified(Boolean(checked))
+                  }
+                />
+                <Label htmlFor="justificado">Justificado (opcional)</Label>
+              </div>
+
+              <Button className="mt-2 md:mt-0" onClick={handleAbsenceRegister}>
+                <SaveIcon className="mr-2" />
+                Registrar Ausencia
+              </Button>
+            </div>
+
+            {/* Tabla de Vacaciones */}
+            <Card>
+              <CardHeader>
+                <CardDescription>
+                  Historial de ausencias del empleado.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <AbsenceTable absences={employeeAbsences} />
+              </CardContent>
+            </Card>
+          </div>
         </div>
-      </div>
-    </form>
+      </section>
+    </>
   );
 }

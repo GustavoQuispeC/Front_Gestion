@@ -196,7 +196,7 @@ export default function RegisterEmployee() {
     <>
       <form
         onSubmit={handleSubmit}
-        className="max-w-5xl mx-auto mt-10 p-6 bg-gray-50 shadow-lg rounded-xl"
+        className="max-w-5xl mx-auto mt-10 p-6 bg-gray-50 shadow-lg rounded-xl dark:bg-neutral-900"
       >
         <h2 className="text-2xl font-semibold mb-6 text-left mx-10">
           Registro de Empleado
