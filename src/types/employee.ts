@@ -72,15 +72,13 @@ export interface EmployeeListProps {
   createdAt: Date;
   isActive: boolean;
 }
-
 export interface EmployeeSearchProps {
-  id: string;
+  employeeId: number;
   firstName: string;
   lastNameFather: string;
   lastNameMother: string;
   documentNumber: string;
   position: string;
   email: string;
-  hireDate : Date;
-  
+  hireDate: string | Date; // Usar string si la API devuelve una fecha como cadena
 }

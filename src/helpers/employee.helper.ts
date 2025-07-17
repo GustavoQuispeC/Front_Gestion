@@ -52,32 +52,32 @@ export const getEmployeeById = async (
   }
 };
 
-//get employee by documentNumber
-export const getEmployeeByDocumentNumber = async (
-  documentNumber: string
-): Promise<EmployeeListProps> => {
-  try {
-    const response = await fetch(
-      `${apiUrl}/employee/document/${documentNumber}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+//! get employee by documentNumber
+// export const getEmployeeByDocumentNumber = async (
+//   documentNumber: string
+// ): Promise<EmployeeListProps> => {
+//   try {
+//     const response = await fetch(
+//       `${apiUrl}/employee/document/${documentNumber}`,
+//       {
+//         method: "GET",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//       }
+//     );
 
-    if (!response.ok) {
-      throw new Error(`Error al obtener el empleado: ${response.statusText}`);
-    }
+//     if (!response.ok) {
+//       throw new Error(`Error al obtener el empleado: ${response.statusText}`);
+//     }
 
-    const employeeData = await response.json();
-    return employeeData; // Se asume que la respuesta es un objeto que representa al empleado
-  } catch (error) {
-    console.error("Error al obtener el empleado:", error);
-    throw error;
-  }
-};
+//     const employeeData = await response.json();
+//     return employeeData; // Se asume que la respuesta es un objeto que representa al empleado
+//   } catch (error) {
+//     console.error("Error al obtener el empleado:", error);
+//     throw error;
+//   }
+// };
 
 //Create employee
 export async function employeeCreate(formData: EmployeeRegisterApiProps) {
@@ -107,25 +107,36 @@ export const getEmployeeByFullname = async (
   fullname: string
 ): Promise<EmployeeSearchProps[]> => {
   try {
-    const response = await fetch(
-      `${apiUrl}/employee/fullname?query=${encodeURIComponent(fullname)}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    // Usar URLSearchParams para crear la consulta de manera más limpia
+    const url = new URL(`${apiUrl}/employee/fullname`);
+    url.searchParams.append("query", fullname);
+
+    const response = await fetch(url.toString(), {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
     if (!response.ok) {
-      throw new Error(`Error al obtener empleados: ${response.statusText}`);
+      // Mejor manejo de errores, incluir el código de estado
+      throw new Error(
+        `Error al obtener empleados: ${response.status} - ${response.statusText}`
+      );
     }
 
     const employeeData = await response.json();
-    return employeeData;
+
+    // Validar que la respuesta sea del tipo esperado
+    if (Array.isArray(employeeData)) {
+      return employeeData as EmployeeSearchProps[];
+    } else {
+      throw new Error("La respuesta no es un arreglo de empleados válido.");
+    }
   } catch (error) {
+    // Mejorar el manejo de errores, incluir detalles adicionales
     console.error("Error al obtener empleados:", error);
-    throw error;
+    throw error; // Propagar el error hacia el llamador
   }
 };
 

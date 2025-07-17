@@ -1,8 +1,20 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import {
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
@@ -11,23 +23,33 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getEmployeeByDocumentNumber } from "@/helpers/employee.helper";
+import { getEmployeeByFullname } from "@/helpers/employee.helper";
 import { getAllRoles } from "@/helpers/role.helper";
 import { registerUser } from "@/helpers/user.helpers";
 import { RoleListProps } from "@/types/role";
 import { UserRegisterProps } from "@/types/user";
+import { Check, ChevronsUpDown, Command } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaBrush, FaSave } from "react-icons/fa";
-import { FcSearch } from "react-icons/fc";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { toast, ToastContainer } from "react-toastify";
 
 const UserRegister = () => {
   const [roles, setRoles] = useState<RoleListProps[]>([]);
-  const [hasPermission, setHasPermission] = useState<boolean>(true); //? Para mostrar u ocultar el formulario
+  const [hasPermission, setHasPermission] = useState<boolean>(true);
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState("");
+  interface Employee {
+    employeeId: number;
+    firstName: string;
+    lastNameFather: string;
+    lastNameMother: string;
+    email: string;
+  }
 
-  const [employeeData, setEmployeeData] = useState({
+  const [filteredEmployees, setFilteredEmployees] = useState<Employee[]>([]); // Estado para los empleados filtrados
+  const [employeeData, setEmployeeData] = useState<Employee>({
     employeeId: 0,
     firstName: "",
     lastNameFather: "",
@@ -55,40 +77,27 @@ const UserRegister = () => {
   };
 
   //! Función para buscar empleado por número de documento
-  const handleSearch = async (documentNumber: string) => {
-    if (documentNumber.length >= 8) {
+  const handleSearch = async (fullname: string) => {
+    if (fullname.length >= 1) {
       try {
-        const empleadoData = await getEmployeeByDocumentNumber(documentNumber);
-        if (!empleadoData) {
-          setEmployeeData({
-            employeeId: 0,
-            firstName: "",
-            lastNameFather: "",
-            lastNameMother: "",
-            email: "",
-          });
+        const empleadoData = await getEmployeeByFullname(fullname);
+
+        if (empleadoData.length === 0) {
+          setFilteredEmployees([]); // Si no hay resultados, limpiar la lista de empleados
           toast.error("No se encontró el empleado", { theme: "colored" });
           return;
         }
 
-        setEmployeeData({
-          firstName: empleadoData.firstName,
-          lastNameFather: empleadoData.lastNameFather,
-          lastNameMother: empleadoData.lastNameMother,
-          email: empleadoData.email,
-
-          employeeId: empleadoData.id,
-        });
-
-        toast.success("Empleado encontrado", { theme: "colored" });
+        setFilteredEmployees(empleadoData); // Guardar los empleados encontrados en el estado
       } catch (e) {
         toast.error("Error al buscar el empleado", { theme: "colored" });
         console.error("Error al buscar el empleado:", e);
       }
+    } else {
+      setFilteredEmployees([]); // Limpiar los resultados si no se ingresa ningún texto
     }
   };
 
-  //! Llamada automática cuando el componente se monta
   useEffect(() => {
     // Aquí validamos el rol del usuario antes de permitirle ver la página
     const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -113,37 +122,27 @@ const UserRegister = () => {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validación de campos
-    if (!userRegister.userName) {
-      toast.error("El campo Nombre de Usuario es obligatorio", {
-        theme: "colored",
-      });
-      return;
-    }
-    if (!userRegister.password) {
-      toast.error("El campo Contraseña es obligatorio", { theme: "colored" });
-      return;
-    }
-    if (!userRegister.roleId) {
-      toast.error("El campo Rol es obligatorio", { theme: "colored" });
+    if (
+      !userRegister.userName ||
+      !userRegister.password ||
+      !userRegister.roleId
+    ) {
+      toast.error("Todos los campos son obligatorios", { theme: "colored" });
       return;
     }
 
-    //? Asignar datos de empleado a userRegister antes de enviar
     const userRegisterData: UserRegisterProps = {
       employeeId: employeeData.employeeId,
       userName: userRegister.userName,
-
       password: userRegister.password,
       roleId: userRegister.roleId,
       isActive: userRegister.isActive,
     };
 
     try {
-      // Llamamos al helper para registrar al usuario
       const response = await registerUser(userRegisterData);
 
-      if (response && response.message === "Usuario creado correctamente") {
+      if (response?.message === "Usuario creado correctamente") {
         toast.success("Usuario registrado con éxito", { theme: "colored" });
       } else {
         toast.error("Error al registrar el usuario", { theme: "colored" });
@@ -154,7 +153,6 @@ const UserRegister = () => {
     }
   };
 
-  //? Limpiar el formulario
   const handleReset = () => {
     setEmployeeData({
       employeeId: 0,
@@ -201,27 +199,64 @@ const UserRegister = () => {
           Registro de usuario
         </h2>
 
-        {/* Buscar empleado por número de documento */}
-        <div className="flex flex-col mb-6 mx-10">
-          <div className="relative">
-            <Input
-              type="text"
-              id="documentNumber"
-              name="documentNumber"
-              className="input input-info w-full pr-10"
-              placeholder="Ingrese Nro. DNI"
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  handleSearch(e.currentTarget.value);
-                }
-              }}
-            />
-            <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-              <FcSearch className="text-xl" />
-            </span>
-          </div>
-        </div>
+        {/* Buscar empleado por apellidos y nombres*/}
+
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={open}
+              className="w-[200px] justify-between"
+            >
+              {value
+                ? `${employeeData.lastNameFather} ${employeeData.lastNameMother} ${employeeData.firstName}`
+                : "Buscar empleado..."}
+              <ChevronsUpDown className="opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[300px] p-0">
+            <Command>
+              <CommandInput
+                placeholder="Buscar empleado..."
+                className="h-9"
+                value={value}
+                onValueChange={(val: string) => {
+                  setValue(val); // Actualiza el valor con el texto ingresado
+                  handleSearch(val); // Llama a la función de búsqueda
+                }}
+              />
+              <CommandList>
+                <CommandEmpty>No se encontraron empleados.</CommandEmpty>
+                <CommandGroup>
+                  {filteredEmployees.map((employee) => (
+                    <CommandItem
+                      key={employee.employeeId}
+                      value={employee.firstName + " " + employee.lastNameFather}
+                      onSelect={() => {
+                        setEmployeeData(employee); // Establecer el empleado seleccionado
+                        setValue(
+                          employee.firstName + " " + employee.lastNameFather
+                        ); // Mostrar el nombre seleccionado
+                        setOpen(false); // Cerrar el Popover
+                      }}
+                    >
+                      {employee.firstName} {employee.lastNameFather}
+                      <Check
+                        className={`ml-auto ${
+                          value ===
+                          employee.firstName + " " + employee.lastNameFather
+                            ? "opacity-100"
+                            : "opacity-0"
+                        }`}
+                      />
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
 
         {/* Fila de Apellido y Nombre + Username */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 mx-10">
