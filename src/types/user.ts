@@ -31,7 +31,7 @@ export interface UserListByIdProps {
 
 export interface UserRegisterProps {
 
-  employeeId: number;
+  employeeId: string;
   userName: string;
   password: string;
   roleId: string;

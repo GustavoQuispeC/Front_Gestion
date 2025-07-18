@@ -73,7 +73,7 @@ export interface EmployeeListProps {
   isActive: boolean;
 }
 export interface EmployeeSearchProps {
-  employeeId: number;
+  employeeId: string;
   firstName: string;
   lastNameFather: string;
   lastNameMother: string;

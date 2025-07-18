@@ -1,20 +1,9 @@
 "use client";
 
+import EmployeeSelect from "@/components/EmployeeControl/subcomponentes/EmployeeSelect";
 import { Button } from "@/components/ui/button";
-import {
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
@@ -26,9 +15,9 @@ import {
 import { getEmployeeByFullname } from "@/helpers/employee.helper";
 import { getAllRoles } from "@/helpers/role.helper";
 import { registerUser } from "@/helpers/user.helpers";
+import { EmployeeSearchProps } from "@/types/employee";
 import { RoleListProps } from "@/types/role";
 import { UserRegisterProps } from "@/types/user";
-import { Check, ChevronsUpDown, Command } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaBrush, FaSave } from "react-icons/fa";
@@ -38,32 +27,28 @@ import { toast, ToastContainer } from "react-toastify";
 const UserRegister = () => {
   const [roles, setRoles] = useState<RoleListProps[]>([]);
   const [hasPermission, setHasPermission] = useState<boolean>(true);
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
-  interface Employee {
-    employeeId: number;
-    firstName: string;
-    lastNameFather: string;
-    lastNameMother: string;
-    email: string;
-  }
 
-  const [filteredEmployees, setFilteredEmployees] = useState<Employee[]>([]); // Estado para los empleados filtrados
-  const [employeeData, setEmployeeData] = useState<Employee>({
-    employeeId: 0,
+  const [employeeData, setEmployeeData] = useState<EmployeeSearchProps>({
+    employeeId: "",
     firstName: "",
     lastNameFather: "",
     lastNameMother: "",
+    documentNumber: "",
+    position: "",
     email: "",
+    hireDate: "",
   });
 
   const [userRegister, setUserRegister] = useState<UserRegisterProps>({
-    employeeId: 0,
+    employeeId: "",
     userName: "",
     password: "",
     roleId: "",
     isActive: true,
   });
+
+  const [selectedEmployee, setSelectedEmployee] =
+    useState<EmployeeSearchProps | null>(null);
 
   //! Función para obtener todos los roles
   const GetRoles = async () => {
@@ -76,25 +61,19 @@ const UserRegister = () => {
     }
   };
 
-  //! Función para buscar empleado por número de documento
-  const handleSearch = async (fullname: string) => {
-    if (fullname.length >= 1) {
-      try {
-        const empleadoData = await getEmployeeByFullname(fullname);
-
-        if (empleadoData.length === 0) {
-          setFilteredEmployees([]); // Si no hay resultados, limpiar la lista de empleados
-          toast.error("No se encontró el empleado", { theme: "colored" });
-          return;
-        }
-
-        setFilteredEmployees(empleadoData); // Guardar los empleados encontrados en el estado
-      } catch (e) {
-        toast.error("Error al buscar el empleado", { theme: "colored" });
-        console.error("Error al buscar el empleado:", e);
-      }
-    } else {
-      setFilteredEmployees([]); // Limpiar los resultados si no se ingresa ningún texto
+  //! Función para cargar opciones de empleados
+  const loadOptions = async (inputValue: string) => {
+    if (inputValue.length < 1) return [];
+    try {
+      const data = await getEmployeeByFullname(inputValue);
+      return data.map((empleado) => ({
+        label: `${empleado.firstName} ${empleado.lastNameFather} ${empleado.lastNameMother}`,
+        value: empleado.employeeId,
+        ...empleado,
+      }));
+    } catch (error) {
+      console.error("Error cargando empleados:", error);
+      return [];
     }
   };
 
@@ -155,19 +134,49 @@ const UserRegister = () => {
 
   const handleReset = () => {
     setEmployeeData({
-      employeeId: 0,
+      employeeId: "",
       firstName: "",
       lastNameFather: "",
       lastNameMother: "",
       email: "",
+      documentNumber: "",
+      position: "",
+      hireDate: "",
     });
     setUserRegister({
-      employeeId: 0,
+      employeeId: "",
       userName: "",
       password: "",
       roleId: "",
       isActive: false,
     });
+  };
+
+  const handleEmployeeChange = (employee: EmployeeSearchProps | null) => {
+    setSelectedEmployee(employee); // Actualiza el empleado seleccionado
+    if (employee) {
+      setEmployeeData({
+        employeeId: employee.employeeId,
+        firstName: employee.firstName,
+        lastNameFather: employee.lastNameFather,
+        lastNameMother: employee.lastNameMother,
+        email: employee.email,
+        documentNumber: employee.documentNumber,
+        position: employee.position,
+        hireDate: employee.hireDate,
+      }); // Actualiza employeeData con los datos del empleado
+    } else {
+      setEmployeeData({
+        employeeId: "",
+        firstName: "",
+        lastNameFather: "",
+        lastNameMother: "",
+        email: "",
+        documentNumber: "",
+        position: "",
+        hireDate: "",
+      }); // Limpiar datos si no hay empleado
+    }
   };
 
   if (!hasPermission) {
@@ -200,63 +209,13 @@ const UserRegister = () => {
         </h2>
 
         {/* Buscar empleado por apellidos y nombres*/}
-
-        <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              role="combobox"
-              aria-expanded={open}
-              className="w-[200px] justify-between"
-            >
-              {value
-                ? `${employeeData.lastNameFather} ${employeeData.lastNameMother} ${employeeData.firstName}`
-                : "Buscar empleado..."}
-              <ChevronsUpDown className="opacity-50" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-[300px] p-0">
-            <Command>
-              <CommandInput
-                placeholder="Buscar empleado..."
-                className="h-9"
-                value={value}
-                onValueChange={(val: string) => {
-                  setValue(val); // Actualiza el valor con el texto ingresado
-                  handleSearch(val); // Llama a la función de búsqueda
-                }}
-              />
-              <CommandList>
-                <CommandEmpty>No se encontraron empleados.</CommandEmpty>
-                <CommandGroup>
-                  {filteredEmployees.map((employee) => (
-                    <CommandItem
-                      key={employee.employeeId}
-                      value={employee.firstName + " " + employee.lastNameFather}
-                      onSelect={() => {
-                        setEmployeeData(employee); // Establecer el empleado seleccionado
-                        setValue(
-                          employee.firstName + " " + employee.lastNameFather
-                        ); // Mostrar el nombre seleccionado
-                        setOpen(false); // Cerrar el Popover
-                      }}
-                    >
-                      {employee.firstName} {employee.lastNameFather}
-                      <Check
-                        className={`ml-auto ${
-                          value ===
-                          employee.firstName + " " + employee.lastNameFather
-                            ? "opacity-100"
-                            : "opacity-0"
-                        }`}
-                      />
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </CommandList>
-            </Command>
-          </PopoverContent>
-        </Popover>
+        <div className="my-4">
+          <EmployeeSelect
+            onChange={handleEmployeeChange}
+            loadOptions={loadOptions}
+            value={selectedEmployee}
+          />
+        </div>
 
         {/* Fila de Apellido y Nombre + Username */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 mx-10">

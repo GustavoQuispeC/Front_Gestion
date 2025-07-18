@@ -77,7 +77,7 @@ export default function EmployeeVacation() {
       const data = await getEmployeeByFullname(inputValue);
       return data.map((empleado) => ({
         label: `${empleado.firstName} ${empleado.lastNameFather} ${empleado.lastNameMother}`,
-        value: empleado.id,
+        value: empleado.employeeId,
         ...empleado,
       }));
     } catch (error) {
@@ -107,7 +107,7 @@ export default function EmployeeVacation() {
   //! Efecto para cargar los datos del empleado seleccionado
   useEffect(() => {
     if (!mounted || !selectedEmployee) return; // Asegúrate de no renderizar si no se ha montado
-    fetchEmployeeData(selectedEmployee.id);
+    fetchEmployeeData(selectedEmployee.employeeId);
   }, [selectedEmployee, mounted, fetchEmployeeData]);
 
   //! Efecto para manejar el cambio de fecha
@@ -121,7 +121,7 @@ export default function EmployeeVacation() {
       return toast.error("Debe seleccionar una fecha de ausencia.");
 
     const data: AbsenceRegisterProps = {
-      employeeId: Number(selectedEmployee.id),
+      employeeId: Number(selectedEmployee.employeeId),
       date: formData.date,
       isJustified: isJustified,
       reason: formData.reason,
@@ -130,7 +130,7 @@ export default function EmployeeVacation() {
     try {
       await AbsenceRegister(data, token || "");
       toast.success("Falta registrada con éxito.");
-      await fetchEmployeeData(selectedEmployee.id);
+      await fetchEmployeeData(selectedEmployee.employeeId);
       setFormData({ date: null, reason: "" });
       setIsJustified(false);
     } catch (error) {
