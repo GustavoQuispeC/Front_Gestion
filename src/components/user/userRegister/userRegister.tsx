@@ -27,9 +27,10 @@ import { toast, ToastContainer } from "react-toastify";
 const UserRegister = () => {
   const [roles, setRoles] = useState<RoleListProps[]>([]);
   const [hasPermission, setHasPermission] = useState<boolean>(true);
-
+  const [selectedEmployee, setSelectedEmployee] =
+    useState<EmployeeSearchProps | null>(null);
   const [employeeData, setEmployeeData] = useState<EmployeeSearchProps>({
-    employeeId: "",
+    id: "",
     firstName: "",
     lastNameFather: "",
     lastNameMother: "",
@@ -40,15 +41,13 @@ const UserRegister = () => {
   });
 
   const [userRegister, setUserRegister] = useState<UserRegisterProps>({
-    employeeId: "",
+    employeeId: 0,
     userName: "",
     password: "",
     roleId: "",
     isActive: true,
+    email: "",
   });
-
-  const [selectedEmployee, setSelectedEmployee] =
-    useState<EmployeeSearchProps | null>(null);
 
   //! Función para obtener todos los roles
   const GetRoles = async () => {
@@ -66,17 +65,21 @@ const UserRegister = () => {
     if (inputValue.length < 1) return [];
     try {
       const data = await getEmployeeByFullname(inputValue);
+      console.log("Datos de empleados:", data); // Verifica la estructura de los datos
       return data.map((empleado) => ({
-        label: `${empleado.firstName} ${empleado.lastNameFather} ${empleado.lastNameMother}`,
-        value: empleado.employeeId,
+        label: `${empleado.firstName} ${empleado.lastNameFather} ${empleado.lastNameMother} ${empleado.id}`,
+        value: empleado.id,
         ...empleado,
+
       }));
     } catch (error) {
       console.error("Error cargando empleados:", error);
       return [];
     }
+   
   };
 
+  //!validación de permisos
   useEffect(() => {
     // Aquí validamos el rol del usuario antes de permitirle ver la página
     const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -90,51 +93,53 @@ const UserRegister = () => {
   }, []);
 
   //! Función para manejar el cambio del rol
-  const handleRoleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleRoleChange = (value: string) => {
     setUserRegister({
       ...userRegister,
-      roleId: e.target.value,
+      roleId: value,
     });
   };
 
   //! Función para manejar el registro de usuario
   const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (
-      !userRegister.userName ||
-      !userRegister.password ||
-      !userRegister.roleId
-    ) {
-      toast.error("Todos los campos son obligatorios", { theme: "colored" });
-      return;
-    }
+  // Validaciones de campos obligatorios
+  if (!userRegister.userName || !userRegister.password || !userRegister.roleId) {
+    toast.error("Todos los campos son obligatorios", { theme: "colored" });
+    return;
+  }
 
-    const userRegisterData: UserRegisterProps = {
-      employeeId: employeeData.employeeId,
-      userName: userRegister.userName,
-      password: userRegister.password,
-      roleId: userRegister.roleId,
-      isActive: userRegister.isActive,
-    };
-
-    try {
-      const response = await registerUser(userRegisterData);
-
-      if (response?.message === "Usuario creado correctamente") {
-        toast.success("Usuario registrado con éxito", { theme: "colored" });
-      } else {
-        toast.error("Error al registrar el usuario", { theme: "colored" });
-      }
-    } catch (error) {
-      console.error("Error al registrar el usuario:", error);
-      toast.error("Error al registrar el usuario", { theme: "colored" });
-    }
+  // Crear los datos del registro de usuario
+  const userRegisterData: UserRegisterProps = {
+    employeeId: Number(employeeData.id),  // Usar el id del empleado
+    userName: userRegister.userName,  // Nombre de usuario
+    password: userRegister.password,  // Contraseña
+    roleId: userRegister.roleId,  // Rol seleccionado
+    isActive: userRegister.isActive,  // Estado del usuario
+    email: employeeData.email,  // Correo del empleado (Asegúrate de que se esté usando el email correctamente)
   };
 
+  try {
+    // Llamada para registrar al usuario
+    const response = await registerUser(userRegisterData);
+
+    if (response?.message === "Usuario creado correctamente") {
+      toast.success("Usuario registrado con éxito", { theme: "colored" });
+    } else {
+      toast.error("Error al registrar el usuario", { theme: "colored" });
+    }
+  } catch (error) {
+    console.error("Error al registrar el usuario:", error);
+    toast.error("Error al registrar el usuario", { theme: "colored" });
+  }
+};
+
+
+  //! Limpieza de formulario
   const handleReset = () => {
     setEmployeeData({
-      employeeId: "",
+      id: "",
       firstName: "",
       lastNameFather: "",
       lastNameMother: "",
@@ -144,19 +149,21 @@ const UserRegister = () => {
       hireDate: "",
     });
     setUserRegister({
-      employeeId: "",
+      employeeId: 0,
       userName: "",
       password: "",
       roleId: "",
       isActive: false,
+      email: "",
     });
   };
 
+  //! Función para manejar el cambio de empleado
   const handleEmployeeChange = (employee: EmployeeSearchProps | null) => {
-    setSelectedEmployee(employee); // Actualiza el empleado seleccionado
+    setSelectedEmployee(employee);
     if (employee) {
       setEmployeeData({
-        employeeId: employee.employeeId,
+        id: employee.id,
         firstName: employee.firstName,
         lastNameFather: employee.lastNameFather,
         lastNameMother: employee.lastNameMother,
@@ -167,7 +174,7 @@ const UserRegister = () => {
       }); // Actualiza employeeData con los datos del empleado
     } else {
       setEmployeeData({
-        employeeId: "",
+        id: "",
         firstName: "",
         lastNameFather: "",
         lastNameMother: "",
@@ -225,7 +232,7 @@ const UserRegister = () => {
               Apellido y Nombres:{" "}
             </Label>
             <span id="fullName" className="text-gray-700">
-              {`${employeeData.lastNameFather} ${employeeData.lastNameMother} ${employeeData.firstName}`}
+              {`${employeeData.lastNameFather} ${employeeData.lastNameMother} ${employeeData.firstName} ` }
             </span>
           </div>
 
@@ -259,6 +266,7 @@ const UserRegister = () => {
               id="email"
               name="email"
               value={employeeData.email}
+
               readOnly
               className="input input-info w-full"
             />
@@ -290,9 +298,7 @@ const UserRegister = () => {
             <div className="relative">
               <Select
                 value={userRegister.roleId}
-                onValueChange={(value) =>
-                  setUserRegister({ ...userRegister, roleId: value })
-                }
+                onValueChange={handleRoleChange} // Usa la función aquí
               >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Seleccione un rol" />

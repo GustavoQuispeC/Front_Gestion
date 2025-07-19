@@ -31,11 +31,12 @@ export interface UserListByIdProps {
 
 export interface UserRegisterProps {
 
-  employeeId: string;
+  employeeId: number;
   userName: string;
   password: string;
   roleId: string;
   isActive: boolean;
+  email: string;
 }
 
 export interface UserRegisterErrorProps {
