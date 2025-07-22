@@ -70,13 +70,11 @@ const UserRegister = () => {
         label: `${empleado.firstName} ${empleado.lastNameFather} ${empleado.lastNameMother} ${empleado.id}`,
         value: empleado.id,
         ...empleado,
-
       }));
     } catch (error) {
       console.error("Error cargando empleados:", error);
       return [];
     }
-   
   };
 
   //!validación de permisos
@@ -102,39 +100,48 @@ const UserRegister = () => {
 
   //! Función para manejar el registro de usuario
   const handleRegister = async (e: React.FormEvent) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  // Validaciones de campos obligatorios
-  if (!userRegister.userName || !userRegister.password || !userRegister.roleId) {
-    toast.error("Todos los campos son obligatorios", { theme: "colored" });
-    return;
-  }
-
-  // Crear los datos del registro de usuario
-  const userRegisterData: UserRegisterProps = {
-    employeeId: Number(employeeData.id),  // Usar el id del empleado
-    userName: userRegister.userName,  // Nombre de usuario
-    password: userRegister.password,  // Contraseña
-    roleId: userRegister.roleId,  // Rol seleccionado
-    isActive: userRegister.isActive,  // Estado del usuario
-    email: employeeData.email,  // Correo del empleado (Asegúrate de que se esté usando el email correctamente)
-  };
-
-  try {
-    // Llamada para registrar al usuario
-    const response = await registerUser(userRegisterData);
-
-    if (response?.message === "Usuario creado correctamente") {
-      toast.success("Usuario registrado con éxito", { theme: "colored" });
-    } else {
-      toast.error("Error al registrar el usuario", { theme: "colored" });
+    // Validaciones de campos obligatorios
+    if (
+      !userRegister.userName ||
+      !userRegister.password ||
+      !userRegister.roleId
+    ) {
+      toast.error("Todos los campos son obligatorios", { theme: "colored" });
+      return;
     }
-  } catch (error) {
-    console.error("Error al registrar el usuario:", error);
-    toast.error("Error al registrar el usuario", { theme: "colored" });
-  }
-};
 
+    // Crear los datos del registro de usuario
+    const userRegisterData: UserRegisterProps = {
+      employeeId: Number(employeeData.id), // Usar el id del empleado
+      userName: userRegister.userName, // Nombre de usuario
+      password: userRegister.password, // Contraseña
+      roleId: userRegister.roleId, // Rol seleccionado
+      isActive: userRegister.isActive, // Estado del usuario
+      email: employeeData.email, // Correo del empleado (Asegúrate de que se esté usando el email correctamente)
+    };
+
+    try {
+      const response = await registerUser(userRegisterData);
+
+      if (response?.message === "Usuario creado correctamente") {
+        toast.success("Usuario registrado con éxito", { theme: "colored" });
+      } else {
+        toast.error("Error al registrar el usuario", { theme: "colored" });
+      }
+    } catch (error) {
+      console.error("Error al registrar el usuario:", error);
+      // Verificar si el error tiene un mensaje del backend
+      if (error instanceof Error && error.message) {
+        toast.error(error.message, { theme: "colored" }); // Muestra el mensaje del backend
+      } else {
+        toast.error("Error desconocido al registrar el usuario", {
+          theme: "colored",
+        });
+      }
+    }
+  };
 
   //! Limpieza de formulario
   const handleReset = () => {
@@ -197,9 +204,9 @@ const UserRegister = () => {
             Por favor comuníquese con el administrador del sistema.
           </p>
           <Link href="/dashboard/main">
-            <button className="mt-6 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+            <Button className="mt-6 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
               Volver al Dashboard
-            </button>
+            </Button>
           </Link>
         </div>
       </div>
@@ -216,7 +223,7 @@ const UserRegister = () => {
         </h2>
 
         {/* Buscar empleado por apellidos y nombres*/}
-        <div className="my-4">
+        <div className="my-4 mx-10">
           <EmployeeSelect
             onChange={handleEmployeeChange}
             loadOptions={loadOptions}
@@ -232,15 +239,13 @@ const UserRegister = () => {
               Apellido y Nombres:{" "}
             </Label>
             <span id="fullName" className="text-gray-700">
-              {`${employeeData.lastNameFather} ${employeeData.lastNameMother} ${employeeData.firstName} ` }
+              {`${employeeData.lastNameFather} ${employeeData.lastNameMother} ${employeeData.firstName} `}
             </span>
           </div>
 
           {/* Username */}
           <div className="flex flex-col">
-            <Label htmlFor="userName" className="mb-1 text-sm font-medium">
-              Nombre de Usuario
-            </Label>
+            <Label htmlFor="userName">Nombre de Usuario</Label>
             <Input
               type="text"
               id="userName"
@@ -266,7 +271,6 @@ const UserRegister = () => {
               id="email"
               name="email"
               value={employeeData.email}
-
               readOnly
               className="input input-info w-full"
             />
@@ -274,7 +278,7 @@ const UserRegister = () => {
 
           {/* Contraseña */}
           <div className="flex flex-col">
-            <Label htmlFor="password" className="mb-1 text-sm font-medium">
+            <Label htmlFor="password" className="mb-1 ">
               Contraseña
             </Label>
             <Input
@@ -292,7 +296,7 @@ const UserRegister = () => {
 
           {/* Rol */}
           <div className="flex flex-col">
-            <Label htmlFor="role" className="mb-1 text-sm font-medium">
+            <Label htmlFor="role" className="mb-1">
               Rol
             </Label>
             <div className="relative">

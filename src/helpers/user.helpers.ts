@@ -98,7 +98,7 @@ export async function registerUser(userData: UserRegisterProps) {
     }
 
     const json = await response.json();
-    return json;
+    return json; // Regresa el JSON, asegúrate que el backend devuelve un objeto con `message`
   } catch (error) {
     console.error("Error al registrar el usuario:", error);
     throw error;
@@ -129,7 +129,11 @@ export async function deleteUser(userId: string, token: string) {
 }
 
 //Update user
-export async function updateUser(userId: string, userData: UserUpdateProps, token: string) {
+export async function updateUser(
+  userId: string,
+  userData: UserUpdateProps,
+  token: string
+) {
   try {
     const response = await fetch(`${apiUrl}/user/${userId}`, {
       method: "PUT",

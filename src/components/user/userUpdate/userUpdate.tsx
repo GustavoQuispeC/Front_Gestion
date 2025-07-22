@@ -9,6 +9,18 @@ import { FaBrush, FaEye, FaEyeSlash, FaSave } from "react-icons/fa";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { toast, ToastContainer } from "react-toastify";
 import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Select } from "@radix-ui/react-select";
+import {
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const UserUpdate = ({ userId }: { userId: string }) => {
   const [hasPermission] = useState<boolean>(true); //? Para mostrar u ocultar el formulario
@@ -67,42 +79,41 @@ const UserUpdate = ({ userId }: { userId: string }) => {
   };
 
   //! Llamar a la función para obtener los roles al cargar el componente
-  const handleRoleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedRoleId = e.target.value;
-    setUsers((prev) => ({
-      ...prev,
-      roleId: selectedRoleId,
-    }));
+  const handleRoleChange = (value: string) => {
+    setUsers({
+      ...users,
+      roleId: value,
+    });
   };
 
   //! actualizar el usuario
   const handleUpdateUser = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  if (isSubmitting) return;
-  setIsSubmitting(true);
-  try {
-    const token = localStorage.getItem("token") || "";
-    const updatedUser = {
-      userName: users.userName,
-      password: users.password,
-      roleId: users.roleId,
-      isActive: users.isActive,
-      employeeId: users.employeeId,
-      currentPassword: users.currentPassword,
-    };
-    const response = await updateUser(userId, updatedUser, token);
-    if (response) {
-      toast.success("Usuario actualizado correctamente", {
-        theme: "colored",
-      });
+    e.preventDefault();
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    try {
+      const token = localStorage.getItem("token") || "";
+      const updatedUser = {
+        userName: users.userName,
+        password: users.password,
+        roleId: users.roleId,
+        isActive: users.isActive,
+        employeeId: users.employeeId,
+        currentPassword: users.currentPassword,
+      };
+      const response = await updateUser(userId, updatedUser, token);
+      if (response) {
+        toast.success("Usuario actualizado correctamente", {
+          theme: "colored",
+        });
+      }
+    } catch (error) {
+      toast.error("Error al actualizar el usuario", { theme: "colored" });
+      console.error("Error al actualizar el usuario:", error);
+    } finally {
+      setIsSubmitting(false);
     }
-  } catch (error) {
-    toast.error("Error al actualizar el usuario", { theme: "colored" });
-    console.error("Error al actualizar el usuario:", error);
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+  };
 
   //! Manejar cambios en los campos de entrada
   const handleInputChange = (
@@ -110,6 +121,8 @@ const UserUpdate = ({ userId }: { userId: string }) => {
   ) => {
     const target = e.target as HTMLInputElement | HTMLSelectElement;
     const { name, value, type } = target;
+
+    // Verificar si el campo es el checkbox y manejarlo correctamente
     setUsers((prevState) => ({
       ...prevState,
       [name]:
@@ -129,9 +142,7 @@ const UserUpdate = ({ userId }: { userId: string }) => {
             Por favor comuníquese con el administrador del sistema.
           </p>
           <Link href="/dashboard/main">
-            <button className="mt-6 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-              Volver al Dashboard
-            </button>
+            <Button className="mt-6 px-4 py-2">Volver al Dashboard</Button>
           </Link>
         </div>
       </div>
@@ -152,12 +163,12 @@ const UserUpdate = ({ userId }: { userId: string }) => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
           {/* Apellido y Nombre */}
           <div className="flex flex-col">
-            <label
+            <Label
               htmlFor="fullName"
               className="mb-2 text-sm font-semibold text-gray-700"
             >
               Apellido y Nombres:{" "}
-            </label>
+            </Label>
             <span id="fullName" className="text-gray-600">
               {`${users.lastNameFather} ${users.lastNameMother} ${users.firstName}`}
             </span>
@@ -165,44 +176,42 @@ const UserUpdate = ({ userId }: { userId: string }) => {
 
           {/* Username */}
           <div className="flex flex-col">
-            <label
+            <Label
               htmlFor="userName"
               className="mb-2 text-sm font-semibold text-gray-700"
             >
               Nombre de Usuario
-            </label>
-            <input
+            </Label>
+            <Input
               type="text"
               id="userName"
               name="userName"
               value={users.userName}
               onChange={handleInputChange}
-              className="input w-full border border-gray-300 focus:ring-2 focus:ring-blue-500 rounded-md p-2"
+              className="input w-full  p-2"
             />
           </div>
 
           {/* Rol */}
           <div className="flex flex-col">
-            <label
-              htmlFor="role"
-              className="mb-2 text-sm font-semibold text-gray-700"
-            >
+            <Label htmlFor="role" className="mb-2">
               Rol
-            </label>
-            <select
-              id="role"
-              name="role"
-              className="input w-full border border-gray-300 focus:ring-2 focus:ring-blue-500 rounded-md p-2"
-              onChange={handleRoleChange}
-              value={users.roleId || ""}
-            >
-              <option value="">Seleccione un rol</option>
-              {roles.map((role) => (
-                <option key={role.id} value={role.id}>
-                  {role.name}
-                </option>
-              ))}
-            </select>
+            </Label>
+
+            <Select value={users.roleId} onValueChange={handleRoleChange}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Seleccione un rol" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {roles.map((role) => (
+                    <SelectItem key={role.id} value={role.id}>
+                      {role.name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
@@ -210,12 +219,12 @@ const UserUpdate = ({ userId }: { userId: string }) => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
           {/* Correo */}
           <div className="flex flex-col">
-            <label
+            <Label
               htmlFor="email"
               className="mb-2 text-sm font-semibold text-gray-700"
             >
               Correo Electrónico
-            </label>
+            </Label>
             <span id="email" className="text-gray-600">
               {users.email || "No disponible"}
             </span>
@@ -223,19 +232,16 @@ const UserUpdate = ({ userId }: { userId: string }) => {
 
           {/* Contraseña actual */}
           <div className="flex flex-col relative">
-            <label
-              htmlFor="currentPassword"
-              className="mb-2 text-sm font-semibold text-gray-700"
-            >
+            <Label htmlFor="currentPassword" className="mb-2">
               Contraseña actual
-            </label>
-            <input
+            </Label>
+            <Input
               type={showCurrentPassword ? "text" : "password"}
               id="currentPassword"
               name="currentPassword"
               value={users.currentPassword || ""}
               onChange={handleInputChange}
-              className="input w-full border border-gray-300 focus:ring-2 focus:ring-blue-500 rounded-md p-2 pr-10"
+              className="input w-full  p-2 pr-10"
               placeholder="Ingrese la contraseña actual"
             />
             <span
@@ -252,99 +258,82 @@ const UserUpdate = ({ userId }: { userId: string }) => {
 
           {/* Contraseña nueva */}
           <div className="flex flex-col relative">
-            <label
-              htmlFor="password"
-              className="mb-2 text-sm font-semibold text-gray-700"
-            >
+            <Label htmlFor="password" className="mb-2 ">
               Contraseña nueva
-            </label>
-            <input
+            </Label>
+            <Input
               type={showNewPassword ? "text" : "password"}
               id="password"
               name="password"
               value={users.password || ""}
               onChange={handleInputChange}
-              className="input w-full border border-gray-300 focus:ring-2 focus:ring-blue-500 rounded-md p-2 pr-10"
+              className="input w-full p-2 pr-10"
               placeholder="Ingrese una nueva contraseña"
             />
             <span
-             className="absolute right-3 bottom-3 text-gray-400 cursor-pointer"
+              className="absolute right-3 bottom-3 text-gray-400 cursor-pointer"
               onClick={() => setShowNewPassword(!showNewPassword)}
             >
               {showNewPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
             </span>
           </div>
 
-          <div className="flex flex-col">
-            <label
-              htmlFor="isActive"
-              className="mb-2 text-sm font-semibold text-gray-700"
+          {/* Estado */}
+          {/* Estado */}
+          <div className="flex items-center gap-3">
+            <Checkbox
+              id="isActive"
+              name="isActive"
+              checked={users.isActive === true} // Asegúrate de que `isActive` sea un valor booleano
+              onCheckedChange={(checked) =>
+                handleInputChange({
+                  target: { name: "isActive", value: checked },
+                } as React.ChangeEvent<HTMLInputElement>)
+              }
+            />
+            <span
+              className={`${
+                users.isActive === true ? "text-green-500" : "text-red-500"
+              }`}
             >
-              Estado
-            </label>
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="isActive"
-                name="isActive"
-                checked={users.isActive}
-                onChange={handleInputChange}
-                className={`checkbox ${
-                  users.isActive ? "checkbox-success" : "checkbox-error"
-                }`}
-              />
-              <span
-                className={`${
-                  users.isActive ? "text-green-500" : "text-red-500"
-                }`}
-              >
-                {users.isActive ? "Activo" : "Inactivo"}
-              </span>
-            </div>
+              {users.isActive === true ? "Activo" : "Inactivo"}
+            </span>
           </div>
         </div>
 
         {/* Botones */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
           <Link href="/dashboard/userList">
-            <button
+            <Button
               type="button"
-              className="flex items-center justify-center gap-2 text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 rounded-md text-xs px-6 py-3 w-full"
+              className="flex items-center justify-center gap-2 px-6 py-3 w-full"
+              variant={"outline"}
             >
               <IoMdArrowRoundBack className="text-lg" />
               Volver
-            </button>
+            </Button>
           </Link>
 
-          <button
+          <Button
             type="submit"
-            className="flex items-center justify-center gap-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 rounded-md text-xs px-6 py-3 w-full"
+            className="flex items-center justify-center gap-2 px-6 py-3 w-full"
           >
             <FaSave className="text-lg" />
             Registrar
-          </button>
+          </Button>
 
-          <button
+          <Button
             type="reset"
-            className="flex items-center justify-center gap-2 text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-md text-xs px-6 py-3 w-full"
+            className="flex items-center justify-center gap-2 px-6 py-3 w-full"
+            variant={"reset"}
           >
             <FaBrush className="text-lg" />
             Limpiar
-          </button>
+          </Button>
         </div>
       </form>
 
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
+      <ToastContainer />
     </>
   );
 };

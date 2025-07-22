@@ -105,6 +105,10 @@ const data = {
           title: "Control de faltas",
           url: "/dashboard/employeeAbsence",
         },
+        {
+          title: "Adelanto de salario",
+          url: "/dashboard/employeeSalaryAdvance",
+        },
       ],
     },
   ],
@@ -138,7 +142,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser /> 
+        <NavUser />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
