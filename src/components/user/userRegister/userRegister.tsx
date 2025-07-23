@@ -119,7 +119,7 @@ const UserRegister = () => {
       password: userRegister.password, // Contraseña
       roleId: userRegister.roleId, // Rol seleccionado
       isActive: userRegister.isActive, // Estado del usuario
-      email: employeeData.email, // Correo del empleado (Asegúrate de que se esté usando el email correctamente)
+      email: employeeData.email, // Correo del empleado
     };
 
     try {
@@ -127,14 +127,14 @@ const UserRegister = () => {
 
       if (response?.message === "Usuario creado correctamente") {
         toast.success("Usuario registrado con éxito", { theme: "colored" });
+        handleReset();
       } else {
         toast.error("Error al registrar el usuario", { theme: "colored" });
       }
     } catch (error) {
       console.error("Error al registrar el usuario:", error);
-      // Verificar si el error tiene un mensaje del backend
       if (error instanceof Error && error.message) {
-        toast.error(error.message, { theme: "colored" }); // Muestra el mensaje del backend
+        toast.error(error.message, { theme: "colored" });
       } else {
         toast.error("Error desconocido al registrar el usuario", {
           theme: "colored",
@@ -347,17 +347,7 @@ const UserRegister = () => {
         </div>
       </form>
 
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
+      <ToastContainer />
     </>
   );
 };
