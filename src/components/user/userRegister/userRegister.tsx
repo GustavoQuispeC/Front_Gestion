@@ -65,7 +65,6 @@ const UserRegister = () => {
     if (inputValue.length < 1) return [];
     try {
       const data = await getEmployeeByFullname(inputValue);
-      console.log("Datos de empleados:", data); // Verifica la estructura de los datos
       return data.map((empleado) => ({
         label: `${empleado.firstName} ${empleado.lastNameFather} ${empleado.lastNameMother} ${empleado.id}`,
         value: empleado.id,
@@ -204,7 +203,7 @@ const UserRegister = () => {
             Por favor comuníquese con el administrador del sistema.
           </p>
           <Link href="/dashboard/main">
-            <Button className="mt-6 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+            <Button className="mt-6 px-4 py-2">
               Volver al Dashboard
             </Button>
           </Link>

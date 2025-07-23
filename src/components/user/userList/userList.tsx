@@ -1,6 +1,7 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -34,6 +35,10 @@ export default function UserList() {
   const [users, setUsers] = useState<UserListProps[]>([]);
   const [hasPermission, setHasPermission] = useState<boolean>(true);
 
+  // Obtener el rol del usuario actual
+  const user = typeof window !== "undefined" ? JSON.parse(localStorage.getItem("user") || "{}") : {};
+  const role = user?.roles?.[0];
+
   //! Función para obtener los usuarios
   const GetUsers = async () => {
     try {
@@ -49,13 +54,10 @@ export default function UserList() {
       }
 
       //! Validación de rol
-      const allowedRoles = ["Administrador", "Gerente"];
+      const allowedRoles = ["Administrador", "Supervisor"];
 
       if (!allowedRoles.includes(role)) {
-        setHasPermission(false); // Cambiar el estado a false si no tiene permisos
-        toast.error("No tienes permiso para ver esta sección", {
-          theme: "colored",
-        });
+        setHasPermission(false);
         return;
       }
 
@@ -111,155 +113,153 @@ export default function UserList() {
       }
     }
   };
+  // Si no tiene permisos, mostrar mensaje
+  if (!hasPermission) {
+    return (
+      <div className="p-6">
+        <div className="text-center">
+          <h2 className="text-3xl font-semibold text-red-600">
+            Lo siento, no tiene permisos suficientes
+          </h2>
+          <p className="text-xl mt-2">
+            Por favor comuníquese con el administrador del sistema.
+          </p>
+          <Link href="/dashboard/main">
+            <Button className="mt-6 px-4 py-2">Volver al Dashboard</Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 bg-white dark:bg-black text-slate-900 dark:text-white transition-colors duration-300">
-    
-      {!hasPermission ? (
-        <div className="text-center">
-          <h2 className="text-3xl font-semibold text-red-600 mb-4">
-            Lo siento, usted no tiene permisos suficientes, por favor
-            comuníquese con el Administrador de Sistema.
-          </h2>
-          <Link
-            href="/dashboard/main"
-            className="inline-block text-blue-600 bg-blue-100 hover:bg-blue-200 py-2 px-6 rounded-md"
-          >
-            Volver al inicio
-          </Link>
-        </div>
-      ) : (
-        <>
-          <div className="mb-6">
-            <h2 className="text-xl font-bold mb-2">
-              Listado de Usuarios
-            </h2>
+      <div className="mb-6">
+        <h2 className="text-xl font-bold mb-2">Listado de Usuarios</h2>
 
-            <Link
-              href="/dashboard/userRegister"
-              className=" inline-flex items-center text-primary hover:underline font-small font-semibold text-base"
-            >
-              <CirclePlus size={18} className="mr-1" />
-              Agregar
-            </Link>
-          </div>
+        <Link
+          href="/dashboard/userRegister"
+          className=" inline-flex items-center text-primary hover:underline font-small font-semibold text-base"
+        >
+          <CirclePlus size={18} className="mr-1" />
+          Agregar
+        </Link>
+      </div>
 
-          <div className="overflow-x-auto bg-white shadow-lg rounded-lg p-4 dark:bg-neutral-900">
-            <Table>
-              <TableCaption>Listado de usuarios</TableCaption>
-              <TableHeader className="font-extrabold">
-                <TableRow>
-                  <TableHead className="w-[100px]">Id</TableHead>
-                  <TableHead> Apellidos y Nombres</TableHead>
-                  <TableHead>Correo</TableHead>
-                  <TableHead>Estado</TableHead>
-                  <TableHead>Rol</TableHead>
-                  <TableHead>Cargo</TableHead>
-                  <TableHead>Creado</TableHead>
-                  <TableHead className="text-center">Acciones</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {users.map((u) => (
-                  <TableRow key={u.id}>
-                    <TableCell className="font-medium">
-                      {u.employeeId}
-                    </TableCell>
-                    <TableCell>
-                      {u.lastNameFather} {u.lastNameMother} {u.firstName}
-                    </TableCell>
-                    <TableCell>{u.email || u.email}</TableCell>
-                    <TableCell>
-                      <Badge
-                        className={`mt-0.5${
-                          u.isActive
-                            ? "border-green-200 text-green-500 bg-green-50 font-semibold"
-                            : "border-red-200 text-red-500 bg-red-50 font-semibold"
-                        }`}
-                      >
-                        {u.isActive ? <BadgeCheckIcon /> : <BadgeX />}
-                        {u.isActive ? "Activo" : "Inactivo"}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{u.roleName}</TableCell>
-                    <TableCell>{u.position}</TableCell>
-                    <TableCell>
-                      {new Date(u.createdAt).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <div className="flex items-center justify-end space-x-2">
+      <div className="overflow-x-auto bg-white shadow-lg rounded-lg p-4 dark:bg-neutral-900">
+        <Table>
+          <TableCaption>Listado de usuarios</TableCaption>
+          <TableHeader className="font-extrabold">
+            <TableRow>
+              <TableHead className="w-[100px]">Id</TableHead>
+              <TableHead> Apellidos y Nombres</TableHead>
+              <TableHead>Correo</TableHead>
+              <TableHead>Estado</TableHead>
+              <TableHead>Rol</TableHead>
+              <TableHead>Cargo</TableHead>
+              <TableHead>Creado</TableHead>
+              <TableHead className="text-center">Acciones</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {users.map((u) => (
+              <TableRow key={u.id}>
+                <TableCell className="font-medium">{u.employeeId}</TableCell>
+                <TableCell>
+                  {u.lastNameFather} {u.lastNameMother} {u.firstName}
+                </TableCell>
+                <TableCell>{u.email || u.email}</TableCell>
+                <TableCell>
+                  <Badge
+                    className={`mt-0.5${
+                      u.isActive
+                        ? "border-green-200 text-green-500 bg-green-50 font-semibold"
+                        : "border-red-200 text-red-500 bg-red-50 font-semibold"
+                    }`}
+                  >
+                    {u.isActive ? <BadgeCheckIcon /> : <BadgeX />}
+                    {u.isActive ? "Activo" : "Inactivo"}
+                  </Badge>
+                </TableCell>
+                <TableCell>{u.roleName}</TableCell>
+                <TableCell>{u.position}</TableCell>
+                <TableCell>
+                  {new Date(u.createdAt).toLocaleDateString()}
+                </TableCell>
+                <TableCell className="text-center">
+                  <div className="flex items-center justify-end space-x-2">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Link href={`/dashboard/employeeView/${u.id}`}>
+                          <button className="mr-3" title="Ver">
+                            <Eye size={18} />
+                          </button>
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Ver detalle</p>
+                      </TooltipContent>
+                    </Tooltip>
+
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Link href={`/dashboard/userUpdate/${u.id}`}>
+                          <button
+                            className="mr-3 text-blue-700 dark:text-primary"
+                            title="Editar"
+                          >
+                            <Pencil size={18} />
+                          </button>
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Editar</p>
+                      </TooltipContent>
+                    </Tooltip>
+                    {u.isActive ? (
+                      role === "Administrador" ? (
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <Link href={`/dashboard/employeeView/${u.id}`}>
-                              <button className="mr-3" title="Ver">
-                                <Eye size={18} />
-                              </button>
-                            </Link>
+                            <span
+                              onClick={() => handleDeleteUser(u.id)}
+                              className="cursor-pointer"
+                              tabIndex={0}
+                              role="button"
+                              aria-label="Eliminar"
+                            >
+                              <Trash2 size={18} color="#f3240d" />
+                            </span>
                           </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Ver detalle</p>
-                          </TooltipContent>
+                          <TooltipContent>Eliminar</TooltipContent>
                         </Tooltip>
-
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Link href={`/dashboard/userUpdate/${u.id}`}>
-                              <button className="mr-3 text-blue-700 dark:text-primary" title="Editar">
-                                <Pencil size={18}  />
-                              </button>
-                            </Link>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Editar</p>
-                          </TooltipContent>
-                        </Tooltip>
-
-                        {u.isActive ? (
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <span
-                                onClick={() => handleDeleteUser(u.id)}
-                                className="cursor-pointer"
-                                tabIndex={0}
-                                role="button"
-                                aria-label="Eliminar"
-                              >
-                                <Trash2 size={18} color="#f3240d" />
-                              </span>
-                            </TooltipTrigger>
-                            <TooltipContent>Eliminar</TooltipContent>
-                          </Tooltip>
-                        ) : (
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <span
-                                className="opacity-30 cursor-not-allowed"
-                                tabIndex={-1}
-                                aria-disabled="true"
-                              >
-                                <Trash2 size={18} />
-                              </span>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              No se puede eliminar
-                            </TooltipContent>
-                          </Tooltip>
-                        )}
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-              {/* <TableFooter>
+                      ) : null // No mostrar el botón si el rol no es Administrador
+                    ) : (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span
+                            className="opacity-30 cursor-not-allowed"
+                            tabIndex={-1}
+                            aria-disabled="true"
+                          >
+                            <Trash2 size={18} />
+                          </span>
+                        </TooltipTrigger>
+                        <TooltipContent>No se puede eliminar</TooltipContent>
+                      </Tooltip>
+                    )}
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+          {/* <TableFooter>
                 <TableRow>
                   <TableCell></TableCell>
                   <TableCell></TableCell>
                 </TableRow>
               </TableFooter> */}
-            </Table>
-          </div>
-        </>
-      )}
+        </Table>
+      </div>
     </div>
   );
 }
