@@ -14,18 +14,19 @@ const ComplexNavbar = () => {
         {/* Logos */}
         <div className="flex items-center mb-3.5">
           <a href="#" className="hidden sm:block">
-            <img
+            {/* <img
               src="/images/LogoFamet.png"
               alt="logo"
               className="w-72 h-16 object-contain"
-            />
+            /> */}
           </a>
+          <h4 className="text-black font-bold pt-3">gusstavodev.help</h4>
           <a href="#" className="sm:hidden">
-            <img
+            {/* <img
               src="/images/LogoFamet2.png"
               alt="logo"
               className="w-28 h-14 object-contain"
-            />
+            /> */}
           </a>
         </div>
 
@@ -45,13 +46,14 @@ const ComplexNavbar = () => {
 
           <ul className="lg:flex lg:gap-x-5">
             <li className="mb-4 hidden max-lg:block">
-              <a href="#">
+              {/* <a href="#">
                 <img
                   src="/images/LogoFamet2.png"
                   alt="logo"
                   className="w-24 h-10 object-contain"
                 />
-              </a>
+              </a> */}
+              <h4 className="text-black font-bold pt-3">gusstavodev.help</h4>
             </li>
             {[
               { label: "Home", url: "#" },

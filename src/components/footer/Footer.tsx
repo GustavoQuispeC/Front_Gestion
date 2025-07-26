@@ -10,14 +10,15 @@ export default function Footer() {
           {/* Logo */}
           <div className="lg:flex lg:items-center">
             <Link href="/" aria-label="Inicio">
-              <Image
+              {/* <Image
                 src="/images/LogoFamet.png"
                 alt="Logo Principal"
                 width={350}
                 height={100}
                 className="object-cover mb-4 lg:mb-0"
                 priority
-              />
+              /> */}
+              <h4 className="text-black font-bold pt-3">gusstavodev.help</h4>
             </Link>
           </div>
 
@@ -119,7 +120,7 @@ export default function Footer() {
         </div>
 
         <p className="text-gray-400 text-sm mt-10 text-center">
-          © gusstavo-dev.com . Todos los derechos reservados.
+          © gusstavodev.help . Todos los derechos reservados.
         </p>
       </div>
     </footer>

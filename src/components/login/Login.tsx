@@ -88,17 +88,18 @@ const Login = () => {
         <div className="min-h-screen flex flex-col items-center justify-center py-6 px-4">
           <div className="grid md:grid-cols-2 items-center gap-10 max-w-6xl max-md:max-w-md w-full">
             <div className="space-y-2">
-              <Image
+              {/* <Image
                 src="/images/LogoFamet2.png"
                 alt="Logo Principal"
                 width={350}
                 height={100}
                 className="object-cover block"
                 priority
-              />
-              <h2 className="px-3 lg:text-2xl text-md font-bold lg:leading-[57px] text-blue-800 font-serif italic">
+              /> */}
+              {/* <h2 className="px-3 lg:text-2xl text-md font-bold lg:leading-[57px] text-blue-800 font-serif italic">
                 Tu mejor aliado en la construcción.
-              </h2>
+              </h2> */}
+              <h1>Gustavodev</h1>
             </div>
 
             <div className="max-w-md md:ml-auto w-full">
