@@ -39,6 +39,13 @@ export default function RegisterEmployee() {
   const [open2, setOpen2] = useState(false);
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [date2, setDate2] = useState<Date | undefined>(undefined);
+  const [documentType, setDocumentType] = useState<string | undefined>(
+    undefined
+  );
+  const [gender, setGender] = useState<string | undefined>(undefined);
+  const [contractType, setContractType] = useState<string | undefined>(
+    undefined
+  );
 
   const [formData, setFormData] = useState<EmployeeRegisterProps>({
     firstName: "",
@@ -103,7 +110,7 @@ export default function RegisterEmployee() {
     }
   };
 
-  // Funcion para manejar el submit del formulario
+  //! Funcion para manejar el submit del formulario
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -175,7 +182,7 @@ export default function RegisterEmployee() {
     }
   };
 
-  // Funcion para validar los campos al cambiar el valor
+  //! Funcion para validar los campos al cambiar el valor
   useEffect(() => {
     if (submitted) {
       const validationErrors = employeeValidateRegister(formData);
@@ -183,7 +190,7 @@ export default function RegisterEmployee() {
     }
   }, [formData, submitted]);
 
-  // Funcion para manejar el cambio de los Input files
+  //! Funcion para manejar el cambio de los Input files
   useEffect(() => {
     return () => {
       if (previewUrl) {
@@ -328,13 +335,14 @@ export default function RegisterEmployee() {
               Tipo de Documento
             </Label>
             <Select
-              value={formData.documentType}
-              onValueChange={(value) =>
+              value={documentType}
+              onValueChange={(value) => {
+                setDocumentType(value);
                 setFormData((prev) => ({
                   ...prev,
                   documentType: value,
-                }))
-              }
+                }));
+              }}
             >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Seleccione documento" />
@@ -389,7 +397,7 @@ export default function RegisterEmployee() {
             <Label htmlFor="documentType" className="mb-1 text-sm font-medium">
               Género
             </Label>
-            <Select
+            {/* <Select
               value={formData.gender}
               onValueChange={(value) =>
                 setFormData((prev) => ({
@@ -397,6 +405,16 @@ export default function RegisterEmployee() {
                   documentType: value,
                 }))
               }
+            > */}
+            <Select
+              value={gender}
+              onValueChange={(value) => {
+                setGender(value);
+                setFormData((prev) => ({
+                  ...prev,
+                  gender: value,
+                }));
+              }}
             >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Seleccione género" />
@@ -582,13 +600,14 @@ export default function RegisterEmployee() {
               Tipo de Contrato
             </Label>
             <Select
-              value={formData.contractType}
-              onValueChange={(value) =>
+              value={contractType}
+              onValueChange={(value) => {
+                setContractType(value);
                 setFormData((prev) => ({
                   ...prev,
-                  documentType: value,
-                }))
-              }
+                  contractType: value,
+                }));
+              }}
             >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Seleccione tipo" />
@@ -664,17 +683,7 @@ export default function RegisterEmployee() {
           </Button>
         </div>
       </form>
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
+      <ToastContainer />
     </>
   );
 }

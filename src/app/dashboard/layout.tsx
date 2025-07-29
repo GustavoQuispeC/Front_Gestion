@@ -28,9 +28,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       </SidebarInset>
       <ToastContainer
         position="top-right"
-        autoClose={5000}
+        autoClose={3000}
         hideProgressBar={false}
-        newestOnTop={false}
+        newestOnTop
         closeOnClick
         rtl={false}
         pauseOnFocusLoss
