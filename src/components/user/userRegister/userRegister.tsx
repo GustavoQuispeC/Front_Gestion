@@ -48,6 +48,7 @@ const UserRegister = () => {
     isActive: true,
     email: "",
   });
+  const [token, setToken] = useState<string>("");
 
   //! Función para obtener todos los roles
   const GetRoles = async () => {
@@ -78,14 +79,19 @@ const UserRegister = () => {
 
   //!validación de permisos
   useEffect(() => {
-    // Aquí validamos el rol del usuario antes de permitirle ver la página
     const user = JSON.parse(localStorage.getItem("user") || "{}");
     const role = user?.roles?.[0];
+    const storedToken = user?.token;
 
-    if (!role || !["Administrador", "Gerente"].includes(role)) {
-      setHasPermission(false); // Si no tiene el rol, se oculta el formulario y muestra el mensaje
+    if (
+      !role ||
+      !["Administrador", "Supervisor"].includes(role) ||
+      !storedToken
+    ) {
+      setHasPermission(false);
     } else {
-      GetRoles(); // Si tiene el rol, continuamos con la obtención de roles
+      setToken(storedToken); // <-- Aquí se guarda el token en el estado
+      GetRoles();
     }
   }, []);
 
@@ -100,6 +106,11 @@ const UserRegister = () => {
   //! Función para manejar el registro de usuario
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!employeeData.id) {
+      toast.error("Debe seleccionar un empleado", { theme: "colored" });
+      return;
+    }
 
     // Validaciones de campos obligatorios
     if (
@@ -122,7 +133,7 @@ const UserRegister = () => {
     };
 
     try {
-      const response = await registerUser(userRegisterData);
+      const response = await registerUser(userRegisterData, token);
 
       if (response?.message === "Usuario creado correctamente") {
         toast.success("Usuario registrado con éxito", { theme: "colored" });
@@ -203,9 +214,7 @@ const UserRegister = () => {
             Por favor comuníquese con el administrador del sistema.
           </p>
           <Link href="/dashboard/main">
-            <Button className="mt-6 px-4 py-2">
-              Volver al Dashboard
-            </Button>
+            <Button className="mt-6 px-4 py-2">Volver al Dashboard</Button>
           </Link>
         </div>
       </div>

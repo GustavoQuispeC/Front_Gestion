@@ -1,23 +1,14 @@
+"use client";
+
 import { UserFormUpdate } from "@/components";
+import { useParams } from "next/navigation";
 
-type Props = {
-  params: {
-    userId: string;
-  };
-};
 
-const UserFormUpdatePage = ({ params }: Props) => {
-  const userId = params.userId;
+export default function UserFormUpdatePage() {
+  const params = useParams();
+  const userId = params?.userId as string;
 
-  if (!userId) {
-    return <div>Usuario no encontrado.</div>;
-  }
+  if (!userId) return <div>Usuario no encontrado.</div>;
 
-  return (
-    <div>
-      <UserFormUpdate userId={userId} />
-    </div>
-  );
-};
-
-export default UserFormUpdatePage;
+  return <UserFormUpdate userId={userId} />;
+}

@@ -4,7 +4,7 @@ export interface UserListProps {
   id: string;
   userName: string;
   email: string;
-  createdAt: Date;
+  createdAt: string;
   isActive: boolean;
   employeeId: number;
   firstName: string;
@@ -18,16 +18,24 @@ export interface UserListByIdProps {
   Id: string;
   userName: string;
   email: string;
-  createdAt: Date;
   isActive: boolean;
   employeeId: number;
   firstName: string;
   lastNameFather: string;
   lastNameMother: string;
   roleId: string;
-  password: string;
+  roleName: string;
+}
+
+export interface UserUpdateProps {
+  userName: string;
+  isActive: boolean;
+  employeeId: number;
+  roleId: string;
+  password?: string;
   currentPassword?: string;
 }
+
 
 export interface UserRegisterProps {
 
@@ -39,6 +47,7 @@ export interface UserRegisterProps {
   email: string;
 }
 
+
 export interface UserRegisterErrorProps {
   employeeId: number;
   userName: string;
@@ -47,22 +56,6 @@ export interface UserRegisterErrorProps {
   roleId: string;
 }
 
-export interface UserUpdateProps {
-  userName: string;
-  isActive: boolean;
-  employeeId: number;
-  roleId: string;
-  password?: string;
-  currentPassword?: string;
-}
-export interface UserUpdateErrorProps {
-  userName: string;
-  isActive: boolean;
-  employeeId: number;
-  roleId: string;
-  password?: string;
-  currentPassword?: string;
-}
 
 export interface UserLoginProps {
   email: string;

@@ -80,25 +80,29 @@ export async function loginUser(email: string, password: string) {
 }
 
 //Register user
-export async function registerUser(userData: UserRegisterProps) {
+export async function registerUser(userData: UserRegisterProps, token: string) {
   try {
     const response = await fetch(`${apiUrl}/user`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(userData),
     });
-    console.log("userData", userData);
-    console.log("response", response);
-
-    if (!response.ok) {
-      const errorMessage = await response.json(); // Obtener mensaje de error desde el backend
-      throw new Error(errorMessage.message || "Error desconocido al registrar");
-    }
 
     const json = await response.json();
-    return json; // Regresa el JSON, asegúrate que el backend devuelve un objeto con `message`
+
+    if (!response.ok) {
+      const detail = json.errors
+        ? json.errors
+            .map((e: { description: string }) => e.description)
+            .join(", ")
+        : json.message;
+      throw new Error(detail || "Error desconocido al registrar");
+    }
+
+    return json;
   } catch (error) {
     console.error("Error al registrar el usuario:", error);
     throw error;

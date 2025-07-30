@@ -2,7 +2,7 @@
 import { getAllRoles } from "@/helpers/role.helper";
 import { GetByUserId, updateUser } from "@/helpers/user.helpers";
 import { RoleListProps } from "@/types/role";
-import { UserListByIdProps } from "@/types/user";
+import { UserListByIdProps, UserUpdateProps } from "@/types/user";
 import Link from "next/link";
 import { useState } from "react";
 import { FaBrush, FaEye, FaEyeSlash, FaSave } from "react-icons/fa";
@@ -23,7 +23,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 
 const UserUpdate = ({ userId }: { userId: string }) => {
-  const [hasPermission] = useState<boolean>(true); //? Para mostrar u ocultar el formulario
+  const [hasPermission, setHasPermission] = useState<boolean>(true); //? Para mostrar u ocultar el formulario
 
   const [isSubmitting, setIsSubmitting] = useState(false); // Estado para manejar el envío del formulario
 
@@ -36,16 +36,46 @@ const UserUpdate = ({ userId }: { userId: string }) => {
     Id: "",
     userName: "",
     email: "",
-    createdAt: new Date(),
     isActive: true,
     employeeId: 0,
     firstName: "",
     lastNameFather: "",
     lastNameMother: "",
     roleId: "",
-    password: "",
-    currentPassword: "", // Para manejar la contraseña actual
+    roleName: "",
   });
+
+  const [userUpdate, setUserUpdate] = useState<UserUpdateProps>({
+    userName: "",
+    isActive: true,
+    employeeId: 0,
+    roleId: "",
+    password: "",
+    currentPassword: "",
+  });
+
+  // Efecto para obtener los datos del usuario
+  useEffect(() => {
+    const userData = localStorage.getItem("user");
+    if (!userData) {
+      setHasPermission(false);
+      return;
+    }
+
+    try {
+      const parsedUser = JSON.parse(userData);
+      const roles: string[] = parsedUser.roles || [];
+
+      if (roles.includes("Administrador")) {
+        setHasPermission(true);
+      } else {
+        setHasPermission(false);
+      }
+    } catch (error) {
+      console.error("Error leyendo datos del usuario:", error);
+      setHasPermission(false);
+    }
+  }, []);
 
   //! Efecto para obtener el usuario y los roles al cargar el componente
   useEffect(() => {
@@ -58,7 +88,6 @@ const UserUpdate = ({ userId }: { userId: string }) => {
     try {
       const rolesData = await getAllRoles();
       setRoles(rolesData);
-      //console.log("Roles obtenidos:", rolesData);
     } catch (e) {
       toast.error("Error al obtener los roles", { theme: "colored" });
       console.error("Error al obtener los roles:", e);
@@ -70,8 +99,19 @@ const UserUpdate = ({ userId }: { userId: string }) => {
     try {
       const token = localStorage.getItem("token") || "";
       const userById = await GetByUserId(id, token);
-      setUsers(userById[0]);
-      console.log("Usuario obtenido:", userById[0]); // Verifica que los datos realmente llegan aquí
+      const user = userById[0];
+
+      setUsers(user); // para mostrar campos de solo lectura
+
+      // llenar campos que se pueden editar
+      setUserUpdate({
+        userName: user.userName,
+        isActive: user.isActive,
+        employeeId: user.employeeId,
+        roleId: user.roleId,
+        password: "",
+        currentPassword: "",
+      });
     } catch (error) {
       console.error("Error al obtener el usuario por ID:", error);
       toast.error("Error al obtener el usuario", { theme: "colored" });
@@ -80,10 +120,10 @@ const UserUpdate = ({ userId }: { userId: string }) => {
 
   //! Llamar a la función para obtener los roles al cargar el componente
   const handleRoleChange = (value: string) => {
-    setUsers({
-      ...users,
+    setUserUpdate((prev) => ({
+      ...prev,
       roleId: value,
-    });
+    }));
   };
 
   //! actualizar el usuario
@@ -94,14 +134,15 @@ const UserUpdate = ({ userId }: { userId: string }) => {
     try {
       const token = localStorage.getItem("token") || "";
       const updatedUser = {
-        userName: users.userName,
-        password: users.password,
-        roleId: users.roleId,
-        isActive: users.isActive,
-        employeeId: users.employeeId,
-        currentPassword: users.currentPassword,
+        userName: userUpdate.userName,
+        roleId: userUpdate.roleId,
+        isActive: userUpdate.isActive,
+        employeeId: userUpdate.employeeId,
+        password: userUpdate.password,
+        currentPassword: userUpdate.currentPassword,
       };
       const response = await updateUser(userId, updatedUser, token);
+      console.log(response);
       if (response) {
         toast.success("Usuario actualizado correctamente", {
           theme: "colored",
@@ -119,12 +160,11 @@ const UserUpdate = ({ userId }: { userId: string }) => {
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const target = e.target as HTMLInputElement | HTMLSelectElement;
+    const target = e.target;
     const { name, value, type } = target;
 
-    // Verificar si el campo es el checkbox y manejarlo correctamente
-    setUsers((prevState) => ({
-      ...prevState,
+    setUserUpdate((prev) => ({
+      ...prev,
       [name]:
         type === "checkbox" ? (target as HTMLInputElement).checked : value,
     }));
@@ -186,7 +226,7 @@ const UserUpdate = ({ userId }: { userId: string }) => {
               type="text"
               id="userName"
               name="userName"
-              value={users.userName}
+              value={userUpdate.userName}
               onChange={handleInputChange}
               className="input w-full  p-2"
             />
@@ -198,20 +238,25 @@ const UserUpdate = ({ userId }: { userId: string }) => {
               Rol
             </Label>
 
-            <Select value={users.roleId} onValueChange={handleRoleChange}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Seleccione un rol" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {roles.map((role) => (
-                    <SelectItem key={role.id} value={role.id}>
-                      {role.name}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            {roles.length > 0 && (
+              <Select
+                value={userUpdate.roleId}
+                onValueChange={handleRoleChange}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Seleccione un rol" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {roles.map((role) => (
+                      <SelectItem key={role.id} value={role.id}>
+                        {role.name}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            )}
           </div>
         </div>
 
@@ -239,7 +284,7 @@ const UserUpdate = ({ userId }: { userId: string }) => {
               type={showCurrentPassword ? "text" : "password"}
               id="currentPassword"
               name="currentPassword"
-              value={users.currentPassword || ""}
+              value={userUpdate.currentPassword || ""}
               onChange={handleInputChange}
               className="input w-full  p-2 pr-10"
               placeholder="Ingrese la contraseña actual"
@@ -265,7 +310,7 @@ const UserUpdate = ({ userId }: { userId: string }) => {
               type={showNewPassword ? "text" : "password"}
               id="password"
               name="password"
-              value={users.password || ""}
+              value={userUpdate.password || ""}
               onChange={handleInputChange}
               className="input w-full p-2 pr-10"
               placeholder="Ingrese una nueva contraseña"
@@ -284,19 +329,20 @@ const UserUpdate = ({ userId }: { userId: string }) => {
             <Checkbox
               id="isActive"
               name="isActive"
-              checked={users.isActive === true} // Asegúrate de que `isActive` sea un valor booleano
+              checked={userUpdate.isActive}
               onCheckedChange={(checked) =>
-                handleInputChange({
-                  target: { name: "isActive", value: checked },
-                } as React.ChangeEvent<HTMLInputElement>)
+                setUserUpdate((prev) => ({
+                  ...prev,
+                  isActive: Boolean(checked),
+                }))
               }
             />
             <span
-              className={`${
-                users.isActive === true ? "text-green-500" : "text-red-500"
-              }`}
+              className={
+                userUpdate.isActive ? "text-green-500" : "text-red-500"
+              }
             >
-              {users.isActive === true ? "Activo" : "Inactivo"}
+              {userUpdate.isActive ? "Activo" : "Inactivo"}
             </span>
           </div>
         </div>

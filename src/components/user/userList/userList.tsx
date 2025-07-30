@@ -22,7 +22,6 @@ import {
   BadgeCheckIcon,
   BadgeX,
   CirclePlus,
-  Eye,
   Pencil,
   Trash2,
 } from "lucide-react";
@@ -36,7 +35,10 @@ export default function UserList() {
   const [hasPermission, setHasPermission] = useState<boolean>(true);
 
   // Obtener el rol del usuario actual
-  const user = typeof window !== "undefined" ? JSON.parse(localStorage.getItem("user") || "{}") : {};
+  const user =
+    typeof window !== "undefined"
+      ? JSON.parse(localStorage.getItem("user") || "{}")
+      : {};
   const role = user?.roles?.[0];
 
   //! Función para obtener los usuarios
@@ -183,12 +185,10 @@ export default function UserList() {
                 </TableCell>
                 <TableCell>{u.roleName}</TableCell>
                 <TableCell>{u.position}</TableCell>
-                <TableCell>
-                  {new Date(u.createdAt).toLocaleDateString()}
-                </TableCell>
+                <TableCell>{u.createdAt}</TableCell>
                 <TableCell className="text-center">
                   <div className="flex items-center justify-end space-x-2">
-                    <Tooltip>
+                    {/* <Tooltip>
                       <TooltipTrigger asChild>
                         <Link href={`/dashboard/employeeView/${u.id}`}>
                           <button className="mr-3" title="Ver">
@@ -199,7 +199,7 @@ export default function UserList() {
                       <TooltipContent>
                         <p>Ver detalle</p>
                       </TooltipContent>
-                    </Tooltip>
+                    </Tooltip> */}
 
                     <Tooltip>
                       <TooltipTrigger asChild>

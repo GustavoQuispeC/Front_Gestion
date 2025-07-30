@@ -294,9 +294,7 @@ export default function RegisterEmployee() {
                   id="date"
                   className="w-full justify-between font-normal"
                 >
-                  {formData.birthDate
-                    ? new Date(formData.birthDate).toLocaleDateString()
-                    : "Seleccione la fecha"}
+                  {date ? date.toLocaleDateString() : "Seleccione la fecha"}
                   <ChevronDownIcon />
                 </Button>
               </PopoverTrigger>
@@ -397,15 +395,7 @@ export default function RegisterEmployee() {
             <Label htmlFor="documentType" className="mb-1 text-sm font-medium">
               Género
             </Label>
-            {/* <Select
-              value={formData.gender}
-              onValueChange={(value) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  documentType: value,
-                }))
-              }
-            > */}
+
             <Select
               value={gender}
               onValueChange={(value) => {
@@ -559,9 +549,10 @@ export default function RegisterEmployee() {
                   id="date"
                   className="w-full justify-between font-normal"
                 >
-                  {formData.hireDate
-                    ? new Date(formData.hireDate).toLocaleDateString()
-                    : "Seleccione fecha"}
+                  {/* {formData.hireDate
+                    ? "Seleccione fecha"
+                    : new Date(formData.hireDate).toLocaleDateString()} */}
+                  {date2 ? date2.toLocaleDateString() : "Seleccione fecha"}
                   <ChevronDownIcon />
                 </Button>
               </PopoverTrigger>
@@ -674,11 +665,7 @@ export default function RegisterEmployee() {
 
         {/* Botón de enviar */}
         <div className="mt-6 text-center">
-          <Button
-            type="submit"
-            disabled={isLoading}
-            // className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 disabled:opacity-50"
-          >
+          <Button type="submit" disabled={isLoading}>
             {isLoading ? "Guardando..." : "Registrar"}
           </Button>
         </div>
