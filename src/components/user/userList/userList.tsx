@@ -29,6 +29,8 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import { es } from "date-fns/locale";
+import { format } from "date-fns";
 
 export default function UserList() {
   const [users, setUsers] = useState<UserListProps[]>([]);
@@ -185,7 +187,14 @@ export default function UserList() {
                 </TableCell>
                 <TableCell>{u.roleName}</TableCell>
                 <TableCell>{u.position}</TableCell>
-                <TableCell>{u.createdAt}</TableCell>
+
+                <TableCell>
+                  {u.createdAt
+                    ? format(new Date(u.createdAt), "dd/MM/yyyy", {
+                        locale: es,
+                      })
+                    : ""}
+                </TableCell>
                 <TableCell className="text-center">
                   <div className="flex items-center justify-end space-x-2">
                     {/* <Tooltip>
@@ -233,7 +242,7 @@ export default function UserList() {
                           <TooltipContent>Eliminar</TooltipContent>
                         </Tooltip>
                       ) : null // No mostrar el botón si el rol no es Administrador
-                    ) : (
+                    ) : role === "Administrador" ? (
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <span
@@ -246,7 +255,7 @@ export default function UserList() {
                         </TooltipTrigger>
                         <TooltipContent>No se puede eliminar</TooltipContent>
                       </Tooltip>
-                    )}
+                    ) : null}
                   </div>
                 </TableCell>
               </TableRow>

@@ -1,3 +1,4 @@
+
 export interface EmployeeRegisterProps {
   firstName: string;
   lastNameFather: string;
@@ -58,20 +59,33 @@ export interface EmployeeListProps {
   lastNameMother: string;
   documentNumber: string;
   documentType: string;
-  birthDate: Date;
-  gender: string;
-  photoUrl: string;
+  birthDate: string;
   phone: string;
-  emergencyPhone: string;
-  email: string;
-  address: string;
-  position: string;
-  hireDate: Date;
-  contractType: string;
   id: number;
-  createdAt: Date;
   isActive: boolean;
 }
+export interface EmployeeByIdProps {
+    firstName:      string;
+    lastNameFather: string;
+    lastNameMother: string;
+    documentNumber: string;
+    documentType:   string;
+    birthDate:      string;
+    gender:         string;
+    photoUrl:       string;
+    phone:          string;
+    emergencyPhone: string;
+    email:          string;
+    address:        string;
+    position:       string;
+    hireDate:       string;
+    contractType:   string;
+    id:             number;
+    createdAt:      string;
+    isActive:       boolean;
+}
+
+
 export interface EmployeeSearchProps {
   id: string;
   firstName: string;

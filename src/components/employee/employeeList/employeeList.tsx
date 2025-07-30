@@ -28,6 +28,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { es } from "date-fns/locale";
+import { format } from "date-fns";
 
 export default function EmployeeList() {
   const [employees, setEmployees] = useState<EmployeeListProps[]>([]);
@@ -57,12 +59,12 @@ export default function EmployeeList() {
           href="/dashboard/employeeRegister"
           className=" inline-flex items-center text-primary hover:underline font-small font-semibold text-base"
         >
-          <CirclePlus size={18}  className="mr-1" />
+          <CirclePlus size={18} className="mr-1" />
           Agregar
         </Link>
       </div>
 
-      <div className="overflow-x-auto bg-white shadow-lg rounded-lg p-4 dark:bg-neutral-900" >
+      <div className="overflow-x-auto bg-white shadow-lg rounded-lg p-4 dark:bg-neutral-900">
         <Table>
           <TableCaption>Listado de empleados</TableCaption>
           <TableHeader className="font-extrabold">
@@ -87,7 +89,11 @@ export default function EmployeeList() {
                 <TableCell>{e.lastNameMother}</TableCell>
                 <TableCell>{e.firstName}</TableCell>
                 <TableCell>
-                  {new Date(e.birthDate).toLocaleDateString()}
+                  {e.birthDate
+                    ? format(new Date(e.birthDate), "dd/MM/yyyy", {
+                        locale: es,
+                      })
+                    : ""}
                 </TableCell>
                 <TableCell>{e.documentType}</TableCell>
                 <TableCell>{e.documentNumber}</TableCell>
@@ -122,7 +128,10 @@ export default function EmployeeList() {
 
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <button className="mr-3 text-blue-800 dark:text-primary" title="Editar">
+                        <button
+                          className="mr-3 text-blue-800 dark:text-primary"
+                          title="Editar"
+                        >
                           <Pencil size={18} />
                         </button>
                       </TooltipTrigger>

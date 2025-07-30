@@ -21,17 +21,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useAuthToken } from "@/hooks/useAuthToken";
+import { useRouter } from "next/navigation";
 
 const UserUpdate = ({ userId }: { userId: string }) => {
-  const [hasPermission, setHasPermission] = useState<boolean>(true); //? Para mostrar u ocultar el formulario
-
-  const [isSubmitting, setIsSubmitting] = useState(false); // Estado para manejar el envío del formulario
-
+  const { token, hasPermission } = useAuthToken(["Administrador"]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
-
   const [roles, setRoles] = useState<RoleListProps[]>([]);
-
   const [users, setUsers] = useState<UserListByIdProps>({
     Id: "",
     userName: "",
@@ -42,7 +40,6 @@ const UserUpdate = ({ userId }: { userId: string }) => {
     lastNameFather: "",
     lastNameMother: "",
     roleId: "",
-    roleName: "",
   });
 
   const [userUpdate, setUserUpdate] = useState<UserUpdateProps>({
@@ -54,34 +51,7 @@ const UserUpdate = ({ userId }: { userId: string }) => {
     currentPassword: "",
   });
 
-  // Efecto para obtener los datos del usuario
-  useEffect(() => {
-    const userData = localStorage.getItem("user");
-    if (!userData) {
-      setHasPermission(false);
-      return;
-    }
-
-    try {
-      const parsedUser = JSON.parse(userData);
-      const roles: string[] = parsedUser.roles || [];
-
-      if (roles.includes("Administrador")) {
-        setHasPermission(true);
-      } else {
-        setHasPermission(false);
-      }
-    } catch (error) {
-      console.error("Error leyendo datos del usuario:", error);
-      setHasPermission(false);
-    }
-  }, []);
-
-  //! Efecto para obtener el usuario y los roles al cargar el componente
-  useEffect(() => {
-    if (!userId) return;
-    Promise.all([GetUserById(userId), GetRoles()]);
-  }, [userId]);
+  const Route = useRouter();
 
   //! Función para obtener todos los roles
   const GetRoles = async () => {
@@ -97,13 +67,18 @@ const UserUpdate = ({ userId }: { userId: string }) => {
   //! Función para obtener el usuario por ID
   const GetUserById = async (id: string) => {
     try {
-      const token = localStorage.getItem("token") || "";
+      const userData = localStorage.getItem("user");
+      const token = userData ? JSON.parse(userData).token : "";
+
+      if (!token) {
+        throw new Error("Token no encontrado. El usuario no está autenticado.");
+      }
+
       const userById = await GetByUserId(id, token);
       const user = userById[0];
 
       setUsers(user); // para mostrar campos de solo lectura
 
-      // llenar campos que se pueden editar
       setUserUpdate({
         userName: user.userName,
         isActive: user.isActive,
@@ -118,42 +93,18 @@ const UserUpdate = ({ userId }: { userId: string }) => {
     }
   };
 
+  //! Efecto para obtener el usuario y los roles al cargar el componente
+  useEffect(() => {
+    if (!userId) return;
+    Promise.all([GetUserById(userId), GetRoles()]);
+  }, [userId]);
+
   //! Llamar a la función para obtener los roles al cargar el componente
   const handleRoleChange = (value: string) => {
     setUserUpdate((prev) => ({
       ...prev,
       roleId: value,
     }));
-  };
-
-  //! actualizar el usuario
-  const handleUpdateUser = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (isSubmitting) return;
-    setIsSubmitting(true);
-    try {
-      const token = localStorage.getItem("token") || "";
-      const updatedUser = {
-        userName: userUpdate.userName,
-        roleId: userUpdate.roleId,
-        isActive: userUpdate.isActive,
-        employeeId: userUpdate.employeeId,
-        password: userUpdate.password,
-        currentPassword: userUpdate.currentPassword,
-      };
-      const response = await updateUser(userId, updatedUser, token);
-      console.log(response);
-      if (response) {
-        toast.success("Usuario actualizado correctamente", {
-          theme: "colored",
-        });
-      }
-    } catch (error) {
-      toast.error("Error al actualizar el usuario", { theme: "colored" });
-      console.error("Error al actualizar el usuario:", error);
-    } finally {
-      setIsSubmitting(false);
-    }
   };
 
   //! Manejar cambios en los campos de entrada
@@ -168,6 +119,37 @@ const UserUpdate = ({ userId }: { userId: string }) => {
       [name]:
         type === "checkbox" ? (target as HTMLInputElement).checked : value,
     }));
+  };
+
+  //! actualizar el usuario
+  const handleUpdateUser = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    try {
+      const updatedUser = {
+        userName: userUpdate.userName,
+        roleId: userUpdate.roleId,
+        isActive: userUpdate.isActive,
+        employeeId: userUpdate.employeeId,
+        password: userUpdate.password,
+        currentPassword: userUpdate.currentPassword,
+      };
+      const response = await updateUser(userId, updatedUser, token);
+      if (response) {
+        toast.success("Usuario actualizado correctamente", {
+          theme: "colored",
+        });
+        setTimeout(() => {
+          Route.push("/dashboard/userList");
+        }, 2000);
+      }
+    } catch (error) {
+      toast.error("Error al actualizar el usuario", { theme: "colored" });
+      console.error("Error al actualizar el usuario:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   //! Verificar si el usuario tiene permisos
@@ -196,7 +178,7 @@ const UserUpdate = ({ userId }: { userId: string }) => {
         onSubmit={handleUpdateUser}
       >
         <h2 className="text-2xl font-semibold mb-6 text-left text-gray-800">
-          Registro de usuario
+          Actualización de usuario
         </h2>
 
         {/* Fila de Apellido y Nombre + Username */}

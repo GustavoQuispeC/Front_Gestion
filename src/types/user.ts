@@ -24,7 +24,6 @@ export interface UserListByIdProps {
   lastNameFather: string;
   lastNameMother: string;
   roleId: string;
-  roleName: string;
 }
 
 export interface UserUpdateProps {
@@ -36,9 +35,7 @@ export interface UserUpdateProps {
   currentPassword?: string;
 }
 
-
 export interface UserRegisterProps {
-
   employeeId: number;
   userName: string;
   password: string;
@@ -47,7 +44,6 @@ export interface UserRegisterProps {
   email: string;
 }
 
-
 export interface UserRegisterErrorProps {
   employeeId: number;
   userName: string;
@@ -55,7 +51,6 @@ export interface UserRegisterErrorProps {
   password: string;
   roleId: string;
 }
-
 
 export interface UserLoginProps {
   email: string;

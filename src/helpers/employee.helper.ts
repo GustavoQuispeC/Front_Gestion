@@ -1,5 +1,5 @@
 import {
-  EmployeeListProps,
+  EmployeeByIdProps,
   EmployeeRegisterApiProps,
   EmployeeSearchProps,
 } from "@/types/employee";
@@ -31,7 +31,7 @@ export async function getAllEmployees() {
 //get employee by id
 export const getEmployeeById = async (
   employeeId: string
-): Promise<EmployeeListProps> => {
+): Promise<EmployeeByIdProps> => {
   try {
     const response = await fetch(`${apiUrl}/employee/${employeeId}`, {
       method: "GET",

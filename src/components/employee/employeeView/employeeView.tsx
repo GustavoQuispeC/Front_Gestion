@@ -2,21 +2,26 @@
 
 import React, { useEffect, useState } from "react";
 import { getEmployeeById } from "@/helpers/employee.helper";
-import { EmployeeListProps } from "@/types/employee";
+import { EmployeeByIdProps } from "@/types/employee";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import { Button } from "@/components/ui/button";
+import { Label } from "@radix-ui/react-label";
+import { es } from "date-fns/locale";
+import { format } from "date-fns";
+import { Badge } from "@/components/ui/badge";
+import { BadgeCheckIcon, BadgeX } from "lucide-react";
 
 const EmployeeView = ({ employeeId }: { employeeId: string }) => {
   const router = useRouter();
-
-  const [employee, setEmployee] = useState<EmployeeListProps | null>(null);
+  const [employee, setEmployee] = useState<EmployeeByIdProps | null>(null);
 
   useEffect(() => {
     const fetchEmployee = async () => {
       try {
-        const employeeData = await getEmployeeById(employeeId);
-        setEmployee(employeeData);
+        const data = await getEmployeeById(employeeId);
+        setEmployee(data);
       } catch (error) {
         console.error("Error al obtener el empleado:", error);
       }
@@ -26,101 +31,103 @@ const EmployeeView = ({ employeeId }: { employeeId: string }) => {
 
   if (!employee) {
     return (
-      <div className="flex items-center justify-center min-h-screen py-2 bg-gray-100">
-        <p className="text-xl font-medium text-gray-500">
+      <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-black">
+        <p className="text-lg text-gray-600 dark:text-gray-300">
           Cargando detalles del empleado...
         </p>
       </div>
     );
   }
 
-  const DataItem = ({
-    label,
-    value,
-  }: {
-    label: string;
-    value: React.ReactNode;
-  }) => (
-    <div className="flex flex-col">
-      <span className="text-sm text-gray-500 font-medium">{label}</span>
-      <span className="text-base text-gray-700 font-semibold">{value}</span>
-    </div>
-  );
-
   return (
-    <div className="min-h-screen py-10 px-6 bg-gray-100 flex items-center justify-center">
-      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-5xl">
-        <h1 className="text-3xl font-semibold text-gray-800 mb-6 text-center">
-          Detalles del Empleado
-        </h1>
+   <div className="min-h-screen py-10 px-6 flex items-center justify-center bg-white text-black dark:bg-black dark:text-white">
+  <div className="w-full max-w-6xl bg-neutral-100 dark:bg-neutral-900 p-8 rounded-xl shadow-lg">
+    <div className="flex justify-between mb-8">
+      <h1 className="text-3xl font-bold">Detalles del Empleado</h1>
+      <Button
+        onClick={() => router.push("/dashboard/employeeList")}
+        className="flex items-center gap-2 bg-neutral-200 hover:bg-neutral-300 text-black dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-white"
+        variant="ghost"
+      >
+        <IoMdArrowRoundBack />
+        Volver
+      </Button>
+    </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Columna izquierda: foto y botones */}
-          <div className="flex flex-col items-center space-y-4">
-            <Image
-              src={employee.photoUrl || "/default-avatar.png"}
-              alt="Foto del empleado"
-              width={150}
-              height={150}
-              className="rounded-full border-4 border-gray-300 shadow-lg object-cover"
-            />
-            <button
-              onClick={() => router.push("/dashboard/employeeList")}
-              className="flex items-center justify-center gap-1.5 text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:ring-gray-300 font-medium 
-              rounded-md text-xs px-4 py-2 w-[80%] mx-auto disabled:opacity-50"
-            >
-              <IoMdArrowRoundBack className="text-base" />
-              Volver
-            </button>
-          </div>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {/* Foto y posición */}
+      <div className="flex flex-col items-center gap-4">
+        <Image
+          src={employee.photoUrl || "/default-avatar.png"}
+          alt="Foto del empleado"
+          width={160}
+          height={160}
+          className="rounded-full border-4 border-white object-cover"
+        />
+        <span className="font-semibold text-lg">{employee.position}</span>
+      </div>
 
-          {/* Columnas de datos */}
-          <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <DataItem label="ID" value={employee.id} />
-            <DataItem
-              label="Nombre completo"
-              value={`${employee.firstName} ${employee.lastNameFather} ${employee.lastNameMother}`}
-            />
-            <DataItem
-              label="Fecha de nacimiento"
-              value={new Date(employee.birthDate).toLocaleDateString()}
-            />
-            <DataItem label="Email" value={employee.email} />
-            <DataItem label="Tipo de documento" value={employee.documentType} />
-            <DataItem
-              label="Número de documento"
-              value={employee.documentNumber}
-            />
-            <DataItem label="Teléfono" value={employee.phone} />
-            <DataItem
-              label="Teléfono de emergencia"
-              value={employee.emergencyPhone}
-            />
-            <DataItem
-              label="Fecha de contratación"
-              value={new Date(employee.hireDate).toLocaleDateString()}
-            />
+      {/* Datos personales */}
+      <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-4">
+        <Label className="text-gray-700 dark:text-gray-300">ID:</Label>
+        <span className="font-bold">{employee.id}</span>
 
-            <DataItem label="Dirección" value={employee.address} />
-            <DataItem
-              label="Estado"
-              value={
-                <span
-                  className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                    employee.isActive
-                      ? "bg-green-100 text-green-500 border border-green-200"
-                      : "bg-red-100 text-red-500 border border-red-500"
-                  }`}
-                >
-                  {employee.isActive ? "Activo" : "Inactivo"}
-                </span>
-              }
-            />
-            <DataItem label="Posición" value={employee.position} />
-          </div>
-        </div>
+        <Label className="text-gray-700 dark:text-gray-300">Nombre Completo:</Label>
+        <span className="font-bold">
+          {employee.firstName} {employee.lastNameFather} {employee.lastNameMother}
+        </span>
+
+        <Label className="text-gray-700 dark:text-gray-300">Fecha de Nacimiento:</Label>
+        <span className="font-bold">
+          {employee.birthDate
+            ? format(new Date(employee.birthDate), "dd/MM/yyyy", { locale: es })
+            : ""}
+        </span>
+
+        <Label className="text-gray-700 dark:text-gray-300">Correo:</Label>
+        <span className="font-bold">{employee.email}</span>
+
+        <Label className="text-gray-700 dark:text-gray-300">Tipo de Documento:</Label>
+        <span className="font-bold">{employee.documentType}</span>
+
+        <Label className="text-gray-700 dark:text-gray-300">Número de Documento:</Label>
+        <span className="font-bold">{employee.documentNumber}</span>
+
+        <Label className="text-gray-700 dark:text-gray-300">Teléfono:</Label>
+        <span className="font-bold">{employee.phone}</span>
+
+        <Label className="text-gray-700 dark:text-gray-300">Teléfono de Emergencia:</Label>
+        <span className="font-bold">{employee.emergencyPhone}</span>
+
+        <Label className="text-gray-700 dark:text-gray-300">Fecha de Contratación:</Label>
+        <span className="font-bold">
+          {employee.hireDate
+            ? format(new Date(employee.hireDate), "dd/MM/yyyy", { locale: es })
+            : ""}
+        </span>
+
+        <Label className="text-gray-700 dark:text-gray-300">Tipo de Contrato:</Label>
+        <span className="font-bold">{employee.contractType}</span>
+
+        <Label className="text-gray-700 dark:text-gray-300">Dirección:</Label>
+        <span className="font-bold">{employee.address}</span>
+
+        <Label className="text-gray-700 dark:text-gray-300">Estado:</Label>
+        <Badge
+          className={`mt-0.5 gap-1 ${
+            employee.isActive
+              ? "border-green-200 text-green-600 bg-green-100 "
+              : "border-red-200 text-red-600 bg-red-100 "
+          }`}
+        >
+          {employee.isActive ? <BadgeCheckIcon /> : <BadgeX />}
+          {employee.isActive ? "Activo" : "Inactivo"}
+        </Badge>
       </div>
     </div>
+  </div>
+</div>
+
   );
 };
 
