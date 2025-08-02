@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 export const CategoriasGrid = () => {
@@ -25,15 +26,16 @@ export const CategoriasGrid = () => {
           img: "/images/herramientas.jpg",
           label: "Herramientas",
         },
-       
       ].map(({ href, img, label }) => (
         <a href={href} className="text-center" key={label}>
           <div className="group transition-transform duration-300 hover:scale-105">
             <div className="overflow-hidden rounded-full w-[162px] h-[162px] mx-auto">
-              <img
+              <Image
                 src={img}
                 alt={label}
                 className="w-full h-full object-cover object-center rounded-full"
+                width={172}
+                height={172}
               />
             </div>
           </div>

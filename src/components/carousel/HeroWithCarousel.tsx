@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const products = [
   {
@@ -36,7 +37,7 @@ const CarouselDemo = () => {
   const [current, setCurrent] = useState(0);
   const router = useRouter();
 
-  // Cambio automático cada 8 segundos
+  // Cambio automático cada 5 segundos
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrent((prev) => (prev + 1) % products.length);
@@ -57,10 +58,12 @@ const CarouselDemo = () => {
             key={product.id}
             className="min-w-full relative h-[350px] bg-black"
           >
-            <img
+            <Image
               src={product.image}
               alt={product.title}
-              className="w-full h-full object-cover opacity-90"
+              fill
+              className="object-cover opacity-90"
+              priority
             />
             <button
               onClick={() => router.push(product.link)}

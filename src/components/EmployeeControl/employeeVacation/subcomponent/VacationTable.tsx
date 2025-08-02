@@ -1,3 +1,4 @@
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table,
   TableBody,
@@ -41,6 +42,7 @@ export default function VacationTable({ vacations }: Props) {
                 <TableCell className="text-left">{v.reason}</TableCell>
                 <TableCell className="text-center">
                   <input type="checkbox" checked={v.isApproved} readOnly />
+                   <Checkbox id="terms" />
                 </TableCell>
               </TableRow>
             ))

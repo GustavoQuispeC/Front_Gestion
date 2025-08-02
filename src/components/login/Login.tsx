@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 import { loginUser } from "@/helpers/user.helpers";
 import { toast, ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
@@ -9,6 +8,9 @@ import { UserLoginErrorProps, UserLoginProps } from "@/types/user";
 import { userValidateLogin } from "@/utils/userLoginValidation";
 import { IoIosMail } from "react-icons/io";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
 
 const Login = () => {
   const router = useRouter();
@@ -103,26 +105,26 @@ const Login = () => {
             </div>
 
             <div className="max-w-md md:ml-auto w-full">
-              <h3 className="text-slate-900 lg:text-3xl text-2xl font-bold mb-8">
+              <h3 className="text-slate-900 lg:text-3xl text-2xl font-bold mb-8 dark:text-white">
                 Iniciar Sesión
               </h3>
 
               <div className="space-y-6">
                 <div className="relative">
-                  <label className="text-sm text-slate-800 font-medium mb-2 block">
+                  <Label className="mb-2">
                     Correo
-                  </label>
+                  </Label>
                   <div className="relative">
-                    <input
+                    <Input
                       name="email"
                       type="email"
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      className="bg-slate-100 w-full text-sm text-slate-800 pl-4 pr-10 py-3 rounded-md outline-none border focus:border-blue-600 focus:bg-transparent"
+                      
                       placeholder="Ingrese su correo electrónico"
                     />
-                    <span className="absolute right-3 top-3.5 text-gray-400">
+                    <span className="absolute right-3 top-2 text-gray-400">
                       <IoIosMail size={20} />
                     </span>
                   </div>
@@ -134,21 +136,21 @@ const Login = () => {
                   )}
                 </div>
                 <div className="relative">
-                  <label className="text-sm text-slate-800 font-medium mb-2 block">
+                  <Label className="mb-2">
                     Contraseña
-                  </label>
+                  </Label>
                   <div className="relative">
-                    <input
+                    <Input
                       name="password"
                       type={showPassword ? "text" : "password"}
                       value={formData.password}
                       onChange={handleChange}
                       required
-                      className="bg-slate-100 w-full text-sm text-slate-800 pl-4 pr-10 py-3 rounded-md outline-none border focus:border-blue-600 focus:bg-transparent"
+                    
                       placeholder="Ingrese su contraseña"
                     />
                     <span
-                      className="absolute right-3 top-3.5 text-gray-400 cursor-pointer"
+                      className="absolute right-3 top-2 text-gray-400 cursor-pointer"
                       onClick={() => setShowPassword(!showPassword)}
                     >
                       {showPassword ? (
@@ -170,17 +172,17 @@ const Login = () => {
               </div>
 
               <div className="!mt-12">
-                <button
+                <Button
                   type="submit"
                   disabled={isLoading || !formData.email || !formData.password}
-                  className={`w-full shadow-xl py-2.5 px-4 text-sm font-semibold rounded text-white ${
+                  className={`w-full shadow-xl py-2.5 px-4 text-sm font-semibold rounded-sm text-white ${
                     isLoading || !formData.email || !formData.password
                       ? "bg-gray-400 cursor-not-allowed"
                       : "bg-blue-700 hover:bg-blue-800 focus:outline-none"
                   }`}
                 >
                   {isLoading ? "Cargando..." : "Iniciar Sesión"}
-                </button>
+                </Button>
               </div>
 
               <div className="space-x-6 flex justify-center">
