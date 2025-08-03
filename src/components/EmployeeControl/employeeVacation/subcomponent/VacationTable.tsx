@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table,
@@ -9,6 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { VacationRegisterProps } from "@/types/vacation";
+import { BadgeCheckIcon, BadgeX } from "lucide-react";
 
 interface Props {
   vacations: VacationRegisterProps[];
@@ -41,8 +43,19 @@ export default function VacationTable({ vacations }: Props) {
                 <TableCell>{v.daysRequested}</TableCell>
                 <TableCell className="text-left">{v.reason}</TableCell>
                 <TableCell className="text-center">
-                  <input type="checkbox" checked={v.isApproved} readOnly />
-                   <Checkbox id="terms" />
+                  <Checkbox id="terms" checked={v.isApproved} disabled />
+                </TableCell>
+                <TableCell>
+                  <Badge
+                    className={`mt-0.5${
+                      v.isApproved
+                        ? "border-green-200 text-green-500 bg-green-50 font-semibold"
+                        : "border-red-200 text-red-500 bg-red-50 font-semibold"
+                    }`}
+                  >
+                    {v.isApproved ? <BadgeCheckIcon /> : <BadgeX />}
+                    {v.isApproved ? "Activo" : "Inactivo"}
+                  </Badge>
                 </TableCell>
               </TableRow>
             ))
