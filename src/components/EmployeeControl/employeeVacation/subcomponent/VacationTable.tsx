@@ -1,5 +1,4 @@
 import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table,
   TableBody,
@@ -27,7 +26,7 @@ export default function VacationTable({ vacations }: Props) {
             <TableHead>Fecha Fin</TableHead>
             <TableHead>Días Solicitados</TableHead>
             <TableHead>Motivo</TableHead>
-            <TableHead className="text-center">Aprobado</TableHead>
+            <TableHead >Aprobado</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -42,9 +41,7 @@ export default function VacationTable({ vacations }: Props) {
                 </TableCell>
                 <TableCell>{v.daysRequested}</TableCell>
                 <TableCell className="text-left">{v.reason}</TableCell>
-                <TableCell className="text-center">
-                  <Checkbox id="terms" checked={v.isApproved} disabled />
-                </TableCell>
+
                 <TableCell>
                   <Badge
                     className={`mt-0.5${
@@ -54,7 +51,7 @@ export default function VacationTable({ vacations }: Props) {
                     }`}
                   >
                     {v.isApproved ? <BadgeCheckIcon /> : <BadgeX />}
-                    {v.isApproved ? "Activo" : "Inactivo"}
+                    {v.isApproved ? "Aprobado" : "Rechazado"}
                   </Badge>
                 </TableCell>
               </TableRow>
