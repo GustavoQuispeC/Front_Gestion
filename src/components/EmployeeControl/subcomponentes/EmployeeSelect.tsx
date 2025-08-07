@@ -35,6 +35,7 @@ export default function EmployeeSelect({
         Búsqueda por Apellidos y Nombres
       </Label>
       <AsyncSelect
+        inputId="nombres"
         cacheOptions
         defaultOptions
         loadOptions={loadOptions}

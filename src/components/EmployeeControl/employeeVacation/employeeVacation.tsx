@@ -16,16 +16,19 @@ import { Calendar } from "../../ui/calendar";
 import { Input } from "../../ui/input";
 import { Checkbox } from "../../ui/checkbox";
 import { Button } from "../../ui/button";
-import EmployeeSelect from "../subcomponentes/EmployeeSelect";
-import EmployeeDetails from "../subcomponentes/EmployeeDetails";
+import EmployeeSelect from "../subcomponentes/employeeSelect";
+import EmployeeDetails from "../subcomponentes/employeeDetails";
 import VacationTable from "./subcomponent/VacationTable";
 import { ChevronDownIcon, SaveIcon } from "lucide-react";
+import { useAuthToken } from "@/hooks/useAuthToken";
 
 export default function EmployeeVacation() {
   const [open1, setOpen1] = useState(false);
-  const [date1, setDate1] = useState<Date | null>(null);
+  const [date1, setDate1] = useState<Date | undefined>(undefined);
   const [open2, setOpen2] = useState(false);
-  const [date2, setDate2] = useState<Date | null>(null);
+  const [date2, setDate2] = useState<Date | undefined>(undefined);
+
+  const { token } = useAuthToken();
 
   const [selectedEmployee, setSelectedEmployee] =
     useState<EmployeeSearchProps | null>(null);
@@ -38,8 +41,6 @@ export default function EmployeeVacation() {
     VacationRegisterProps[]
   >([]);
 
-  const [token, setToken] = useState<string | null>(null);
-
   const [formData, setFormData] = useState<{
     startDate: Date | null;
     endDate: Date | null;
@@ -49,15 +50,6 @@ export default function EmployeeVacation() {
     endDate: null,
     reason: "",
   });
-
-  //! Cargar el token del localStorage al iniciar el componente
-  useEffect(() => {
-    const storedToken = localStorage.getItem("user");
-    if (!storedToken) {
-      toast.warning("No se encontró el token de autenticación.");
-    }
-    setToken(storedToken);
-  }, []);
 
   //! Función para cargar opciones de empleados
   const loadOptions = async (inputValue: string) => {
@@ -120,8 +112,15 @@ export default function EmployeeVacation() {
   }, [selectedEmployee, token, fetchEmployeeData]);
 
   //! Renderizar la fecha en formato ISO
-  const renderDate = (date: Date | null) =>
-    date ? date.toISOString().slice(0, 10) : "Seleccionar fecha";
+  const renderDate = (date?: Date) => {
+    if (!date || isNaN(date.getTime())) return "Seleccionar fecha";
+    return new Intl.DateTimeFormat("es-CO", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      timeZone: "America/Bogota",
+    }).format(date);
+  };
 
   //! Calcular los días solicitados entre dos fechas
   const calculateDaysRequested = (start: Date, end: Date): number => {
@@ -149,16 +148,17 @@ export default function EmployeeVacation() {
       reason: formData.reason,
       daysRequested,
       daysTaken: daysRequested,
-      daysRemaining: 0,
+      daysRemaining: Math.floor(vacationSummary?.remainingDays ?? 0),
     };
+    console.log("Datos de vacaciones a registrar:", data);
 
     try {
       await VacationRegister(data, token || "");
       toast.success("Vacaciones registradas con éxito.");
       await fetchEmployeeData(selectedEmployee.id);
       setFormData({ startDate: null, endDate: null, reason: "" });
-      setDate1(null);
-      setDate2(null);
+      setDate1(undefined);
+      setDate2(undefined);
       setIsApproved(false);
     } catch (error) {
       console.error("Error al registrar vacaciones:", error);
