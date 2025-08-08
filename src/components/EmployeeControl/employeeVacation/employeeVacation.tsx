@@ -8,7 +8,11 @@ import {
   VacationRegister,
 } from "@/helpers/vacation.helper";
 import { EmployeeSearchProps } from "@/types/employee";
-import { VacationRegisterProps, VacationSummary } from "@/types/vacation";
+import {
+  VacacionListProps,
+  VacationRegisterProps,
+  VacationSummary,
+} from "@/types/vacation";
 import { Card, CardContent, CardDescription, CardHeader } from "../../ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
 import { Label } from "../../ui/label";
@@ -16,11 +20,11 @@ import { Calendar } from "../../ui/calendar";
 import { Input } from "../../ui/input";
 import { Checkbox } from "../../ui/checkbox";
 import { Button } from "../../ui/button";
-import EmployeeSelect from "../subcomponentes/employeeSelect";
-import EmployeeDetails from "../subcomponentes/employeeDetails";
 import VacationTable from "./subcomponent/VacationTable";
 import { ChevronDownIcon, SaveIcon } from "lucide-react";
 import { useAuthToken } from "@/hooks/useAuthToken";
+import EmployeeSelect from "../subcomponentes/EmployeeSelect";
+import EmployeeDetails from "../subcomponentes/EmployeeDetails";
 
 export default function EmployeeVacation() {
   const [open1, setOpen1] = useState(false);
@@ -35,20 +39,22 @@ export default function EmployeeVacation() {
   const [vacationSummary, setVacationSummary] =
     useState<VacationSummary | null>(null);
 
-  const [isApproved, setIsApproved] = useState(false);
+  // const [isApproved, setIsApproved] = useState(false);
 
   const [employeeVacations, setEmployeeVacations] = useState<
-    VacationRegisterProps[]
+    VacacionListProps[]
   >([]);
 
   const [formData, setFormData] = useState<{
     startDate: Date | null;
     endDate: Date | null;
     reason: string;
+    isApproved: boolean;
   }>({
     startDate: null,
     endDate: null,
     reason: "",
+    isApproved: false,
   });
 
   //! Función para cargar opciones de empleados
@@ -134,6 +140,8 @@ export default function EmployeeVacation() {
     if (!selectedEmployee) return toast.error("Debe seleccionar un empleado.");
     if (!formData.startDate || !formData.endDate)
       return toast.error("Debe seleccionar ambas fechas.");
+    if (!formData.isApproved)
+      return toast.error("Debe indicar si las vacaciones están aprobadas.");
 
     const daysRequested = calculateDaysRequested(
       formData.startDate,
@@ -144,7 +152,7 @@ export default function EmployeeVacation() {
       employeeId: Number(selectedEmployee.id),
       startDate: formData.startDate,
       endDate: formData.endDate,
-      isApproved,
+      isApproved: formData.isApproved,
       reason: formData.reason,
       daysRequested,
       daysTaken: daysRequested,
@@ -156,10 +164,14 @@ export default function EmployeeVacation() {
       await VacationRegister(data, token || "");
       toast.success("Vacaciones registradas con éxito.");
       await fetchEmployeeData(selectedEmployee.id);
-      setFormData({ startDate: null, endDate: null, reason: "" });
+      setFormData({
+        startDate: null,
+        endDate: null,
+        reason: "",
+        isApproved: false,
+      });
       setDate1(undefined);
       setDate2(undefined);
-      setIsApproved(false);
     } catch (error) {
       console.error("Error al registrar vacaciones:", error);
       const errorMsg =
@@ -309,8 +321,11 @@ export default function EmployeeVacation() {
               <div className="flex items-center gap-3">
                 <Checkbox
                   id="aprobado"
-                  checked={isApproved}
-                  onCheckedChange={(checked) => setIsApproved(Boolean(checked))}
+                  checked={formData.isApproved}
+                  onCheckedChange={(checked) =>
+                    setFormData({ ...formData, isApproved: Boolean(checked) })
+                  }
+                  required={true}
                 />
                 <Label htmlFor="aprobado">Aprobado (opcional)</Label>
               </div>

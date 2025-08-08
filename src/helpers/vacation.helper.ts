@@ -1,4 +1,8 @@
-import { VacationRegisterProps, VacationSummary } from "@/types/vacation";
+import {
+  VacacionListProps,
+  VacationRegisterProps,
+  VacationSummary,
+} from "@/types/vacation";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -75,7 +79,7 @@ export async function VacationRegister(
 export async function GetVacationsByEmployeeId(
   userId: string,
   token: string
-): Promise<VacationRegisterProps[]> {
+): Promise<VacacionListProps[]> {
   try {
     const response = await fetch(`${apiUrl}/Vacation/employee/${userId}`, {
       method: "GET",
@@ -89,8 +93,16 @@ export async function GetVacationsByEmployeeId(
       throw new Error("Error en la solicitud: " + response.statusText);
     }
 
-    const json = (await response.json()) as VacationRegisterProps[];
-    return json;
+    const json = (await response.json()) as VacacionListProps[];
+    return json.map((vacation) => ({
+      employeeId: vacation.employeeId,
+      startDate: new Date(vacation.startDate),
+      endDate: new Date(vacation.endDate),
+      daysRequested: vacation.daysRequested,
+      reason: vacation.reason,
+      isApproved: vacation.isApproved,
+      createdAt: new Date(vacation.createdAt),
+    }));
   } catch (error) {
     console.error("Error al obtener las vacaciones:", error);
     throw error;

@@ -17,3 +17,14 @@ export interface VacationRegisterProps {
   
 }
 
+export interface VacacionListProps {
+    employeeId: number;
+  startDate: Date;
+  endDate: Date;
+   daysRequested: number;
+  reason : string;
+  isApproved: boolean;
+  createdAt: Date;
+}
+
+

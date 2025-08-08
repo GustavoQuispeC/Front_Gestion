@@ -8,11 +8,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { VacationRegisterProps } from "@/types/vacation";
+import { VacacionListProps } from "@/types/vacation";
 import { BadgeCheckIcon, BadgeX } from "lucide-react";
+import { es } from "date-fns/locale";
+import { format } from "date-fns";
 
 interface Props {
-  vacations: VacationRegisterProps[];
+  vacations: VacacionListProps[];
 }
 
 export default function VacationTable({ vacations }: Props) {
@@ -22,11 +24,12 @@ export default function VacationTable({ vacations }: Props) {
         <TableCaption>Vacaciones registradas</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">Fecha Inicio</TableHead>
+            <TableHead>Fecha Inicio</TableHead>
             <TableHead>Fecha Fin</TableHead>
             <TableHead>Días Solicitados</TableHead>
             <TableHead>Motivo</TableHead>
-            <TableHead >Aprobado</TableHead>
+            <TableHead>Aprobado</TableHead>
+            <TableHead>Fecha de Registro</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -34,10 +37,18 @@ export default function VacationTable({ vacations }: Props) {
             vacations.map((v, index) => (
               <TableRow key={index}>
                 <TableCell>
-                  {new Date(v.startDate).toLocaleDateString()}
+                  {v.startDate
+                    ? format(new Date(v.startDate), "dd/MM/yyyy", {
+                        locale: es,
+                      })
+                    : ""}
                 </TableCell>
                 <TableCell>
-                  {new Date(v.endDate).toLocaleDateString()}
+                  {v.endDate
+                    ? format(new Date(v.endDate), "dd/MM/yyyy", {
+                        locale: es,
+                      })
+                    : ""}
                 </TableCell>
                 <TableCell>{v.daysRequested}</TableCell>
                 <TableCell className="text-left">{v.reason}</TableCell>
@@ -53,6 +64,13 @@ export default function VacationTable({ vacations }: Props) {
                     {v.isApproved ? <BadgeCheckIcon /> : <BadgeX />}
                     {v.isApproved ? "Aprobado" : "Rechazado"}
                   </Badge>
+                </TableCell>
+                <TableCell>
+                  {v.createdAt
+                    ? format(new Date(v.createdAt), "dd/MM/yyyy", {
+                        locale: es,
+                      })
+                    : ""}
                 </TableCell>
               </TableRow>
             ))
