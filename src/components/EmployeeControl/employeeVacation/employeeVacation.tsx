@@ -25,6 +25,8 @@ import { ChevronDownIcon, SaveIcon } from "lucide-react";
 import { useAuthToken } from "@/hooks/useAuthToken";
 import EmployeeSelect from "../subcomponentes/EmployeeSelect";
 import EmployeeDetails from "../subcomponentes/EmployeeDetails";
+import { IoMdArrowRoundBack } from "react-icons/io";
+import { useRouter } from "next/navigation";
 
 export default function EmployeeVacation() {
   const [open1, setOpen1] = useState(false);
@@ -38,6 +40,8 @@ export default function EmployeeVacation() {
     useState<EmployeeSearchProps | null>(null);
   const [vacationSummary, setVacationSummary] =
     useState<VacationSummary | null>(null);
+
+  const router = useRouter();
 
   // const [isApproved, setIsApproved] = useState(false);
 
@@ -300,7 +304,7 @@ export default function EmployeeVacation() {
                 {/* Motivo */}
                 <div className="flex flex-col">
                   <Label htmlFor="reason" className="mb-2">
-                    Motivo (opcional)
+                    Motivo
                   </Label>
                   <Input
                     id="reason"
@@ -327,13 +331,26 @@ export default function EmployeeVacation() {
                   }
                   required={true}
                 />
-                <Label htmlFor="aprobado">Aprobado (opcional)</Label>
+                <Label htmlFor="aprobado">Aprobado </Label>
               </div>
-
-              <Button className="mt-2 md:mt-0" onClick={handleVacationRegister}>
-                <SaveIcon className="mr-2" />
-                Registrar Vacaciones
-              </Button>
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="outline"
+                  onClick={() => router.push("/dashboard/main")}
+                  className="w-64"
+                >
+                  <IoMdArrowRoundBack className="text-base" />
+                  Volver
+                </Button>{" "}
+                <Button
+                  type="button"
+                  className="mt-2 md:mt-0"
+                  onClick={handleVacationRegister}
+                >
+                  <SaveIcon className="mr-2" />
+                  Registrar Vacaciones
+                </Button>
+              </div>
             </div>
 
             {/* Tabla de Vacaciones */}
