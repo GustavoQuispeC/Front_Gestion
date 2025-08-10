@@ -29,6 +29,9 @@ import {
 } from "@/components/ui/popover";
 import { ChevronDownIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
+import Image from "next/image";
+import { es } from "date-fns/locale";
+import { format } from "date-fns";
 
 export default function RegisterEmployee() {
   const [submitted, setSubmitted] = useState(false);
@@ -39,13 +42,9 @@ export default function RegisterEmployee() {
   const [open2, setOpen2] = useState(false);
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [date2, setDate2] = useState<Date | undefined>(undefined);
-  const [documentType, setDocumentType] = useState<string | undefined>(
-    undefined
-  );
-  const [gender, setGender] = useState<string | undefined>(undefined);
-  const [contractType, setContractType] = useState<string | undefined>(
-    undefined
-  );
+  const [documentType, setDocumentType] = useState<string>("");
+  const [gender, setGender] = useState<string>("");
+  const [contractType, setContractType] = useState<string>("");
 
   const [formData, setFormData] = useState<EmployeeRegisterProps>({
     firstName: "",
@@ -140,21 +139,26 @@ export default function RegisterEmployee() {
         setIsLoading(false);
         return;
       }
-
       const finalFormData: EmployeeRegisterApiProps = {
         FirstName: formData.firstName,
         LastNameFather: formData.lastNameFather,
         LastNameMother: formData.lastNameMother,
         DocumentNumber: formData.documentNumber,
         DocumentType: formData.documentType,
-        BirthDate: formData.birthDate,
+        BirthDate:
+          formData.birthDate instanceof Date
+            ? formData.birthDate.toISOString()
+            : "",
         Gender: formData.gender,
         Phone: formData.phone,
         EmergencyPhone: formData.emergencyPhone,
         Email: formData.email,
         Address: formData.address,
         Position: formData.position,
-        HireDate: formData.hireDate,
+        HireDate:
+          formData.hireDate instanceof Date
+            ? formData.hireDate.toISOString()
+            : "",
         ContractType: formData.contractType,
         PhotoUrl: finalPhotoUrl,
       };
@@ -294,7 +298,9 @@ export default function RegisterEmployee() {
                   id="date"
                   className="w-full justify-between font-normal"
                 >
-                  {date ? date.toLocaleDateString() : "Seleccione la fecha"}
+                  {date
+                    ? format(date, "dd/MM/yyyy", { locale: es })
+                    : "Seleccione la fecha"}
                   <ChevronDownIcon />
                 </Button>
               </PopoverTrigger>
@@ -308,7 +314,6 @@ export default function RegisterEmployee() {
                   captionLayout="dropdown"
                   onSelect={(selectedDate) => {
                     setDate(selectedDate);
-                    // Al seleccionar una fecha, actualizamos formData.birthDate
                     setFormData((prev) => ({
                       ...prev,
                       birthDate: selectedDate || prev.birthDate,
@@ -549,10 +554,9 @@ export default function RegisterEmployee() {
                   id="date"
                   className="w-full justify-between font-normal"
                 >
-                  {/* {formData.hireDate
-                    ? "Seleccione fecha"
-                    : new Date(formData.hireDate).toLocaleDateString()} */}
-                  {date2 ? date2.toLocaleDateString() : "Seleccione fecha"}
+                  {date2
+                    ? format(date2, "dd/MM/yyyy", { locale: es })
+                    : "Seleccione fecha"}
                   <ChevronDownIcon />
                 </Button>
               </PopoverTrigger>
@@ -566,7 +570,6 @@ export default function RegisterEmployee() {
                   captionLayout="dropdown"
                   onSelect={(selectedDate) => {
                     setDate2(selectedDate);
-                    // Al seleccionar una fecha, actualizamos formData.birthDate
                     setFormData((prev) => ({
                       ...prev,
                       hireDate: selectedDate || prev.hireDate,
@@ -654,10 +657,13 @@ export default function RegisterEmployee() {
           {previewUrl && (
             <div className="mt-4">
               <p className="text-sm text-slate-700 mb-2">Vista previa:</p>
-              <img
+              <Image
                 src={previewUrl}
                 alt="Vista previa"
-                className="h-48 w-40 object-cover rounded-lg border"
+                className=" object-cover rounded-lg border"
+                width={160}
+                height={192}
+                style={{ height: "auto" }}
               />
             </div>
           )}

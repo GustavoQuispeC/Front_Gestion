@@ -41,14 +41,14 @@ export interface EmployeeRegisterApiProps {
   LastNameMother: string;
   DocumentNumber: string;
   DocumentType: string;
-  BirthDate: Date;
+  BirthDate: string;
   Gender: string;
   Phone: string;
   EmergencyPhone: string;
   Email: string;
   Address: string;
   Position: string;
-  HireDate: Date;
+  HireDate: string;
   ContractType: string;
   PhotoUrl: string;
 }
