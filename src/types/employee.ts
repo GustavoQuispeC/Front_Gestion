@@ -96,3 +96,4 @@ export interface EmployeeSearchProps {
   email: string;
   hireDate: string | Date; // Usar string si la API devuelve una fecha como cadena
 }
+

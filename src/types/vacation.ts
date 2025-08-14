@@ -14,17 +14,23 @@ export interface VacationRegisterProps {
   daysTaken: number;
   daysRemaining: number;
   reason: string;
-  
 }
 
 export interface VacacionListProps {
-    employeeId: number;
+  employeeId: number;
   startDate: Date;
   endDate: Date;
-   daysRequested: number;
-  reason : string;
+  daysRequested: number;
+  reason: string;
   isApproved: boolean;
   createdAt: Date;
 }
 
-
+export interface EmployeeVacationListProps {
+  employeeId: number;
+  firstName: string;
+  lastNameFather: string;
+  lastNameMother: string;
+  hireDate: Date;
+  remainingDays: number;
+}

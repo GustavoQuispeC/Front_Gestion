@@ -51,9 +51,7 @@ export default function UserList() {
       const role = user?.roles?.[0];
 
       if (!token || !role) {
-        toast.error("No se encontró token o rol del usuario", {
-          theme: "colored",
-        });
+        toast.error("No se encontró token o rol del usuario");
         return;
       }
 
@@ -69,7 +67,7 @@ export default function UserList() {
       setUsers(employeeData);
     } catch (error) {
       console.error("Error al obtener los empleados:", error);
-      toast.error("Error al obtener los empleados", { theme: "colored" });
+      toast.error("Error al obtener los empleados");
     }
   };
 
@@ -98,22 +96,18 @@ export default function UserList() {
         const response = await deleteUser(userId, token);
 
         if (response.message === "Usuario eliminado correctamente") {
-          toast.success("Usuario desactivado correctamente", {
-            theme: "colored",
-          });
+          toast.success("Usuario desactivado correctamente");
 
           // Actualizar estado del usuario sin eliminarlo del arreglo
           setUsers((prev) =>
             prev.map((u) => (u.id === userId ? { ...u, isActive: false } : u))
           );
         } else {
-          toast.error(response.message || "Error al eliminar el usuario", {
-            theme: "colored",
-          });
+          toast.error(response.message || "Error al eliminar el usuario");
         }
       } catch (error) {
         console.error("Error al eliminar el usuario:", error);
-        toast.error("Error al eliminar el usuario", { theme: "colored" });
+        toast.error("Error al eliminar el usuario");
       }
     }
   };

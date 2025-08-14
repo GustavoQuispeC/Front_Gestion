@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { FaBrush, FaEye, FaEyeSlash, FaSave } from "react-icons/fa";
 import { IoMdArrowRoundBack } from "react-icons/io";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -59,7 +59,7 @@ const UserUpdate = ({ userId }: { userId: string }) => {
       const rolesData = await getAllRoles();
       setRoles(rolesData);
     } catch (e) {
-      toast.error("Error al obtener los roles", { theme: "colored" });
+      toast.error("Error al obtener los roles");
       console.error("Error al obtener los roles:", e);
     }
   };
@@ -89,7 +89,7 @@ const UserUpdate = ({ userId }: { userId: string }) => {
       });
     } catch (error) {
       console.error("Error al obtener el usuario por ID:", error);
-      toast.error("Error al obtener el usuario", { theme: "colored" });
+      toast.error("Error al obtener el usuario");
     }
   };
 
@@ -137,15 +137,13 @@ const UserUpdate = ({ userId }: { userId: string }) => {
       };
       const response = await updateUser(userId, updatedUser, token);
       if (response) {
-        toast.success("Usuario actualizado correctamente", {
-          theme: "colored",
-        });
+        toast.success("Usuario actualizado correctamente");
         setTimeout(() => {
           Route.push("/dashboard/userList");
         }, 2000);
       }
     } catch (error) {
-      toast.error("Error al actualizar el usuario", { theme: "colored" });
+      toast.error("Error al actualizar el usuario");
       console.error("Error al actualizar el usuario:", error);
     } finally {
       setIsSubmitting(false);
@@ -360,8 +358,6 @@ const UserUpdate = ({ userId }: { userId: string }) => {
           </Button>
         </div>
       </form>
-
-      <ToastContainer />
     </>
   );
 };

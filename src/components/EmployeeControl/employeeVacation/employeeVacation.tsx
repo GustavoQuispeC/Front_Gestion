@@ -21,7 +21,7 @@ import { Input } from "../../ui/input";
 import { Checkbox } from "../../ui/checkbox";
 import { Button } from "../../ui/button";
 import VacationTable from "./subcomponent/VacationTable";
-import { ChevronDownIcon, SaveIcon } from "lucide-react";
+import { ChevronDownIcon, Eye, SaveIcon } from "lucide-react";
 import { useAuthToken } from "@/hooks/useAuthToken";
 import EmployeeSelect from "../subcomponentes/EmployeeSelect";
 import EmployeeDetails from "../subcomponentes/EmployeeDetails";
@@ -341,6 +341,14 @@ export default function EmployeeVacation() {
                 >
                   <IoMdArrowRoundBack className="text-base" />
                   Volver
+                </Button>{" "}
+                  <Button
+                  variant="secondary"
+                  onClick={() => router.push("/dashboard/employeeVacationList")}
+                  className="w-64"
+                >
+                  <Eye className="text-base" />
+                  Ver todos
                 </Button>{" "}
                 <Button
                   type="button"

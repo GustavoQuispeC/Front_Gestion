@@ -108,3 +108,25 @@ export async function GetVacationsByEmployeeId(
     throw error;
   }
 }
+
+//Listar vacaciones de empleados
+export async function getEmployeesVacationAll() {
+  try {
+    const response = await fetch(`${apiUrl}/Vacation/all`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error en la solicitud: " + response.statusText);
+    }
+
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    console.error("Error al obtener las vacaciones de los empleados:", error);
+    throw error;
+  }
+}

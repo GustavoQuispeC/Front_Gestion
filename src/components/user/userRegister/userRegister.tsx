@@ -22,7 +22,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaBrush, FaSave } from "react-icons/fa";
 import { IoMdArrowRoundBack } from "react-icons/io";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 
 const UserRegister = () => {
   const [roles, setRoles] = useState<RoleListProps[]>([]);
@@ -56,7 +56,7 @@ const UserRegister = () => {
       const rolesData = await getAllRoles();
       setRoles(rolesData);
     } catch (e) {
-      toast.error("Error al obtener los roles", { theme: "colored" });
+      toast.error("Error al obtener los roles");
       console.error("Error al obtener los roles:", e);
     }
   };
@@ -108,7 +108,7 @@ const UserRegister = () => {
     e.preventDefault();
 
     if (!employeeData.id) {
-      toast.error("Debe seleccionar un empleado", { theme: "colored" });
+      toast.error("Debe seleccionar un empleado");
       return;
     }
 
@@ -118,7 +118,7 @@ const UserRegister = () => {
       !userRegister.password ||
       !userRegister.roleId
     ) {
-      toast.error("Todos los campos son obligatorios", { theme: "colored" });
+      toast.error("Todos los campos son obligatorios");
       return;
     }
 
@@ -136,19 +136,17 @@ const UserRegister = () => {
       const response = await registerUser(userRegisterData, token);
 
       if (response?.message === "Usuario creado correctamente") {
-        toast.success("Usuario registrado con éxito", { theme: "colored" });
+        toast.success("Usuario registrado con éxito");
         handleReset();
       } else {
-        toast.error("Error al registrar el usuario", { theme: "colored" });
+        toast.error("Error al registrar el usuario");
       }
     } catch (error) {
       console.error("Error al registrar el usuario:", error);
       if (error instanceof Error && error.message) {
-        toast.error(error.message, { theme: "colored" });
+        toast.error(error.message);
       } else {
-        toast.error("Error desconocido al registrar el usuario", {
-          theme: "colored",
-        });
+        toast.error("Error desconocido al registrar el usuario");
       }
     }
   };
@@ -262,16 +260,16 @@ const UserRegister = () => {
               onChange={(e) =>
                 setUserRegister({ ...userRegister, userName: e.target.value })
               }
-              className="input input-info w-full"
+              className="input input-info w-full mt-1.5"
             />
           </div>
         </div>
 
         {/* Fila de Correo, Contraseña y Rol */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 mx-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-1 mx-10">
           {/* Correo */}
           <div className="flex flex-col">
-            <Label htmlFor="email" className="mb-1 text-sm font-medium">
+            <Label htmlFor="email" className=" text-sm font-medium">
               Correo Electrónico
             </Label>
             <Input
@@ -354,8 +352,6 @@ const UserRegister = () => {
           </Button>
         </div>
       </form>
-
-      <ToastContainer />
     </>
   );
 };
