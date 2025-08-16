@@ -342,7 +342,7 @@ export default function EmployeeVacation() {
                   <IoMdArrowRoundBack className="text-base" />
                   Volver
                 </Button>{" "}
-                  <Button
+                <Button
                   variant="secondary"
                   onClick={() => router.push("/dashboard/employeeVacationList")}
                   className="w-64"
