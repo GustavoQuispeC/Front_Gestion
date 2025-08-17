@@ -336,6 +336,7 @@ export default function EmployeeVacation() {
               <div className="flex items-center gap-3">
                 <Button
                   variant="outline"
+                  type="button" 
                   onClick={() => router.push("/dashboard/main")}
                   className="w-64"
                 >
@@ -343,7 +344,8 @@ export default function EmployeeVacation() {
                   Volver
                 </Button>{" "}
                 <Button
-                  variant="secondary"
+                  variant="reset"
+                  type="button" 
                   onClick={() => router.push("/dashboard/employeeVacationList")}
                   className="w-64"
                 >

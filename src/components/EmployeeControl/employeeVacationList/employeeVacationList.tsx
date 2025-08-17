@@ -1,4 +1,13 @@
 "use client";
+
+import { getEmployeesVacationAll } from "@/helpers/vacation.helper";
+import { EmployeeVacationListProps } from "@/types/vacation";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
+import { useEffect, useState } from "react";
+import { IoMdArrowRoundBack } from "react-icons/io";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -9,14 +18,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getEmployeesVacationAll } from "@/helpers/vacation.helper";
-import { EmployeeVacationListProps } from "@/types/vacation";
-import { format } from "date-fns";
-import { es } from "date-fns/locale";
-import { useEffect, useState } from "react";
-import { IoMdArrowRoundBack } from "react-icons/io";
-import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
 
 export default function EmployeeVacationList() {
   const router = useRouter();
@@ -40,16 +41,6 @@ export default function EmployeeVacationList() {
 
   return (
     <div className="md:col-span-3 overflow-x-auto w-full">
-      <div className="flex items-center gap-3">
-        <Button
-          variant="outline"
-          onClick={() => router.push("/dashboard/employeeVacation")}
-          className="w-64"
-        >
-          <IoMdArrowRoundBack className="text-base" />
-          Volver
-        </Button>{" "}
-      </div>
       <Table className="w-full">
         <TableCaption>Listado de empleados</TableCaption>
         <TableHeader>
@@ -96,6 +87,17 @@ export default function EmployeeVacationList() {
           )}
         </TableBody>
       </Table>
+      <div className="flex items-center gap-3">
+        <Button
+          variant="outline"
+          type="button" 
+          onClick={() => router.push("/dashboard/employeeVacation")}
+          className="w-64 bg-gray-200"
+        >
+          <IoMdArrowRoundBack className="text-base" />
+          Volver
+        </Button>{" "}
+      </div>
     </div>
   );
 }

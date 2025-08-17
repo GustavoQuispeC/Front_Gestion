@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { toast } from "react-toastify";
 import { getEmployeeByFullname } from "@/helpers/employee.helper";
 import { EmployeeSearchProps } from "@/types/employee";
-import { ChevronDownIcon, SaveIcon } from "lucide-react";
+import { ChevronDownIcon, Eye, SaveIcon } from "lucide-react";
 import { AbsenceTableProps, AbsenceSummary } from "@/types/absence";
 import {
   AbsenceRegister,
@@ -31,6 +31,8 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import AbsenceTable from "./subcomponent/AbsenceTable";
 import { AbsenceRegisterProps } from "../../../types/absence";
+import { IoMdArrowRoundBack } from "react-icons/io";
+import { useRouter } from "next/navigation";
 
 export default function EmployeeVacation() {
   const [open1, setOpen1] = useState(false);
@@ -55,6 +57,8 @@ export default function EmployeeVacation() {
   });
 
   const [mounted, setMounted] = useState(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true); // Establecer `mounted` a true cuando se monta el componente
@@ -149,9 +153,9 @@ export default function EmployeeVacation() {
 
   return (
     <>
-      <section className="w-full mx-auto mt-4 h-full">
-        <div className="dark:bg-neutral-900 text-black dark:text-white rounded-2xl px-12 pb-8 mx-8">
-          <h2 className="text-2xl font-bold mb-6 text-center md:text-left">
+      <section className="w-full mx-auto mt-4 h-full px-2 sm:px-4 md:px-8">
+        <div className="dark:bg-neutral-900 text-black dark:text-white rounded-2xl px-4 sm:px-6 md:px-12 pb-8">
+          <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center md:text-left">
             Control de Ausencias
           </h2>
 
@@ -175,18 +179,16 @@ export default function EmployeeVacation() {
               {selectedEmployee && (
                 <EmployeeDetails employee={selectedEmployee} />
               )}
-              <div>
-                {AbsenceSummary && (
-                  <div className="mt-4">
-                    <p className="font-bold">
-                      Total dias de Ausencias:{" "}
-                      <span className="font-normal">
-                        {AbsenceSummary.totalAbsences}
-                      </span>
-                    </p>
-                  </div>
-                )}
-              </div>
+              {AbsenceSummary && (
+                <div className="mt-4">
+                  <p className="font-bold text-sm sm:text-base">
+                    Total días de Ausencias:{" "}
+                    <span className="font-normal">
+                      {AbsenceSummary.totalAbsences}
+                    </span>
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -262,10 +264,37 @@ export default function EmployeeVacation() {
                 />
                 <Label htmlFor="justificado">Justificado (opcional)</Label>
               </div>
+            </div>
 
-              <Button className="mt-2 md:mt-0" onClick={handleAbsenceRegister}>
+            {/* Botones */}
+            <div className="flex flex-col sm:flex-row flex-wrap items-center gap-3 justify-end w-full">
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() => router.push("/dashboard/main")}
+                className="w-full sm:w-64"
+              >
+                <IoMdArrowRoundBack className="text-base" />
+                Volver
+              </Button>
+
+              <Button
+                variant="reset"
+                type="button"
+                onClick={() => router.push("/dashboard/main")}
+                className="w-full sm:w-64"
+              >
+                <Eye className="text-base" />
+                Ver todos
+              </Button>
+
+              <Button
+                className="w-full sm:w-auto mt-2 md:mt-0"
+                type="button"
+                onClick={handleAbsenceRegister}
+              >
                 <SaveIcon className="mr-2" />
-                Registrar Ausencia
+                Registrar Inasistencia
               </Button>
             </div>
 
