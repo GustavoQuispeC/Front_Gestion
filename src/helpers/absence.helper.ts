@@ -1,4 +1,9 @@
-import {  AbsenceRegisterProps, AbsenceSummary, AbsenceTableProps } from "@/types/absence";
+import {
+  AbsenceRegisterProps,
+  AbsenceSummary,
+  AbsenceTableProps,
+  EmployeeAbsenceAll,
+} from "@/types/absence";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -58,10 +63,11 @@ export async function GetAbsencesByEmployeeId(
 
 //Registrar una ausencia
 export async function AbsenceRegister(
-  userData : AbsenceRegisterProps,
-  token : string){
+  userData: AbsenceRegisterProps,
+  token: string
+) {
   try {
-     const response = await fetch(`${apiUrl}/Absence/register`, {
+    const response = await fetch(`${apiUrl}/Absence/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -70,7 +76,6 @@ export async function AbsenceRegister(
       body: JSON.stringify({
         ...userData,
         date: new Date(userData.date).toISOString(),
-      
       }),
     });
 
@@ -89,13 +94,33 @@ export async function AbsenceRegister(
     if (contentType && contentType.includes("application/json")) {
       return await response.json();
     } else {
-      return await response.text(); 
+      return await response.text();
     }
-  }
-  catch (error) {
+  } catch (error) {
     console.error("Error al registrar la ausencia:", error);
     throw error;
   }
+}
 
+//Listar todas las ausencias de los empleados
+export async function GetAllAbsences(): Promise<EmployeeAbsenceAll[]> {
+  try {
+    const response = await fetch(`${apiUrl}/Absence/all`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    console.log("Response from all employee absences:", response);
 
+    if (!response.ok) {
+      throw new Error("Error en la solicitud: " + response.statusText);
+    }
+
+    const json = (await response.json()) as EmployeeAbsenceAll[];
+    return json;
+  } catch (error) {
+    console.error("Error al obtener todas las faltas de los empleados:", error);
+    throw error;
+  }
 }

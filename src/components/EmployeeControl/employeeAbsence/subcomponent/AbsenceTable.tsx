@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -8,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { AbsenceTableProps } from "@/types/absence";
+import { BadgeCheckIcon, BadgeX } from "lucide-react";
 
 interface Props {
   absences: AbsenceTableProps[];
@@ -23,7 +25,7 @@ export default function AbsenceTable({ absences }: Props) {
             <TableHead className="w-[100px]">Fecha de inasistencia</TableHead>
             <TableHead>Motivo</TableHead>
             <TableHead>Registrado el</TableHead>
-            <TableHead className="text-center">Justificado</TableHead>
+            <TableHead className="text-center">Estado</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -36,12 +38,16 @@ export default function AbsenceTable({ absences }: Props) {
                   {new Date(a.createdAt).toLocaleDateString()}
                 </TableCell>
                 <TableCell className="text-center">
-                  <input
-                    type="checkbox"
-                    checked={a.isJustified}
-                    readOnly
-                    aria-label="¿Está justificado?"
-                  />
+                  <Badge
+                    className={`mt-0.5${
+                      a.isJustified
+                        ? "border-green-200 text-green-500 bg-green-50 font-semibold w-32"
+                        : "border-red-200 text-red-500 bg-red-50 font-semibold w-32"
+                    }`}
+                  >
+                    {a.isJustified ? <BadgeCheckIcon /> : <BadgeX />}
+                    {a.isJustified ? "Justificado" : "No Justificado"}
+                  </Badge>
                 </TableCell>
               </TableRow>
             ))

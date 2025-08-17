@@ -281,7 +281,7 @@ export default function EmployeeVacation() {
               <Button
                 variant="reset"
                 type="button"
-                onClick={() => router.push("/dashboard/main")}
+                onClick={() => router.push("/dashboard/employeeAbsenceList")}
                 className="w-full sm:w-64"
               >
                 <Eye className="text-base" />

@@ -17,3 +17,12 @@ export interface AbsenceRegisterProps {
   reason: string;
   isJustified: boolean;
 }
+
+export interface EmployeeAbsenceAll {
+    employeeId:     number;
+    firstName:      string;
+    lastNameFather: string;
+    lastNameMother: string;
+    justified:      number;
+    unjustified:    number;
+}
