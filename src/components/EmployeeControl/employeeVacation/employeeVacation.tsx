@@ -23,10 +23,10 @@ import { Button } from "../../ui/button";
 import VacationTable from "./subcomponent/VacationTable";
 import { ChevronDownIcon, Eye, SaveIcon } from "lucide-react";
 import { useAuthToken } from "@/hooks/useAuthToken";
-import EmployeeSelect from "../subcomponentes/EmployeeSelect";
-import EmployeeDetails from "../subcomponentes/EmployeeDetails";
+
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useRouter } from "next/navigation";
+import { EmployeeDetails, EmployeeSelect } from "@/components";
 
 export default function EmployeeVacation() {
   const [open1, setOpen1] = useState(false);
