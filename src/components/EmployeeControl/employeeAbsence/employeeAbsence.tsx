@@ -34,7 +34,7 @@ import { AbsenceRegisterProps } from "../../../types/absence";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useRouter } from "next/navigation";
 
-export default function EmployeeVacation() {
+export default function EmployeeAbsence() {
   const [open1, setOpen1] = useState(false);
   const [date1, setDate1] = useState<Date | null>(null);
   const [selectedEmployee, setSelectedEmployee] =

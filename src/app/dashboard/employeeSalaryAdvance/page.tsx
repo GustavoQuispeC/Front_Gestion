@@ -1,4 +1,5 @@
-import EmployeeSalaryAdvance from "@/components/employeeControl/employeeSalaryAdvance/EmployeeSalaryAdvance";
+import { EmployeeSalaryAdvance } from "@/components";
+
 
 const employeeSalaryAdvance = () => {
   return (
