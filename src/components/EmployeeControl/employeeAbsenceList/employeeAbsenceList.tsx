@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import { GetAllAbsences } from "@/helpers/absence.helper";
 import { toast } from "react-toastify";
 
-export function EmployeeAbsenceList() {
+export default function EmployeeAbsenceList() {
   const router = useRouter();
   const [employees, setEmployees] = useState<EmployeeAbsenceAll[]>([]);
 

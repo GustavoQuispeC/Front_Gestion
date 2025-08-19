@@ -13,3 +13,4 @@ export { default as UserFormRegister } from "./user/userRegister/UserRegister";
 export { default as UserFormUpdate } from "./user/userUpdate/UserUpdate";
 export { default as EmployeeVacationList } from "./employeeControl/employeeVacationList/EmployeeVacationList";
 export { default as EmployeeAbsence } from "./employeeControl/employeeAbsence/EmployeeAbsence";
+export { default as EmployeeAbsenceList } from "./employeeControl/employeeAbsenceList/EmployeeAbsenceList";

@@ -1,4 +1,5 @@
 import React from 'react'
+import Image from 'next/image';
 
 const products = () => {
   return (
@@ -7,10 +8,15 @@ const products = () => {
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
         <div className="bg-white flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
-          <div className="w-full">
-            <img src="https://readymadeui.com/images/product1.webp" alt="Product 1"
-              className="w-full object-cover object-top aspect-[230/307]" />
-          </div>
+            <div className="w-full">
+            <Image
+              src="https://readymadeui.com/images/product1.webp"
+              alt="Product 1"
+              width={230}
+              height={307}
+              className="w-full object-cover object-top aspect-[230/307]"
+            />
+            </div>
 
           <div className="p-4 flex-1 flex flex-col">
             <div className="flex-1">
@@ -32,10 +38,15 @@ const products = () => {
         </div>
 
         <div className="bg-white flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
-          <div className="w-full">
-            <img src="https://readymadeui.com/images/product2.webp" alt="Product 2"
-              className="w-full object-cover object-top aspect-[230/307]" />
-          </div>
+            <div className="w-full">
+            <Image
+              src="https://readymadeui.com/images/product2.webp"
+              alt="Product 2"
+              width={230}
+              height={307}
+              className="w-full object-cover object-top aspect-[230/307]"
+            />
+            </div>
 
           <div className="p-4 flex-1 flex flex-col">
             <div className="flex-1">
@@ -57,10 +68,15 @@ const products = () => {
         </div>
 
         <div className="bg-white flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
-          <div className="w-full">
-            <img src="https://readymadeui.com/images/product3.webp" alt="Product 3"
-              className="w-full object-cover object-top aspect-[230/307]" />
-          </div>
+            <div className="w-full">
+            <Image
+              src="https://readymadeui.com/images/product3.webp"
+              alt="Product 3"
+              width={230}
+              height={307}
+              className="w-full object-cover object-top aspect-[230/307]"
+            />
+            </div>
 
           <div className="p-4 flex-1 flex flex-col">
             <div className="flex-1">
@@ -82,10 +98,15 @@ const products = () => {
         </div>
 
         <div className="bg-white flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
-          <div className="w-full">
-            <img src="https://readymadeui.com/images/product7.webp" alt="Product 3"
-              className="w-full object-cover object-top aspect-[230/307]" />
-          </div>
+            <div className="w-full">
+            <Image
+              src="https://readymadeui.com/images/product7.webp"
+              alt="Product 3"
+              width={230}
+              height={307}
+              className="w-full object-cover object-top aspect-[230/307]"
+            />
+            </div>
 
           <div className="p-4 flex-1 flex flex-col">
             <div className="flex-1">
@@ -107,10 +128,15 @@ const products = () => {
         </div>
 
         <div className="bg-white flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
-          <div className="w-full">
-            <img src="https://readymadeui.com/images/product5.webp" alt="Product 3"
-              className="w-full object-cover object-top aspect-[230/307]" />
-          </div>
+            <div className="w-full">
+            <Image
+              src="https://readymadeui.com/images/product5.webp"
+              alt="Product 3"
+              width={230}
+              height={307}
+              className="w-full object-cover object-top aspect-[230/307]"
+            />
+            </div>
 
           <div className="p-4 flex-1 flex flex-col">
             <div className="flex-1">
@@ -132,10 +158,15 @@ const products = () => {
         </div>
 
         <div className="bg-white flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
-          <div className="w-full">
-            <img src="https://readymadeui.com/images/product6.webp" alt="Product 3"
-              className="w-full object-cover object-top aspect-[230/307]" />
-          </div>
+            <div className="w-full">
+            <Image
+              src="https://readymadeui.com/images/product6.webp"
+              alt="Product 3"
+              width={230}
+              height={307}
+              className="w-full object-cover object-top aspect-[230/307]"
+            />
+            </div>
 
           <div className="p-4 flex-1 flex flex-col">
             <div className="flex-1">
@@ -157,10 +188,15 @@ const products = () => {
         </div>
 
         <div className="bg-white flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
-          <div className="w-full">
-            <img src="https://readymadeui.com/images/product1.webp" alt="Product 3"
-              className="w-full object-cover object-top aspect-[230/307]" />
-          </div>
+            <div className="w-full">
+            <Image
+              src="https://readymadeui.com/images/product1.webp"
+              alt="Product 3"
+              width={230}
+              height={307}
+              className="w-full object-cover object-top aspect-[230/307]"
+            />
+            </div>
 
           <div className="p-4 flex-1 flex flex-col">
             <div className="flex-1">
@@ -182,10 +218,15 @@ const products = () => {
         </div>
 
         <div className="bg-white flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
-          <div className="w-full">
-            <img src="https://readymadeui.com/images/product2.webp" alt="Product 3"
-              className="w-full object-cover object-top aspect-[230/307]" />
-          </div>
+            <div className="w-full">
+            <Image
+              src="https://readymadeui.com/images/product2.webp"
+              alt="Product 3"
+              width={230}
+              height={307}
+              className="w-full object-cover object-top aspect-[230/307]"
+            />
+            </div>
 
           <div className="p-4 flex-1 flex flex-col">
             <div className="flex-1">
