@@ -1,4 +1,4 @@
-import EmployeeVacation from "@/components/employeeControl/employeeVacation/employeeVacation";
+import EmployeeVacation from "@/components/employeeControl/employeeVacation/EmployeeVacation";
 
 const employeeVacation = () => {
   return (

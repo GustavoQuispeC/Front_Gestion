@@ -1,4 +1,4 @@
-import EmployeeAbsence from "@/components/employeeControl/employeeAbsence/employeeAbsence";
+import EmployeeAbsence from "@/components/employeeControl/employeeAbsence/EmployeeAbsence";
 
 const employeeAbsence = () => {
   return (

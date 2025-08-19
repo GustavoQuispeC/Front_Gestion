@@ -8,7 +8,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Slide, ToastContainer } from "react-toastify";
-import { ModeToggle } from "@/components/togle/togle";
+import { ModeToggle } from "@/components/togle/Togle";
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <SidebarProvider>
