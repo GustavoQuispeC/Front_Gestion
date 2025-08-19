@@ -15,3 +15,4 @@ export { default as EmployeeVacationList } from "./employeeControl/employeeVacat
 export { default as EmployeeAbsence } from "./employeeControl/employeeAbsence/EmployeeAbsence";
 export { default as EmployeeAbsenceList } from "./employeeControl/employeeAbsenceList/EmployeeAbsenceList";
 export { default as EmployeeSalaryAdvance } from "./employeeControl/employeeSalaryAdvance/EmployeeSalaryAdvance";
+export { default as EmployeeVacation } from "./employeeControl/employeeVacation/EmployeeVacation";
