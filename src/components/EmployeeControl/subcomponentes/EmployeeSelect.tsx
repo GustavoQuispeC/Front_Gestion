@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect } from "react";
 import AsyncSelect from "react-select/async";
 import { EmployeeSearchProps } from "@/types/employee";

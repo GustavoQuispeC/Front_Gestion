@@ -4,6 +4,7 @@ import {
   Footer,
   HeroWithCarousel,
   Products,
+
 } from "@/components";
 
 export default function Home() {

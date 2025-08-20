@@ -1,7 +1,8 @@
+
 export { default as HeroWithCarousel } from "./carousel/HeroWithCarousel";
 export { default as ComplexNavbar } from "./navbar/ComplexNavbar";
 export { default as Footer } from "./footer/Footer";
-export { default as Products } from "./products/Products";
+
 export { default as CategoriasGrid } from "./categories/CategoriasGrid";
 export { default as LoginForm } from "./login/Login";
 export { default as ContactForm } from "./contact/Contact";
@@ -18,3 +19,4 @@ export { default as EmployeeSalaryAdvance } from "./employeeControl/employeeSala
 export { default as EmployeeVacation } from "./employeeControl/employeeVacation/EmployeeVacation";
 export { default as EmployeeDetails } from "./employeeControl/subcomponentes/EmployeeDetails";
 export { default as EmployeeSelect } from "./employeeControl/subcomponentes/EmployeeSelect";
+export { default as Products} from "./products/Products";

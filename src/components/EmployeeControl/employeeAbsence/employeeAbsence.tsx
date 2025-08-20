@@ -11,14 +11,14 @@ import {
   GetAbsencesByEmployeeId,
   GetAbsenceSummaryById,
 } from "@/helpers/absence.helper";
-import EmployeeSelect from "../subcomponentes/EmployeeSelect";
+
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
 } from "@/components/ui/card";
-import EmployeeDetails from "../subcomponentes/EmployeeDetails";
+
 import {
   Popover,
   PopoverContent,
@@ -29,10 +29,12 @@ import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import AbsenceTable from "./subcomponent/AbsenceTable";
+
 import { AbsenceRegisterProps } from "../../../types/absence";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useRouter } from "next/navigation";
+import { EmployeeDetails, EmployeeSelect } from "@/components";
+import AbsenceTable from "./subcomponent/AbsenceTable";
 
 export default function EmployeeAbsence() {
   const [open1, setOpen1] = useState(false);
