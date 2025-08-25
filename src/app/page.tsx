@@ -3,9 +3,9 @@ import {
   ComplexNavbar,
   Footer,
   HeroWithCarousel,
-  Products,
 
 } from "@/components";
+import ProductFilterSidebar from "@/components/ProductFilterSidebar/ProductFilterSidebar";
 
 export default function Home() {
   return (
@@ -15,7 +15,7 @@ export default function Home() {
         <HeroWithCarousel />
         <CategoriasGrid />
 
-        <Products />
+        <ProductFilterSidebar/>
 
         {/* Icono de whatsapp */}
         <a
