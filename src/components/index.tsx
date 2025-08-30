@@ -1,4 +1,5 @@
 
+
 export { default as HeroWithCarousel } from "./carousel/HeroWithCarousel";
 export { default as ComplexNavbar } from "./navbar/ComplexNavbar";
 export { default as Footer } from "./footer/Footer";
@@ -20,3 +21,4 @@ export { default as EmployeeVacation } from "./employeeControl/employeeVacation/
 export { default as EmployeeDetails } from "./employeeControl/subcomponentes/EmployeeDetails";
 export { default as EmployeeSelect } from "./employeeControl/subcomponentes/EmployeeSelect";
 export { default as Products} from "./products/Products";
+export { default as ProductFilterSidebar } from "./ProductFilterSidebar/ProductFilterSidebar";
