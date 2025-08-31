@@ -1,125 +1,151 @@
 "use client";
-
+import { useEffect } from "react";
+import {
+  CircleUser,
+  Mail,
+  Menu,
+  Phone,
+  ShoppingCart,
+  X,
+} from "lucide-react";
+import Image from "next/image";
+import { setupNavbarToggle } from "@/components/navbar/setupNavbarToggle";
 import Link from "next/link";
-import React, { useState } from "react";
-import { FaUserCircle } from "react-icons/fa";
 
 const ComplexNavbar = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [showSearchInput, setShowSearchInput] = useState(false);
-  //todo: cambiar el logo por el de la empresa
+  useEffect(() => {
+    setupNavbarToggle(); // Llama a la función para configurar el menú colapsable
+  }, []); // El array vacío asegura que se ejecute solo una vez cuando el componente se monte
+
   return (
-    <header className="sticky top-0 flex border-b border-blue-950 px-4 sm:px-10 bg-white h-[60px] tracking-wide z-50 shadow-md">
-      <div className="flex items-center justify-between w-full max-w-screen-xl mx-auto gap-4">
-        {/* Logos */}
-        <div className="flex items-center mb-3.5">
-          <a href="#" className="hidden sm:block">
-            {/* <img
-              src="/images/LogoFamet.png"
-              alt="logo"
-              className="w-72 h-16 object-contain"
-            /> */}
-          </a>
-          <h4 className="text-black font-bold pt-3">gusstavodev.help</h4>
-          <a href="#" className="sm:hidden">
-            {/* <img
-              src="/images/LogoFamet2.png"
-              alt="logo"
-              className="w-28 h-14 object-contain"
-            /> */}
+    <header className="min-h-[60px] tracking-wide relative z-50">
+      <section className="bg-orange-600 min-h-[40px] px-4 py-2 sm:px-10 flex items-center max-sm:flex-col">
+        <button type="button" className="text-white text-sm flex items-center">
+          <Phone width={16} className="mr-2" />
+          +180-548-2588
+        </button>
+        <span className="border-l h-3 mx-6 max-sm:hidden"></span>
+        <button
+          type="button"
+          className="text-white text-sm max-sm:my-2 flex items-center"
+        >
+          <Mail width={18} className="mr-2" />
+          gusstavocta@gmail.com
+        </button>
+        <div className="sm:ml-auto text-white">
+          <Link href="/login" className="text-white text-sm mr-1">
+            Iniciar Sesión
+          </Link>
+          /
+          <a href="javscript:void(0)" className="text-white text-sm ml-1">
+            Salir
           </a>
         </div>
+      </section>
 
-        {/* Menu */}
+      <div className="flex flex-wrap items-center justify-between py-3 px-4 sm:px-10 bg-blue-900 lg:gap-y-4 gap-y-6 gap-x-4">
+        <a href="javascript:void(0)">
+          <Image
+            src="https://readymadeui.com/readymadeui-white.svg"
+            alt="logo"
+            className="sm:w-[140px] w-[130px]"
+            width={140}
+            height={40}
+          />
+        </a>
+
         <div
           id="collapseMenu"
-          className={`${
-            isMenuOpen ? "translate-x-0" : "-translate-x-full"
-          } transition-transform duration-300 ease-in-out max-lg:fixed max-lg:bg-white max-lg:w-1/3 max-lg:min-w-[250px] max-lg:top-0 max-lg:left-0 max-lg:p-4 max-lg:h-full max-lg:shadow-md max-lg:overflow-auto z-50 lg:!block lg:static lg:translate-x-0`}
+          className="max-lg:hidden lg:!flex lg:items-center max-lg:before:fixed max-lg:before:bg-black max-lg:before:opacity-40 max-lg:before:inset-0 max-lg:before:z-50"
         >
           <button
-            onClick={() => setIsMenuOpen(false)}
-            className="lg:hidden fixed top-2 right-4 z-[100] rounded-full bg-white w-9 h-9 flex items-center justify-center border"
+            id="toggleClose"
+            className="lg:hidden fixed top-2 right-4 z-[100] rounded-full bg-white w-9 h-9 flex items-center justify-center border border-gray-100 cursor-pointer"
           >
-            ✕
+            <X width={48} className="text-black" />
           </button>
 
-          <ul className="lg:flex lg:gap-x-5">
-            <li className="mb-4 hidden max-lg:block">
-              {/* <a href="#">
-                <img
-                  src="/images/LogoFamet2.png"
+          <ul className="lg:!flex lg:gap-x-10 max-lg:space-y-3 max-lg:fixed max-lg:bg-blue-900 max-lg:w-2/3 max-lg:min-w-[300px] max-lg:top-0 max-lg:left-0 max-lg:px-10 max-lg:py-4 max-lg:h-full max-lg:shadow-md max-lg:overflow-auto z-50">
+            <li className="mb-6 hidden max-lg:block">
+              <a href="javascript:void(0)">
+                <Image
+                  src="https://readymadeui.com/readymadeui-white.svg"
                   alt="logo"
-                  className="w-24 h-10 object-contain"
+                  className="w-36"
+                  width={144}
+                  height={36}
                 />
-              </a> */}
-              <h4 className="text-black font-bold pt-3">gusstavodev.help</h4>
+              </a>
             </li>
-            {[
-              { label: "Home", url: "#" },
-              { label: "Team", url: "#" },
-              { label: "Feature", url: "#" },
-              { label: "Blog", url: "#" },
-              { label: "Contáctenos", url: "/contact" },
-            ].map((item) => (
-              <li key={item.label} className="max-lg:border-b max-lg:py-1">
-                <a
-                  href={item.url}
-                  className={`font-semibold block text-[15px] ${
-                    item.label === "Home" ? "text-blue-700" : "text-slate-800"
-                  } lg:hover:text-blue-400 transition-colors`}
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))}
+            <li className="max-lg:border-b max-lg:border-gray-100 max-lg:py-3 relative lg:after:absolute lg:after:bg-white lg:after:w-full lg:after:h-[2px] lg:after:block lg:after:-bottom-4 lg:after:transition-all lg:after:duration-300">
+              <Link
+                href="/"
+                className="text-white block text-[15px] font-normal"
+              >
+                Inicio
+              </Link>
+            </li>
+            <li className="max-lg:border-b max-lg:border-gray-100 max-lg:py-3 relative lg:hover:after:absolute lg:after:bg-white lg:after:w-0 lg:hover:after:w-full lg:hover:after:h-[2px] lg:after:block lg:after:-bottom-4 lg:after:transition-all lg:after:duration-300">
+              <a
+                href="javascript:void(0)"
+                className="text-white block text-[15px] font-normal"
+              >
+                Tracking
+              </a>
+            </li>
+            <li className="max-lg:border-b max-lg:border-gray-100 max-lg:py-3 relative lg:hover:after:absolute lg:after:bg-white lg:after:w-0 lg:hover:after:w-full lg:hover:after:h-[2px] lg:after:block lg:after:-bottom-4 lg:after:transition-all lg:after:duration-300">
+              <a
+                href="javascript:void(0)"
+                className="text-white block text-[15px] font-normal"
+              >
+                Support
+              </a>
+            </li>
+            <li className="max-lg:border-b max-lg:border-gray-100 max-lg:py-3 relative lg:hover:after:absolute lg:after:bg-white lg:after:w-0 lg:hover:after:w-full lg:hover:after:h-[2px] lg:after:block lg:after:-bottom-4 lg:after:transition-all lg:after:duration-300">
+              <a
+                href="javascript:void(0)"
+                className="text-white block text-[15px] font-normal"
+              >
+                Account
+              </a>
+            </li>
+            <li className="max-lg:border-b max-lg:border-gray-100 max-lg:py-3 relative lg:hover:after:absolute lg:after:bg-white lg:after:w-0 lg:hover:after:w-full lg:hover:after:h-[2px] lg:after:block lg:after:-bottom-4 lg:after:transition-all lg:after:duration-300">
+              <a
+                href="javascript:void(0)"
+                className="text-white block text-[15px] font-normal"
+              >
+                Places
+              </a>
+            </li>
+            <li className="max-lg:border-b max-lg:border-gray-100 max-lg:py-3 relative lg:hover:after:absolute lg:after:bg-white lg:after:w-0 lg:hover:after:w-full lg:hover:after:h-[2px] lg:after:block lg:after:-bottom-4 lg:after:transition-all lg:after:duration-300">
+              <Link
+                href="/contact"
+                className="text-white block text-[15px] font-normal"
+              >
+                Contáctenos
+              </Link>
+            </li>
           </ul>
         </div>
 
-        {/* Buscador y acciones */}
-        <div className="flex items-center gap-3 ml-auto">
-          {/* Icono de búsqueda y campo condicional */}
-          {showSearchInput ? (
-            <div className="flex items-center bg-gray-100 px-3 py-1.5 rounded-full border focus-within:border-slate-900 transition-all">
-              <FaUserCircle className="h-4 w-4 text-gray-500 mr-2" />
-              <input
-                type="text"
-                placeholder="Buscar..."
-                className="text-sm bg-transparent outline-none w-full"
-                autoFocus
-                onBlur={() => setShowSearchInput(false)}
-              />
-            </div>
-          ) : (
-            <button
-              className="text-white block sm:hidden"
-              onClick={() => setShowSearchInput(true)}
-            >
-              <FaUserCircle className="h-5 w-5" />
-            </button>
-          )}
+        <div className="flex items-center max-sm:ml-auto">
+          <ul className="flex space-x-4">
+            <li className="relative px-1 lg:hover:after:absolute lg:after:bg-white lg:after:w-0 lg:hover:after:w-full lg:hover:after:h-[2px] lg:after:block lg:after:-bottom-4 lg:after:transition-all lg:after:duration-300">
+              <CircleUser width={36} className="text-white" />
+            </li>
+            <li className="relative px-1 lg:hover:after:absolute lg:after:bg-white lg:after:w-0 lg:hover:after:w-full lg:hover:after:h-[2px] lg:after:block lg:after:-bottom-4 lg:after:transition-all lg:after:duration-300">
+              <span className="relative">
+                <ShoppingCart width={36} className="text-white" />
+                <span className="absolute left-auto ml-4 -top-1 rounded-full bg-red-500 px-1 py-0 text-xs text-white">
+                  0
+                </span>
+              </span>
+            </li>
+          </ul>
 
-          {/* Mostrar siempre en pantallas grandes */}
-          <div className="hidden sm:flex items-center bg-gray-100 px-3 py-1.5 rounded-full border focus-within:border-slate-900 transition-all">
-            <FaUserCircle className="h-4 w-4 text-gray-500 mr-2" />
-            <input
-              type="text"
-              placeholder="Buscar..."
-              className="text-sm bg-transparent outline-none w-full"
-            />
-          </div>
-          <Link href="/login">
-            <div className="text-white hover:text-gray-400 font-bold bg-blue-700 rounded-lg py-1 px-3 hover:bg-blue-800">
-              Iniciar Sesión
-            </div>
-          </Link>
-
-          {/* Botón menú responsive */}
-          <button
-            className="lg:hidden text-white text-2xl"
-            onClick={() => setIsMenuOpen(true)}
-          >
-            ☰
+          <button id="toggleOpen" className="lg:hidden ml-6 cursor-pointer">
+            <Menu className="text-white " />
+           
           </button>
         </div>
       </div>

@@ -1,6 +1,5 @@
 import {
   CategoriasGrid,
-  ComplexNavbar,
   Footer,
   HeroWithCarousel,
   ProductFilterSidebar,
@@ -10,7 +9,7 @@ export default function Home() {
   return (
     <>
       <div className="bg-slate-50">
-        <ComplexNavbar />
+       
         <HeroWithCarousel />
         <CategoriasGrid />
 
