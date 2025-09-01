@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { loginUser } from "@/helpers/user.helpers";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { UserLoginErrorProps, UserLoginProps } from "@/types/user";
 import { userValidateLogin } from "@/utils/userLoginValidation";
@@ -111,9 +111,7 @@ const Login = () => {
 
               <div className="space-y-6">
                 <div className="relative">
-                  <Label className="mb-2">
-                    Correo
-                  </Label>
+                  <Label className="mb-2">Correo</Label>
                   <div className="relative">
                     <Input
                       name="email"
@@ -121,7 +119,6 @@ const Login = () => {
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      
                       placeholder="Ingrese su correo electrónico"
                     />
                     <span className="absolute right-3 top-2 text-gray-400">
@@ -136,9 +133,7 @@ const Login = () => {
                   )}
                 </div>
                 <div className="relative">
-                  <Label className="mb-2">
-                    Contraseña
-                  </Label>
+                  <Label className="mb-2">Contraseña</Label>
                   <div className="relative">
                     <Input
                       name="password"
@@ -146,7 +141,6 @@ const Login = () => {
                       value={formData.password}
                       onChange={handleChange}
                       required
-                    
                       placeholder="Ingrese su contraseña"
                     />
                     <span
@@ -192,18 +186,6 @@ const Login = () => {
           </div>
         </div>
       </form>
-
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
     </>
   );
 };

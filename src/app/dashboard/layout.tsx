@@ -11,6 +11,7 @@ import { Slide, ToastContainer } from "react-toastify";
 import { ModeToggle } from "@/components/togle/Togle";
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
+    
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
