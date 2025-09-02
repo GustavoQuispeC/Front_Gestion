@@ -105,7 +105,7 @@ const Login = () => {
             </div>
 
             <div className="max-w-md md:ml-auto w-full">
-              <h3 className="text-slate-900 lg:text-3xl text-2xl font-bold mb-8 dark:text-white">
+              <h3 className="text-blue-900 lg:text-3xl text-2xl font-bold mb-8 dark:text-white">
                 Iniciar Sesión
               </h3>
 
@@ -172,7 +172,7 @@ const Login = () => {
                   className={`w-full shadow-xl py-2.5 px-4 text-sm font-semibold rounded-sm text-white ${
                     isLoading || !formData.email || !formData.password
                       ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-blue-700 hover:bg-blue-800 focus:outline-none"
+                      : "bg-orange-600 hover:bg-orange-700 focus:outline-none"
                   }`}
                 >
                   {isLoading ? "Cargando..." : "Iniciar Sesión"}

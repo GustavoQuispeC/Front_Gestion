@@ -8,14 +8,15 @@ import {
   ShoppingCart,
   X,
 } from "lucide-react";
-import Image from "next/image";
+
 import { setupNavbarToggle } from "@/components/navbar/setupNavbarToggle";
 import Link from "next/link";
+
 
 const ComplexNavbar = () => {
   useEffect(() => {
     setupNavbarToggle(); // Llama a la función para configurar el menú colapsable
-  }, []); // El array vacío asegura que se ejecute solo una vez cuando el componente se monte
+  }, []); //solo se ejecuta 1 vez
 
   return (
     <header className="min-h-[60px] tracking-wide relative z-50">
@@ -43,16 +44,16 @@ const ComplexNavbar = () => {
         </div>
       </section>
 
-      <div className="flex flex-wrap items-center justify-between py-3 px-4 sm:px-10 bg-white lg:gap-y-4 gap-y-6 gap-x-4">
+      <div className="flex flex-wrap items-center justify-between py-3 px-4 sm:px-10 bg-gray-900 lg:gap-y-4 gap-y-6 gap-x-4">
         <a href="javascript:void(0)">
           {/* <Image
-            src="https://readymadeui.com/readymadeui-white.svg"
+            src="/images/LogoFamet.png"
             alt="logo"
             className="sm:w-[140px] w-[130px]"
             width={140}
             height={40}
           /> */}
-          <h4 className="text-black font-bold">gusstavodev.help</h4>
+          <h4 className="text-blue-200 font-bold">gusstavodev.help</h4>
         </a>
 
         <div
@@ -66,22 +67,23 @@ const ComplexNavbar = () => {
             <X width={48} className="text-black" />
           </button>
 
-          <ul className="lg:!flex lg:gap-x-10 max-lg:space-y-3 max-lg:fixed max-lg:bg-gray-100 max-lg:w-2/3 max-lg:min-w-[300px] max-lg:top-0 max-lg:left-0 max-lg:px-10 max-lg:py-4 max-lg:h-full max-lg:shadow-md max-lg:overflow-auto z-50">
-            <li className="mb-6 hidden max-lg:block bg-gray-500">
+          <ul className="lg:!flex lg:gap-x-10 max-lg:space-y-3 max-lg:fixed max-lg:bg-gray-900 max-lg:w-2/3 max-lg:min-w-[300px] max-lg:top-0 max-lg:left-0 max-lg:px-10 max-lg:py-4 max-lg:h-full max-lg:shadow-md max-lg:overflow-auto z-50">
+            <li className="mb-6 hidden max-lg:block">
               <a href="javascript:void(0)">
-                <Image
+                {/* <Image
                   src="https://readymadeui.com/readymadeui-white.svg"
                   alt="logo"
                   className="w-36"
                   width={144}
                   height={36}
-                />
+                /> */}
+                <h4 className="text-blue-200 font-bold">gusstavodev.help</h4>
               </a>
             </li>
             <li className="max-lg:border-b max-lg:border-gray-100 max-lg:py-3 relative lg:after:absolute lg:after:bg-orange-500 lg:after:w-full lg:after:h-[2px] lg:after:block lg:after:-bottom-4 lg:after:transition-all lg:after:duration-300">
               <Link
                 href="/"
-                className="text-orange-500 block text-[15px] font-bold"
+                className="text-orange-500 block text-[15px] font-semibold hover:text-orange-400"
               >
                 Inicio
               </Link>
@@ -89,7 +91,7 @@ const ComplexNavbar = () => {
             <li className="max-lg:border-b max-lg:border-gray-100 max-lg:py-3 relative lg:hover:after:absolute lg:after:bg-orange-500 lg:after:w-0 lg:hover:after:w-full lg:hover:after:h-[2px] lg:after:block lg:after:-bottom-4 lg:after:transition-all lg:after:duration-300">
               <a
                 href="javascript:void(0)"
-                className="text-orange-500 block text-[15px] font-bold"
+                className="text-orange-500 block text-[15px] font-semibold hover:text-orange-400"
               >
                 Tracking
               </a>
@@ -97,7 +99,7 @@ const ComplexNavbar = () => {
             <li className="max-lg:border-b max-lg:border-gray-100 max-lg:py-3 relative lg:hover:after:absolute lg:after:bg-orange-500 lg:after:w-0 lg:hover:after:w-full lg:hover:after:h-[2px] lg:after:block lg:after:-bottom-4 lg:after:transition-all lg:after:duration-300">
               <a
                 href="javascript:void(0)"
-                className="text-orange-500 block text-[15px] font-bold"
+                className="text-orange-500 block text-[15px] font-semibold hover:text-orange-400"
               >
                 Support
               </a>
@@ -105,15 +107,15 @@ const ComplexNavbar = () => {
             <li className="max-lg:border-b max-lg:border-gray-100 max-lg:py-3 relative lg:hover:after:absolute lg:after:bg-orange-500 lg:after:w-0 lg:hover:after:w-full lg:hover:after:h-[2px] lg:after:block lg:after:-bottom-4 lg:after:transition-all lg:after:duration-300">
               <a
                 href="javascript:void(0)"
-                className="text-orange-500 block text-[15px] font-bold"
+                className="text-orange-500 block text-[15px] font-semibold hover:text-orange-400"
               >
-                Account
+                Accountsemibold
               </a>
             </li>
             <li className="max-lg:border-b max-lg:border-gray-100 max-lg:py-3 relative lg:hover:after:absolute lg:after:bg-orange-500 lg:after:w-0 lg:hover:after:w-full lg:hover:after:h-[2px] lg:after:block lg:after:-bottom-4 lg:after:transition-all lg:after:duration-300">
               <a
                 href="javascript:void(0)"
-                className="text-orange-500 block text-[15px] font-bold"
+                className="text-orange-500 block text-[15px] font-semibold hover:text-orange-400"
               >
                 Places
               </a>
@@ -121,7 +123,7 @@ const ComplexNavbar = () => {
             <li className="max-lg:border-b max-lg:border-gray-100 max-lg:py-3 relative lg:hover:after:absolute lg:after:bg-orange-500 lg:after:w-0 lg:hover:after:w-full lg:hover:after:h-[2px] lg:after:block lg:after:-bottom-4 lg:after:transition-all lg:after:duration-300">
               <Link
                 href="/contact"
-                className="text-orange-500 block text-[15px] font-bold"
+                className="text-orange-500 block text-[15px] font-semibold hover:text-orange-400"
               >
                 Contáctenos
               </Link>
@@ -132,12 +134,12 @@ const ComplexNavbar = () => {
         <div className="flex items-center max-sm:ml-auto">
           <ul className="flex space-x-4">
             <li className="relative px-1 lg:hover:after:absolute lg:after:bg-white lg:after:w-0 lg:hover:after:w-full lg:hover:after:h-[2px] lg:after:block lg:after:-bottom-4 lg:after:transition-all lg:after:duration-300">
-              <CircleUser width={36} className="text-gray-700" />
+              <CircleUser width={36} className="text-orange-500 hover:text-orange-400" />
             </li>
             <li className="relative px-1 lg:hover:after:absolute lg:after:bg-white lg:after:w-0 lg:hover:after:w-full lg:hover:after:h-[2px] lg:after:block lg:after:-bottom-4 lg:after:transition-all lg:after:duration-300">
               <span className="relative">
-                <ShoppingCart width={36} className="text-gray-700" />
-                <span className="absolute left-auto ml-4 -top-1 rounded-full bg-red-500 px-1 py-0 text-xs text-white">
+                <ShoppingCart width={36} className="text-orange-500 hover:text-orange-400" />
+                <span className="absolute left-auto ml-4 -top-1 rounded-full bg-red-600 px-1 py-0 text-xs text-white">
                   0
                 </span>
               </span>
@@ -145,7 +147,7 @@ const ComplexNavbar = () => {
           </ul>
 
           <button id="toggleOpen" className="lg:hidden ml-6 cursor-pointer">
-            <Menu className="text-gray-700" />
+            <Menu className="text-gray-400" />
 
           </button>
         </div>

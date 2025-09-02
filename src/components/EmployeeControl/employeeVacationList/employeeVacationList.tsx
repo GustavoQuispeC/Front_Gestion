@@ -40,7 +40,7 @@ export default function EmployeeVacationList() {
   }, []);
 
   return (
-    <div className="md:col-span-3 overflow-x-auto w-full">
+    <div className="overflow-x-auto bg-white shadow-lg rounded-lg p-4 dark:bg-neutral-900">
       <Table className="w-full">
         <TableCaption>Listado de empleados</TableCaption>
         <TableHeader>
@@ -57,7 +57,7 @@ export default function EmployeeVacationList() {
           {employees && employees.length > 0 ? (
             employees.map((e, index) => (
               <TableRow key={index}>
-                <TableCell>{e.employeeId}</TableCell>
+                <TableCell className="pl-5">{e.employeeId}</TableCell>
                 <TableCell>{e.lastNameFather}</TableCell>
                 <TableCell>{e.lastNameMother}</TableCell>
                 <TableCell>{e.firstName}</TableCell>
@@ -70,7 +70,7 @@ export default function EmployeeVacationList() {
                     : ""}
                 </TableCell>
                 <TableCell
-                  className={`font-semibold ${
+                  className={`font-semibold pl-10 ${
                     e.remainingDays >= 1 ? "text-green-600" : "text-red-600"
                   }`}
                 >
@@ -90,7 +90,7 @@ export default function EmployeeVacationList() {
       <div className="flex items-center gap-3">
         <Button
           variant="outline"
-          type="button" 
+          type="button"
           onClick={() => router.push("/dashboard/employeeVacation")}
           className="w-64 bg-gray-200"
         >

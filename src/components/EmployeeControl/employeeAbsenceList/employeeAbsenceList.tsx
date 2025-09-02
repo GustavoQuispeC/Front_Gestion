@@ -38,17 +38,17 @@ export default function EmployeeAbsenceList() {
   }, []);
 
   return (
-    <div className="md:col-span-3 overflow-x-auto w-full">
-      <Table className="w-full">
+    <div className="overflow-x-auto bg-white shadow-lg rounded-lg p-4 dark:bg-neutral-900">
+      <Table className="w-full ">
         <TableCaption>Listado de empleados</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead>Código</TableHead>
-            <TableHead>Apellido paterno</TableHead>
-            <TableHead>Apellido materno</TableHead>
-            <TableHead>Nombres</TableHead>
-            <TableHead>F. justificadas</TableHead>
-            <TableHead>F. injustificadas</TableHead>
+            <TableHead className="text-blue-900 dark:text-blue-500">Código</TableHead>
+            <TableHead className="text-blue-900 dark:text-blue-500">Apellido paterno</TableHead>
+            <TableHead className="text-blue-900 dark:text-blue-500">Apellido materno</TableHead>
+            <TableHead className="text-blue-900 dark:text-blue-500">Nombres</TableHead>
+            <TableHead className="text-blue-900 dark:text-blue-500">F. justificadas</TableHead>
+            <TableHead className="text-blue-900 dark:text-blue-500">F. injustificadas</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -59,9 +59,23 @@ export default function EmployeeAbsenceList() {
                 <TableCell>{e.lastNameFather}</TableCell>
                 <TableCell>{e.lastNameMother}</TableCell>
                 <TableCell>{e.firstName}</TableCell>
-                <TableCell className={e.justified >= 1 ? "text-green-600 font-bold pl-12" : "pl-12"}>{e.justified}</TableCell>
-                <TableCell className={e.unjustified >= 1 ? "text-red-600 font-bold pl-12" : "pl-12"}>
-                    {e.unjustified}
+                <TableCell
+                  className={
+                    e.justified >= 1
+                      ? "text-green-600 font-bold pl-12"
+                      : "pl-12"
+                  }
+                >
+                  {e.justified}
+                </TableCell>
+                <TableCell
+                  className={
+                    e.unjustified >= 1
+                      ? "text-red-600 font-bold pl-12"
+                      : "pl-12"
+                  }
+                >
+                  {e.unjustified}
                 </TableCell>
               </TableRow>
             ))
