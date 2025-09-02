@@ -1,13 +1,13 @@
 import { Search } from "lucide-react";
 import { Products } from "..";
-import Image from "next/image";
+
 
 const ProductFilterSidebar = () => {
   return (
     <div className="flex">
       <div className="w-full max-w-[300px] shrink-0 shadow-md px-6 sm:px-8 min-h-screen py-6">
         <div className="flex items-center border-b border-gray-300 pb-2 mb-6">
-          <h3 className="text-slate-900 text-lg font-semibold">Filtrar</h3>
+          <h3 className="text-blue-900 text-lg font-semibold">Filtrar</h3>
           <button
             type="button"
             className="text-sm text-red-500 font-semibold ml-auto cursor-pointer"
@@ -16,7 +16,7 @@ const ProductFilterSidebar = () => {
           </button>
         </div>
         <div>
-          <h6 className="text-slate-900 text-sm font-semibold">Marca</h6>
+          <h6 className="text-blue-900 text-sm font-semibold">Marca</h6>
           <div className="flex px-3 py-1.5 rounded-md border border-gray-300 bg-gray-100 overflow-hidden mt-2">
             <input
               type="email"
@@ -136,7 +136,7 @@ const ProductFilterSidebar = () => {
 
         <hr className="my-6 border-gray-300" />
 
-        <div>
+        {/* <div>
           <h6 className="text-slate-900 text-sm font-semibold">Size</h6>
           <div className="flex flex-wrap gap-3 mt-4">
             <button
@@ -188,11 +188,11 @@ const ProductFilterSidebar = () => {
               4XL
             </button>
           </div>
-        </div>
+        </div> */}
 
         <hr className="my-6 border-gray-300" />
 
-        <div>
+        {/* <div>
           <h6 className="text-slate-900 text-sm font-semibold">Price</h6>
           <div className="relative mt-6">
             <div className="h-1.5 bg-gray-300 relative">
@@ -260,11 +260,11 @@ const ProductFilterSidebar = () => {
               <span id="maxPrice">$1000</span>
             </div>
           </div>
-        </div>
+        </div> */}
 
         <hr className="my-6 border-gray-300" />
 
-        <div>
+        {/* <div>
           <h6 className="text-slate-900 text-sm font-semibold">Color</h6>
           <div className="flex flex-wrap gap-3 mt-4">
             <button
@@ -300,12 +300,12 @@ const ProductFilterSidebar = () => {
               className="cursor-pointer rounded-full text-[13px] text-white font-medium bg-gray-700 w-8 h-8 hover:scale-[1.05] transition-all"
             ></button>
           </div>
-        </div>
+        </div> */}
       </div>
 
       <div className="w-full p-6">
         <Products />
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div className="bg-gray-100 w-full h-full rounded-md">
             <div className="bg-white flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
               <div className="w-full">
@@ -690,8 +690,8 @@ const ProductFilterSidebar = () => {
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </div>*/}
+      </div> 
     </div>
   );
 };

@@ -1,10 +1,11 @@
 import React from 'react'
 import Image from 'next/image';
+import { Button } from '../ui/button';
 
 const products = () => {
   return (
     <div className="p-4 mx-auto lg:max-w-6xl md:max-w-4xl">
-      <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-6 sm:mb-12">Nuestros productos mas vendidos</h2>
+      <h2 className="text-2xl sm:text-3xl font-bold text-blue-900 mb-6 sm:mb-12">Catálogo de productos</h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
         <div className="bg-white flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
@@ -33,7 +34,7 @@ const products = () => {
                 </div>
               </div>
             </div>
-            <button type="button" className="text-sm px-2 py-2 font-medium w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white tracking-wide ml-auto outline-none border-none rounded">Add to cart</button>
+            <Button type="button" className="text-sm px-2 py-2 font-medium w-full mt-4 tracking-wide ml-auto outline-none border-none ">Cotizar</Button>
           </div>
         </div>
 
@@ -63,7 +64,7 @@ const products = () => {
                 </div>
               </div>
             </div>
-            <button type="button" className="text-sm px-2 py-2 font-medium w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white tracking-wide ml-auto outline-none border-none rounded">Add to cart</button>
+           <Button type="button" className="text-sm px-2 py-2 font-medium w-full mt-4 tracking-wide ml-auto outline-none border-none ">Cotizar</Button>
           </div>
         </div>
 
@@ -93,7 +94,7 @@ const products = () => {
                 </div>
               </div>
             </div>
-            <button type="button" className="text-sm px-2 py-2 font-medium w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white tracking-wide ml-auto outline-none border-none rounded">Add to cart</button>
+      <Button type="button" className="text-sm px-2 py-2 font-medium w-full mt-4 tracking-wide ml-auto outline-none border-none ">Cotizar</Button>
           </div>
         </div>
 
@@ -123,7 +124,7 @@ const products = () => {
                 </div>
               </div>
             </div>
-            <button type="button" className="text-sm px-2 py-2 font-medium w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white tracking-wide ml-auto outline-none border-none rounded">Add to cart</button>
+           <Button type="button" className="text-sm px-2 py-2 font-medium w-full mt-4 tracking-wide ml-auto outline-none border-none ">Cotizar</Button>
           </div>
         </div>
 
@@ -153,7 +154,7 @@ const products = () => {
                 </div>
               </div>
             </div>
-            <button type="button" className="text-sm px-2 py-2 font-medium w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white tracking-wide ml-auto outline-none border-none rounded">Add to cart</button>
+           <Button type="button" className="text-sm px-2 py-2 font-medium w-full mt-4 tracking-wide ml-auto outline-none border-none ">Cotizar</Button>
           </div>
         </div>
 
@@ -183,7 +184,7 @@ const products = () => {
                 </div>
               </div>
             </div>
-            <button type="button" className="text-sm px-2 py-2 font-medium w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white tracking-wide ml-auto outline-none border-none rounded">Add to cart</button>
+            <Button type="button" className="text-sm px-2 py-2 font-medium w-full mt-4 tracking-wide ml-auto outline-none border-none ">Cotizar</Button>
           </div>
         </div>
 
@@ -213,7 +214,7 @@ const products = () => {
                 </div>
               </div>
             </div>
-            <button type="button" className="text-sm px-2 py-2 font-medium w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white tracking-wide ml-auto outline-none border-none rounded">Add to cart</button>
+           <Button type="button" className="text-sm px-2 py-2 font-medium w-full mt-4 tracking-wide ml-auto outline-none border-none ">Cotizar</Button>
           </div>
         </div>
 
@@ -243,7 +244,7 @@ const products = () => {
                 </div>
               </div>
             </div>
-            <button type="button" className="text-sm px-2 py-2 font-medium w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white tracking-wide ml-auto outline-none border-none rounded">Add to cart</button>
+           <Button type="button" className="text-sm px-2 py-2 font-medium w-full mt-4 tracking-wide ml-auto outline-none border-none ">Cotizar</Button>
           </div>
           
         </div>
