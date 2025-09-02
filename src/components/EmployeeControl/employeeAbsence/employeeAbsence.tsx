@@ -157,7 +157,7 @@ export default function EmployeeAbsence() {
     <>
       <section className="w-full mx-auto mt-4 h-full px-2 sm:px-4 md:px-8">
         <div className="dark:bg-neutral-900 text-black dark:text-white rounded-2xl px-4 sm:px-6 md:px-12 pb-8">
-          <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center md:text-left">
+          <h2 className="text-xl text-blue-900 dark:text-blue-500 sm:text-2xl font-bold mb-6 text-center md:text-left">
             Control de Ausencias
           </h2>
 
@@ -274,7 +274,7 @@ export default function EmployeeAbsence() {
                 variant="outline"
                 type="button"
                 onClick={() => router.push("/dashboard/main")}
-                className="w-full sm:w-64"
+                className="w-full sm:w-64 text-blue-900 dark:text-blue-500"
               >
                 <IoMdArrowRoundBack className="text-base" />
                 Volver
@@ -291,7 +291,7 @@ export default function EmployeeAbsence() {
               </Button>
 
               <Button
-                className="w-full sm:w-auto mt-2 md:mt-0"
+                className="w-full sm:w-64 mt-2 md:mt-0"
                 type="button"
                 onClick={handleAbsenceRegister}
               >

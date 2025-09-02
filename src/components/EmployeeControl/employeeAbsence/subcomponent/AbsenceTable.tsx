@@ -22,10 +22,16 @@ export default function AbsenceTable({ absences }: Props) {
         <TableCaption> Inasistencias registradas</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">Fecha de inasistencia</TableHead>
-            <TableHead>Motivo</TableHead>
-            <TableHead>Registrado el</TableHead>
-            <TableHead className="text-center">Estado</TableHead>
+            <TableHead className=" w-[40px]">
+              Fecha de inasistencia
+            </TableHead>
+            <TableHead >Motivo</TableHead>
+            <TableHead className=" text-center">
+              Registrado el:
+            </TableHead>
+            <TableHead className="  w-[100px] text-center">
+              Estado
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -34,10 +40,10 @@ export default function AbsenceTable({ absences }: Props) {
               <TableRow key={index}>
                 <TableCell>{new Date(a.date).toLocaleDateString()}</TableCell>
                 <TableCell>{a.reason}</TableCell>
-                <TableCell>
+                <TableCell className="text-center">
                   {new Date(a.createdAt).toLocaleDateString()}
                 </TableCell>
-                <TableCell className="text-center">
+                <TableCell>
                   <Badge
                     className={`mt-0.5${
                       a.isJustified

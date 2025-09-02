@@ -43,12 +43,12 @@ export default function EmployeeAbsenceList() {
         <TableCaption>Listado de empleados</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="text-blue-900 dark:text-blue-500">Código</TableHead>
-            <TableHead className="text-blue-900 dark:text-blue-500">Apellido paterno</TableHead>
-            <TableHead className="text-blue-900 dark:text-blue-500">Apellido materno</TableHead>
-            <TableHead className="text-blue-900 dark:text-blue-500">Nombres</TableHead>
-            <TableHead className="text-blue-900 dark:text-blue-500">F. justificadas</TableHead>
-            <TableHead className="text-blue-900 dark:text-blue-500">F. injustificadas</TableHead>
+            <TableHead >Código</TableHead>
+            <TableHead >Apellido paterno</TableHead>
+            <TableHead >Apellido materno</TableHead>
+            <TableHead >Nombres</TableHead>
+            <TableHead >F. justificadas</TableHead>
+            <TableHead >F. injustificadas</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -93,7 +93,7 @@ export default function EmployeeAbsenceList() {
           variant="outline"
           type="button"
           onClick={() => router.push("/dashboard/employeeAbsence")}
-          className="w-64 bg-gray-200"
+          className="w-64 text-blue-900 dark:text-blue-500 mt-4"
         >
           <IoMdArrowRoundBack className="text-base" />
           Volver
