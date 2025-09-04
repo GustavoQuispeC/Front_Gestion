@@ -53,7 +53,7 @@ export default function EmployeeList() {
   return (
     <div className="p-6 bg-white dark:bg-black text-gray-900 dark:text-gray-100">
       <div className="mb-6">
-        <h2 className="text-xl font-bold mb-2">Listado de empleados</h2>
+        <h2 className="text-xl text-blue-900 dark:text-blue-500 font-bold mb-2">Listado de empleados</h2>
 
         <Link
           href="/dashboard/employeeRegister"
@@ -129,7 +129,7 @@ export default function EmployeeList() {
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <button
-                          className="mr-3 text-blue-800 dark:text-primary"
+                          className="mr-3 text-blue-800 dark:text-blue-500"
                           title="Editar"
                         >
                           <Pencil size={18} />
