@@ -51,13 +51,13 @@ export default function EmployeeSelect({
         styles={{
           control: (base, state) => ({
             ...base,
-            borderColor: state.isFocused ? "#a0aec0" : "#d1d5db",
+            borderColor: state.isFocused ? "#fef8f2" : "#d1d5db",
             boxShadow: "none",
             backgroundColor: state.selectProps.menuIsOpen
               ? "var(--color-bg-control-open)"
               : "var(--color-bg-control)",
             "&:hover": {
-              borderColor: "#a0aec0",
+              borderColor: "#bb5f09",
             },
             color: "var(--color-text)",
           }),

@@ -104,52 +104,57 @@ const UserRegister = () => {
   };
 
   //! Función para manejar el registro de usuario
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
+const handleRegister = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-    if (!employeeData.id) {
-      toast.error("Debe seleccionar un empleado");
-      return;
-    }
+  if (!employeeData.id) {
+    toast.error("Debe seleccionar un empleado");
+    return;
+  }
 
-    // Validaciones de campos obligatorios
-    if (
-      !userRegister.userName ||
-      !userRegister.password ||
-      !userRegister.roleId
-    ) {
-      toast.error("Todos los campos son obligatorios");
-      return;
-    }
+  // Validaciones de campos obligatorios
+  if (
+    !userRegister.userName ||
+    !userRegister.password ||
+    !userRegister.roleId
+  ) {
+    toast.error("Todos los campos son obligatorios");
+    return;
+  }
 
-    // Crear los datos del registro de usuario
-    const userRegisterData: UserRegisterProps = {
-      employeeId: Number(employeeData.id), // Usar el id del empleado
-      userName: userRegister.userName, // Nombre de usuario
-      password: userRegister.password, // Contraseña
-      roleId: userRegister.roleId, // Rol seleccionado
-      isActive: userRegister.isActive, // Estado del usuario
-      email: employeeData.email, // Correo del empleado
-    };
-
-    try {
-      const response = await registerUser(userRegisterData, token);
-
-      if (response?.message === "Usuario creado correctamente") {
-        toast.success("Usuario registrado con éxito");
-        handleReset();
-      } else {
-        toast.error("Error al registrar el usuario");
-      }
-    } catch (error) {
-      console.error("Error al registrar el usuario:", error);
-      if (error instanceof Error && error.message) {
-        toast.error(error.message);
-      } else {
-        toast.error("Error desconocido al registrar el usuario");
-      }
-    }
+  // Crear los datos del registro de usuario
+  const userRegisterData: UserRegisterProps = {
+    employeeId: Number(employeeData.id),
+    userName: userRegister.userName,
+    password: userRegister.password,
+    roleId: userRegister.roleId,
+    isActive: userRegister.isActive,
+    email: employeeData.email,
   };
+
+  try {
+    const response = await registerUser(userRegisterData, token);
+
+    if (response?.message === "Usuario creado correctamente") {
+      toast.success("Usuario registrado con éxito");
+      handleReset();
+    } else if (response?.message) {
+      toast.error(response.message);
+    } else if (response?.error) {
+      toast.error(response.error);
+    } else {
+      toast.error("Error al registrar el usuario");
+    }
+  } catch (error) {
+    console.error("Error al registrar el usuario:", error);
+    if (error instanceof Error && error.message) {
+      toast.error(error.message);  // Aquí el mensaje de error debería ser accesible
+    } else {
+      toast.error("Error desconocido al registrar el usuario");
+    }
+  }
+};
+
 
   //! Limpieza de formulario
   const handleReset = () => {
@@ -224,7 +229,7 @@ const UserRegister = () => {
         className="w-full max-w-5xl mx-auto mt-10 p-6 bg-white dark:bg-neutral-900 shadow-lg rounded-xl"
         onSubmit={handleRegister}
       >
-        <h2 className="text-2xl font-semibold mb-6 text-left mx-10">
+        <h2 className="text-2xl text-blue-900 dark:text-blue-500 font-semibold mb-6 text-left mx-10">
           Registro de usuario
         </h2>
 
@@ -244,7 +249,7 @@ const UserRegister = () => {
             <Label htmlFor="fullName" className="mb-1 text-sm font-medium">
               Apellido y Nombres:{" "}
             </Label>
-            <span id="fullName" className="text-gray-700">
+            <span id="fullName" >
               {`${employeeData.lastNameFather} ${employeeData.lastNameMother} ${employeeData.firstName} `}
             </span>
           </div>

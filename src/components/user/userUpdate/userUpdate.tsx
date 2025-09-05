@@ -172,10 +172,10 @@ const UserUpdate = ({ userId }: { userId: string }) => {
   return (
     <>
       <form
-        className="w-full max-w-5xl mx-auto mt-10 p-8 bg-white shadow-xl rounded-lg border border-gray-200"
+        className="w-full max-w-5xl mx-auto mt-10 p-8 bg-white dark:bg-neutral-900 shadow-xl rounded-lg  border-gray-200"
         onSubmit={handleUpdateUser}
       >
-        <h2 className="text-2xl font-semibold mb-6 text-left text-gray-800">
+        <h2 className="text-2xl font-semibold mb-6 text-left text-blue-900 dark:text-blue-500">
           Actualización de usuario
         </h2>
 
@@ -185,11 +185,11 @@ const UserUpdate = ({ userId }: { userId: string }) => {
           <div className="flex flex-col">
             <Label
               htmlFor="fullName"
-              className="mb-2 text-sm font-semibold text-gray-700"
+              className="mb-2 text-sm font-semibold"
             >
               Apellido y Nombres:{" "}
             </Label>
-            <span id="fullName" className="text-gray-600">
+            <span id="fullName" >
               {`${users.lastNameFather} ${users.lastNameMother} ${users.firstName}`}
             </span>
           </div>
@@ -198,7 +198,7 @@ const UserUpdate = ({ userId }: { userId: string }) => {
           <div className="flex flex-col">
             <Label
               htmlFor="userName"
-              className="mb-2 text-sm font-semibold text-gray-700"
+              className="mb-2 text-sm font-semibold "
             >
               Nombre de Usuario
             </Label>
@@ -246,11 +246,11 @@ const UserUpdate = ({ userId }: { userId: string }) => {
           <div className="flex flex-col">
             <Label
               htmlFor="email"
-              className="mb-2 text-sm font-semibold text-gray-700"
+              className="mb-2 text-sm font-semibold"
             >
               Correo Electrónico
             </Label>
-            <span id="email" className="text-gray-600">
+            <span id="email"  >
               {users.email || "No disponible"}
             </span>
           </div>
@@ -274,9 +274,9 @@ const UserUpdate = ({ userId }: { userId: string }) => {
               onClick={() => setShowCurrentPassword(!showCurrentPassword)}
             >
               {showCurrentPassword ? (
-                <FaEyeSlash size={18} />
-              ) : (
                 <FaEye size={18} />
+              ) : (
+                <FaEyeSlash size={18} />
               )}
             </span>
           </div>
@@ -299,7 +299,7 @@ const UserUpdate = ({ userId }: { userId: string }) => {
               className="absolute right-3 bottom-3 text-gray-400 cursor-pointer"
               onClick={() => setShowNewPassword(!showNewPassword)}
             >
-              {showNewPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+              {showNewPassword ? <FaEye size={18} /> : <FaEyeSlash size={18} />}
             </span>
           </div>
 

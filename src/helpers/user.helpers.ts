@@ -79,7 +79,6 @@ export async function loginUser(email: string, password: string) {
   }
 }
 
-//Register user
 export async function registerUser(userData: UserRegisterProps, token: string) {
   try {
     const response = await fetch(`${apiUrl}/user`, {
@@ -98,16 +97,19 @@ export async function registerUser(userData: UserRegisterProps, token: string) {
         ? json.errors
             .map((e: { description: string }) => e.description)
             .join(", ")
-        : json.message;
-      throw new Error(detail || "Error desconocido al registrar");
+        : json.message || "Error desconocido al registrar";
+      
+      // Lanzamos el error con el mensaje que viene del backend
+      throw new Error(detail);
     }
 
     return json;
   } catch (error) {
     console.error("Error al registrar el usuario:", error);
-    throw error;
+    throw error; // Pasamos el error hacia el handleRegister
   }
 }
+
 
 //Delete user
 export async function deleteUser(userId: string, token: string) {

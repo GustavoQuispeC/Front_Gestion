@@ -133,7 +133,7 @@ export default function UserList() {
   return (
     <div className="p-6 bg-white dark:bg-black text-slate-900 dark:text-white transition-colors duration-300">
       <div className="mb-6">
-        <h2 className="text-xl font-bold mb-2">Listado de Usuarios</h2>
+        <h2 className="text-xl text-blue-900 dark:text-blue-500 font-bold mb-2">Listado de Usuarios</h2>
 
         <Link
           href="/dashboard/userRegister"
@@ -208,7 +208,7 @@ export default function UserList() {
                       <TooltipTrigger asChild>
                         <Link href={`/dashboard/userUpdate/${u.id}`}>
                           <button
-                            className="mr-3 text-blue-700 dark:text-primary"
+                            className="mr-3 text-blue-900 dark:text-blue-500"
                             title="Editar"
                           >
                             <Pencil size={18} />
