@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { loginUser } from "@/helpers/user.helpers";
-import { toast } from "react-toastify";
+import { Slide, toast, ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { UserLoginErrorProps, UserLoginProps } from "@/types/user";
 import { userValidateLogin } from "@/utils/userLoginValidation";
@@ -52,7 +52,7 @@ const Login = () => {
 
     const hasErrors = Object.values(validationErrors).some((msg) => msg !== "");
     if (hasErrors) {
-      toast.error("Revisa los campos del formulario.", { theme: "colored" });
+      toast.error("Revisa los campos del formulario.");
       return;
     }
 
@@ -71,14 +71,12 @@ const Login = () => {
           })
         );
 
-        toast.success(`Bienvenido, ${response.username}`, { theme: "colored" });
+        toast.success(`Bienvenido, ${response.username}`);
         router.push("/dashboard/main");
       }
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
-      toast.error("Error al autenticarte. Intenta nuevamente.", {
-        theme: "colored",
-      });
+      toast.error("Error al autenticarte. Intenta nuevamente.");
     } finally {
       setIsLoading(false);
     }
@@ -87,7 +85,7 @@ const Login = () => {
   return (
     <>
       <form onSubmit={handleLogin}>
-        <div className="min-h-screen flex flex-col items-center justify-center py-6 px-4">
+        <div className="min-h-screen flex flex-col items-center justify-center py-6 px- dark:bg-neutral-800">
           <div className="grid md:grid-cols-2 items-center gap-10 max-w-6xl max-md:max-w-md w-full">
             <div className="space-y-2">
               {/* <Image
@@ -105,7 +103,7 @@ const Login = () => {
             </div>
 
             <div className="max-w-md md:ml-auto w-full">
-              <h3 className="text-blue-900 lg:text-3xl text-2xl font-bold mb-8 dark:text-white">
+              <h3 className="text-blue-900 lg:text-3xl text-2xl font-bold mb-8  dark:text-blue-500">
                 Iniciar Sesión
               </h3>
 
@@ -186,6 +184,19 @@ const Login = () => {
           </div>
         </div>
       </form>
+      <ToastContainer
+              position="top-right"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="dark"
+              transition={Slide}
+            />
     </>
   );
 };

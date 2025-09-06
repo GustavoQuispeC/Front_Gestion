@@ -11,11 +11,11 @@ const CarouselDemo = () => {
   }, []);
 
   return (
-    <div className="w-full relative">
+    <div className="w-full relative dark:bg-neutral-700">
   <div className="swiper progress-slide-carousel swiper-container relative">
     <div className="swiper-wrapper">
       <div className="swiper-slide">
-        <div className="bg-indigo-50 h-96 flex justify-center items-center relative overflow-hidden">
+        <div className="bg-indigo-50  h-96 flex justify-center items-center relative overflow-hidden">
           <Image
             src="https://firebasestorage.googleapis.com/v0/b/grupofamet-456604.firebasestorage.app/o/imagenes-ui%2Fcarousel%2F3361eea4-843d-4ad4-ae2e-3abead2762e9.jpg?alt=media&token=fc63b7a1-e1fe-4db7-8876-7a5f6508e7ee"
             className="object-cover"

@@ -1,13 +1,6 @@
 "use client";
 import { useEffect } from "react";
-import {
-  CircleUser,
-  Mail,
-  Menu,
-  Phone,
-  ShoppingCart,
-  X,
-} from "lucide-react";
+import { CircleUser, Mail, Menu, Phone, ShoppingCart, X } from "lucide-react";
 
 import { setupNavbarToggle } from "@/components/navbar/setupNavbarToggle";
 import Link from "next/link";
@@ -20,31 +13,31 @@ const ComplexNavbar = () => {
 
   return (
     <header className="min-h-[60px] tracking-wide relative z-50">
-      <section className="bg-blue-900 min-h-[40px] px-4 py-2 sm:px-10 flex items-center max-sm:flex-col">
-        <button type="button" className="text-white text-sm flex items-center">
+      <section className="bg-blue-900 min-h-[40px] dark:bg-neutral-800 px-4 py-2 sm:px-10 flex items-center max-sm:flex-col">
+        <button type="button" className="text-white dark:text-blue-500 text-sm flex items-center">
           <Phone width={16} className="mr-2" />
           +180-548-2588
         </button>
         <span className="border-l h-3 mx-6 max-sm:hidden"></span>
         <button
           type="button"
-          className="text-white text-sm max-sm:my-2 flex items-center"
+          className="text-white dark:text-blue-500 text-sm max-sm:my-2 flex items-center"
         >
           <Mail width={18} className="mr-2" />
           gusstavocta@gmail.com
         </button>
         <div className="sm:ml-auto text-white">
-          <Link href="/login" className="text-white text-sm mr-1">
+          <Link href="/login" className="text-white dark:text-blue-500 text-sm mr-1">
             Iniciar Sesión
           </Link>
           /
-          <a href="javscript:void(0)" className="text-white text-sm ml-1">
+          <a href="javscript:void(0)" className="text-white dark:text-blue-500 text-sm ml-1 mr-8">
             Salir
           </a>
         </div>
       </section>
 
-      <div className="flex flex-wrap items-center justify-between py-3 px-4 sm:px-10 bg-gray-900 lg:gap-y-4 gap-y-6 gap-x-4">
+      <div className="flex flex-wrap items-center justify-between py-3 px-4 sm:px-10 bg-gray-900 dark:bg-blue-950 lg:gap-y-4 gap-y-6 gap-x-4">
         <a href="javascript:void(0)">
           {/* <Image
             src="/images/LogoFamet.png"
@@ -134,11 +127,17 @@ const ComplexNavbar = () => {
         <div className="flex items-center max-sm:ml-auto">
           <ul className="flex space-x-4">
             <li className="relative px-1 lg:hover:after:absolute lg:after:bg-white lg:after:w-0 lg:hover:after:w-full lg:hover:after:h-[2px] lg:after:block lg:after:-bottom-4 lg:after:transition-all lg:after:duration-300">
-              <CircleUser width={36} className="text-orange-500 hover:text-orange-400" />
+              <CircleUser
+                width={36}
+                className="text-orange-500 hover:text-orange-400"
+              />
             </li>
             <li className="relative px-1 lg:hover:after:absolute lg:after:bg-white lg:after:w-0 lg:hover:after:w-full lg:hover:after:h-[2px] lg:after:block lg:after:-bottom-4 lg:after:transition-all lg:after:duration-300">
               <span className="relative">
-                <ShoppingCart width={36} className="text-orange-500 hover:text-orange-400" />
+                <ShoppingCart
+                  width={36}
+                  className="text-orange-500 hover:text-orange-400"
+                />
                 <span className="absolute left-auto ml-4 -top-1 rounded-full bg-red-600 px-1 py-0 text-xs text-white">
                   0
                 </span>
@@ -148,7 +147,6 @@ const ComplexNavbar = () => {
 
           <button id="toggleOpen" className="lg:hidden ml-6 cursor-pointer">
             <Menu className="text-gray-400" />
-
           </button>
         </div>
       </div>

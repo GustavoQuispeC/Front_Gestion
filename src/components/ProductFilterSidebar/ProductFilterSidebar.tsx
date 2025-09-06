@@ -4,19 +4,19 @@ import { Products } from "..";
 
 const ProductFilterSidebar = () => {
   return (
-    <div className="flex">
+    <div className="flex dark:bg-neutral-800">
       <div className="w-full max-w-[300px] shrink-0 shadow-md px-6 sm:px-8 min-h-screen py-6">
         <div className="flex items-center border-b border-gray-300 pb-2 mb-6">
-          <h3 className="text-blue-900 text-lg font-semibold">Filtrar</h3>
+          <h3 className="text-blue-900 dark:text-blue-500 text-lg font-semibold">Filtrar</h3>
           <button
             type="button"
-            className="text-sm text-red-500 font-semibold ml-auto cursor-pointer"
+            className="text-sm text-red-500 dark:text-orange-400 font-semibold ml-auto cursor-pointer"
           >
             Limpiar todo
           </button>
         </div>
         <div>
-          <h6 className="text-blue-900 text-sm font-semibold">Marca</h6>
+          <h6 className="text-blue-900 dark:text-blue-500 text-sm font-semibold">Marca</h6>
           <div className="flex px-3 py-1.5 rounded-md border border-gray-300 bg-gray-100 overflow-hidden mt-2">
             <input
               type="email"
@@ -24,7 +24,7 @@ const ProductFilterSidebar = () => {
               className="w-full bg-transparent outline-none text-gray-900 text-sm"
             />
 
-            <Search width={18} className="text-gray-400" />
+            <Search width={18} className="text-gray-400 dark:text-gray-500" />
           </div>
           <ul className="mt-6 space-y-4">
             <li className="flex items-center gap-3">
@@ -35,7 +35,7 @@ const ProductFilterSidebar = () => {
               />
               <label
                 htmlFor="zara"
-                className="text-slate-600 font-medium text-sm cursor-pointer"
+                className="text-slate-600 dark:text-slate-400 font-medium text-sm cursor-pointer"
               >
                 Zara
               </label>
@@ -48,7 +48,7 @@ const ProductFilterSidebar = () => {
               />
               <label
                 htmlFor="hm"
-                className="text-slate-600 font-medium text-sm cursor-pointer"
+                className="text-slate-600 dark:text-slate-400 font-medium text-sm cursor-pointer"
               >
                 H&M
               </label>
@@ -61,7 +61,7 @@ const ProductFilterSidebar = () => {
               />
               <label
                 htmlFor="uniqlo"
-                className="text-slate-600 font-medium text-sm cursor-pointer"
+                className="text-slate-600 dark:text-slate-400 font-medium text-sm cursor-pointer"
               >
                 Uniqlo
               </label>
@@ -74,7 +74,7 @@ const ProductFilterSidebar = () => {
               />
               <label
                 htmlFor="levis"
-                className="text-slate-600 font-medium text-sm cursor-pointer"
+                className="text-slate-600 dark:text-slate-400 font-medium text-sm cursor-pointer"
               >
                 Levi’s
               </label>
@@ -87,7 +87,7 @@ const ProductFilterSidebar = () => {
               />
               <label
                 htmlFor="nike"
-                className="text-slate-600 font-medium text-sm cursor-pointer"
+                className="text-slate-600 dark:text-slate-400 font-medium text-sm cursor-pointer"
               >
                 Nike
               </label>
@@ -100,7 +100,7 @@ const ProductFilterSidebar = () => {
               />
               <label
                 htmlFor="adidas"
-                className="text-slate-600 font-medium text-sm cursor-pointer"
+                className="text-slate-600 dark:text-slate-400 font-medium text-sm cursor-pointer"
               >
                 Adidas
               </label>
@@ -113,7 +113,7 @@ const ProductFilterSidebar = () => {
               />
               <label
                 htmlFor="puma"
-                className="text-slate-600 font-medium text-sm cursor-pointer"
+                className="text-slate-600 dark:text-slate-400 font-medium text-sm cursor-pointer"
               >
                 Puma
               </label>
@@ -126,7 +126,7 @@ const ProductFilterSidebar = () => {
               />
               <label
                 htmlFor="tommy"
-                className="text-slate-600 font-medium text-sm cursor-pointer"
+                className="text-slate-600 dark:text-slate-400 font-medium text-sm cursor-pointer"
               >
                 Tommy Hilfiger
               </label>
@@ -305,392 +305,7 @@ const ProductFilterSidebar = () => {
 
       <div className="w-full p-6">
         <Products />
-        {/* <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-gray-100 w-full h-full rounded-md">
-            <div className="bg-white flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
-              <div className="w-full">
-                <Image
-                  src="https://readymadeui.com/images/product2.webp"
-                  alt="Product 3"
-                  width={230}
-                  height={307}
-                  className="w-full object-cover object-top aspect-[230/307]"
-                />
-              </div>
-
-              <div className="p-4 flex-1 flex flex-col">
-                <div className="flex-1">
-                  <h5 className="text-sm sm:text-base font-semibold text-slate-900 line-clamp-2">
-                    Syllable Streetwear
-                  </h5>
-                  <div className="mt-2 flex items-center flex-wrap gap-2">
-                    <h6 className="text-sm sm:text-base font-semibold text-slate-900">
-                      $14
-                    </h6>
-                    <div
-                      className="bg-slate-100 w-8 h-8 flex items-center justify-center rounded-full cursor-pointer ml-auto"
-                      title="Wishlist"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16px"
-                        className="fill-slate-800 inline-block"
-                        viewBox="0 0 64 64"
-                      >
-                        <path
-                          d="M45.5 4A18.53 18.53 0 0 0 32 9.86 18.5 18.5 0 0 0 0 22.5C0 40.92 29.71 59 31 59.71a2 2 0 0 0 2.06 0C34.29 59 64 40.92 64 22.5A18.52 18.52 0 0 0 45.5 4ZM32 55.64C26.83 52.34 4 36.92 4 22.5a14.5 14.5 0 0 1 26.36-8.33 2 2 0 0 0 3.27 0A14.5 14.5 0 0 1 60 22.5c0 14.41-22.83 29.83-28 33.14Z"
-                          data-original="#000000"
-                        ></path>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  className="text-sm px-2 py-2 font-medium w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white tracking-wide ml-auto outline-none border-none rounded"
-                >
-                  Add to cart
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="bg-gray-100 w-full h-full rounded-md">
-            <div className="bg-white flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
-              <div className="w-full">
-                <Image
-                  src="https://readymadeui.com/images/product1.webp"
-                  alt="Product 3"
-                  width={230}
-                  height={307}
-                  className="w-full object-cover object-top aspect-[230/307]"
-                />
-              </div>
-
-              <div className="p-4 flex-1 flex flex-col">
-                <div className="flex-1">
-                  <h5 className="text-sm sm:text-base font-semibold text-slate-900 line-clamp-2">
-                    Syllable Streetwear
-                  </h5>
-                  <div className="mt-2 flex items-center flex-wrap gap-2">
-                    <h6 className="text-sm sm:text-base font-semibold text-slate-900">
-                      $14
-                    </h6>
-                    <div
-                      className="bg-slate-100 w-8 h-8 flex items-center justify-center rounded-full cursor-pointer ml-auto"
-                      title="Wishlist"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16px"
-                        className="fill-slate-800 inline-block"
-                        viewBox="0 0 64 64"
-                      >
-                        <path
-                          d="M45.5 4A18.53 18.53 0 0 0 32 9.86 18.5 18.5 0 0 0 0 22.5C0 40.92 29.71 59 31 59.71a2 2 0 0 0 2.06 0C34.29 59 64 40.92 64 22.5A18.52 18.52 0 0 0 45.5 4ZM32 55.64C26.83 52.34 4 36.92 4 22.5a14.5 14.5 0 0 1 26.36-8.33 2 2 0 0 0 3.27 0A14.5 14.5 0 0 1 60 22.5c0 14.41-22.83 29.83-28 33.14Z"
-                          data-original="#000000"
-                        ></path>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  className="text-sm px-2 py-2 font-medium w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white tracking-wide ml-auto outline-none border-none rounded"
-                >
-                  Add to cart
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="bg-gray-100 w-full h-full rounded-md">
-            <div className="bg-white flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
-              <div className="w-full">
-                <Image
-                  src="https://readymadeui.com/images/product6.webp"
-                  alt="Product 3"
-                  width={230}
-                  height={307}
-                  className="w-full object-cover object-top aspect-[230/307]"
-                />
-              </div>
-
-              <div className="p-4 flex-1 flex flex-col">
-                <div className="flex-1">
-                  <h5 className="text-sm sm:text-base font-semibold text-slate-900 line-clamp-2">
-                    Syllable Streetwear
-                  </h5>
-                  <div className="mt-2 flex items-center flex-wrap gap-2">
-                    <h6 className="text-sm sm:text-base font-semibold text-slate-900">
-                      $14
-                    </h6>
-                    <div
-                      className="bg-slate-100 w-8 h-8 flex items-center justify-center rounded-full cursor-pointer ml-auto"
-                      title="Wishlist"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16px"
-                        className="fill-slate-800 inline-block"
-                        viewBox="0 0 64 64"
-                      >
-                        <path
-                          d="M45.5 4A18.53 18.53 0 0 0 32 9.86 18.5 18.5 0 0 0 0 22.5C0 40.92 29.71 59 31 59.71a2 2 0 0 0 2.06 0C34.29 59 64 40.92 64 22.5A18.52 18.52 0 0 0 45.5 4ZM32 55.64C26.83 52.34 4 36.92 4 22.5a14.5 14.5 0 0 1 26.36-8.33 2 2 0 0 0 3.27 0A14.5 14.5 0 0 1 60 22.5c0 14.41-22.83 29.83-28 33.14Z"
-                          data-original="#000000"
-                        ></path>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  className="text-sm px-2 py-2 font-medium w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white tracking-wide ml-auto outline-none border-none rounded"
-                >
-                  Add to cart
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="bg-gray-100 w-full h-full rounded-md">
-            <div className="bg-white flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
-              <div className="w-full">
-                <Image
-                  src="https://readymadeui.com/images/product5.webp"
-                  alt="Product 3"
-                  width={230}
-                  height={307}
-                  className="w-full object-cover object-top aspect-[230/307]"
-                />
-              </div>
-
-              <div className="p-4 flex-1 flex flex-col">
-                <div className="flex-1">
-                  <h5 className="text-sm sm:text-base font-semibold text-slate-900 line-clamp-2">
-                    Jargon Jungle
-                  </h5>
-                  <div className="mt-2 flex items-center flex-wrap gap-2">
-                    <h6 className="text-sm sm:text-base font-semibold text-slate-900">
-                      $15
-                    </h6>
-                    <div
-                      className="bg-slate-100 w-8 h-8 flex items-center justify-center rounded-full cursor-pointer ml-auto"
-                      title="Wishlist"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16px"
-                        className="fill-slate-800 inline-block"
-                        viewBox="0 0 64 64"
-                      >
-                        <path
-                          d="M45.5 4A18.53 18.53 0 0 0 32 9.86 18.5 18.5 0 0 0 0 22.5C0 40.92 29.71 59 31 59.71a2 2 0 0 0 2.06 0C34.29 59 64 40.92 64 22.5A18.52 18.52 0 0 0 45.5 4ZM32 55.64C26.83 52.34 4 36.92 4 22.5a14.5 14.5 0 0 1 26.36-8.33 2 2 0 0 0 3.27 0A14.5 14.5 0 0 1 60 22.5c0 14.41-22.83 29.83-28 33.14Z"
-                          data-original="#000000"
-                        ></path>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  className="text-sm px-2 py-2 font-medium w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white tracking-wide ml-auto outline-none border-none rounded"
-                >
-                  Add to cart
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="bg-gray-100 w-full h-full rounded-md">
-            <div className="bg-white flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
-              <div className="w-full">
-                <Image
-                  src="https://readymadeui.com/images/product7.webp"
-                  alt="Product 3"
-                  width={230}
-                  height={307}
-                  className="w-full object-cover object-top aspect-[230/307]"
-                />
-              </div>
-
-              <div className="p-4 flex-1 flex flex-col">
-                <div className="flex-1">
-                  <h5 className="text-sm sm:text-base font-semibold text-slate-900 line-clamp-2">
-                    Verbal Vogue Tees
-                  </h5>
-                  <div className="mt-2 flex items-center flex-wrap gap-2">
-                    <h6 className="text-sm sm:text-base font-semibold text-slate-900">
-                      $12
-                    </h6>
-                    <div
-                      className="bg-slate-100 w-8 h-8 flex items-center justify-center rounded-full cursor-pointer ml-auto"
-                      title="Wishlist"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16px"
-                        className="fill-slate-800 inline-block"
-                        viewBox="0 0 64 64"
-                      >
-                        <path
-                          d="M45.5 4A18.53 18.53 0 0 0 32 9.86 18.5 18.5 0 0 0 0 22.5C0 40.92 29.71 59 31 59.71a2 2 0 0 0 2.06 0C34.29 59 64 40.92 64 22.5A18.52 18.52 0 0 0 45.5 4ZM32 55.64C26.83 52.34 4 36.92 4 22.5a14.5 14.5 0 0 1 26.36-8.33 2 2 0 0 0 3.27 0A14.5 14.5 0 0 1 60 22.5c0 14.41-22.83 29.83-28 33.14Z"
-                          data-original="#000000"
-                        ></path>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  className="text-sm px-2 py-2 font-medium w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white tracking-wide ml-auto outline-none border-none rounded"
-                >
-                  Add to cart
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="bg-gray-100 w-full h-full rounded-md">
-            <div className="bg-white flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
-              <div className="w-full">
-                <Image
-                  src="https://readymadeui.com/images/product3.webp"
-                  alt="Product 3"
-                  width={230}
-                  height={307}
-                  className="w-full object-cover object-top aspect-[230/307]"
-                />
-              </div>
-
-              <div className="p-4 flex-1 flex flex-col">
-                <div className="flex-1">
-                  <h5 className="text-sm sm:text-base font-semibold text-slate-900 line-clamp-2">
-                    ThreadCraft Vibes
-                  </h5>
-                  <div className="mt-2 flex items-center flex-wrap gap-2">
-                    <h6 className="text-sm sm:text-base font-semibold text-slate-900">
-                      $14
-                    </h6>
-                    <div
-                      className="bg-slate-100 w-8 h-8 flex items-center justify-center rounded-full cursor-pointer ml-auto"
-                      title="Wishlist"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16px"
-                        className="fill-slate-800 inline-block"
-                        viewBox="0 0 64 64"
-                      >
-                        <path
-                          d="M45.5 4A18.53 18.53 0 0 0 32 9.86 18.5 18.5 0 0 0 0 22.5C0 40.92 29.71 59 31 59.71a2 2 0 0 0 2.06 0C34.29 59 64 40.92 64 22.5A18.52 18.52 0 0 0 45.5 4ZM32 55.64C26.83 52.34 4 36.92 4 22.5a14.5 14.5 0 0 1 26.36-8.33 2 2 0 0 0 3.27 0A14.5 14.5 0 0 1 60 22.5c0 14.41-22.83 29.83-28 33.14Z"
-                          data-original="#000000"
-                        ></path>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  className="text-sm px-2 py-2 font-medium w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white tracking-wide ml-auto outline-none border-none rounded"
-                >
-                  Add to cart
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="bg-gray-100 w-full h-full rounded-md">
-            <div className="bg-white flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
-              <div className="w-full">
-                <Image
-                  src="https://readymadeui.com/images/product2.webp"
-                  alt="Product 2"
-                  width={230}
-                  height={307}
-                  className="w-full object-cover object-top aspect-[230/307]"
-                />
-              </div>
-
-              <div className="p-4 flex-1 flex flex-col">
-                <div className="flex-1">
-                  <h5 className="text-sm sm:text-base font-semibold text-slate-900 line-clamp-2">
-                    Adjective Attire
-                  </h5>
-                  <div className="mt-2 flex items-center flex-wrap gap-2">
-                    <h6 className="text-sm sm:text-base font-semibold text-slate-900">
-                      $12
-                    </h6>
-                    <div
-                      className="bg-slate-100 w-8 h-8 flex items-center justify-center rounded-full cursor-pointer ml-auto"
-                      title="Wishlist"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16px"
-                        className="fill-slate-800 inline-block"
-                        viewBox="0 0 64 64"
-                      >
-                        <path
-                          d="M45.5 4A18.53 18.53 0 0 0 32 9.86 18.5 18.5 0 0 0 0 22.5C0 40.92 29.71 59 31 59.71a2 2 0 0 0 2.06 0C34.29 59 64 40.92 64 22.5A18.52 18.52 0 0 0 45.5 4ZM32 55.64C26.83 52.34 4 36.92 4 22.5a14.5 14.5 0 0 1 26.36-8.33 2 2 0 0 0 3.27 0A14.5 14.5 0 0 1 60 22.5c0 14.41-22.83 29.83-28 33.14Z"
-                          data-original="#000000"
-                        ></path>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  className="text-sm px-2 py-2 font-medium w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white tracking-wide ml-auto outline-none border-none rounded"
-                >
-                  Add to cart
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="bg-gray-100 w-full h-full rounded-md">
-            <div className="bg-white flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
-              <div className="w-full">
-                <Image
-                  src="https://readymadeui.com/images/product1.webp"
-                  alt="Product 1"
-                  width={230}
-                  height={307}
-                  className="w-full object-cover object-top aspect-[230/307]"
-                />
-              </div>
-
-              <div className="p-4 flex-1 flex flex-col">
-                <div className="flex-1">
-                  <h5 className="text-sm sm:text-base font-semibold text-slate-900 line-clamp-2">
-                    Lexicon Luxe
-                  </h5>
-                  <div className="mt-2 flex items-center flex-wrap gap-2">
-                    <h6 className="text-sm sm:text-base font-semibold text-slate-900">
-                      $10
-                    </h6>
-                    <div
-                      className="bg-slate-100 w-8 h-8 flex items-center justify-center rounded-full cursor-pointer ml-auto"
-                      title="Wishlist"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16px"
-                        className="fill-slate-800 inline-block"
-                        viewBox="0 0 64 64"
-                      >
-                        <path
-                          d="M45.5 4A18.53 18.53 0 0 0 32 9.86 18.5 18.5 0 0 0 0 22.5C0 40.92 29.71 59 31 59.71a2 2 0 0 0 2.06 0C34.29 59 64 40.92 64 22.5A18.52 18.52 0 0 0 45.5 4ZM32 55.64C26.83 52.34 4 36.92 4 22.5a14.5 14.5 0 0 1 26.36-8.33 2 2 0 0 0 3.27 0A14.5 14.5 0 0 1 60 22.5c0 14.41-22.83 29.83-28 33.14Z"
-                          data-original="#000000"
-                        ></path>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  className="text-sm px-2 py-2 font-medium w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white tracking-wide ml-auto outline-none border-none rounded"
-                >
-                  Add to cart
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>*/}
+        
       </div> 
     </div>
   );

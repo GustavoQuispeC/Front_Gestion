@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import ClientNavbar from "./ClientNavbar";
+import { ModeToggle } from "@/components/togle/Togle";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,6 +30,16 @@ export default function RootLayout({
       <body className="antialiased">
         <ClientNavbar /> {/* Use the client-side Navbar component */}
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+           <div
+            style={{
+              position: "fixed",
+              top: 1,
+              right: 20,
+              zIndex: 1000,
+            }}
+          >
+            <ModeToggle />
+          </div>
           {children}
         </ThemeProvider>
       </body>

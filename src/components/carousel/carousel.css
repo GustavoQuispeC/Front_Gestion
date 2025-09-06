@@ -6,9 +6,11 @@
   -webkit-transition-timing-function: linear !important;
   transition-timing-function: linear !important;
   position: relative;
+  
 }
 
 /* Custom progress bar color */
 .swiper-pagination-progressbar .swiper-pagination-progressbar-fill {
   background: #f4511e !important;
+  
 }

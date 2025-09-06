@@ -156,8 +156,8 @@ export default function EmployeeAbsence() {
   return (
     <>
       <section className="w-full mx-auto mt-4 h-full px-2 sm:px-4 md:px-8">
-        <div className="dark:bg-neutral-900 text-black dark:text-white rounded-2xl px-4 sm:px-6 md:px-12 pb-8">
-          <h2 className="text-xl text-blue-900 dark:text-blue-500 sm:text-2xl font-bold mb-6 text-center md:text-left">
+        <div className="dark:bg-neutral-900 text-black dark:text-white rounded-2xl shadow-sm px-4 sm:px-6 md:px-12 pb-8">
+          <h2 className="text-xl text-blue-900 dark:text-blue-500 sm:text-2xl font-bold mb-6 pt-8 text-center md:text-left">
             Control de Ausencias
           </h2>
 

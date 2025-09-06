@@ -5,10 +5,10 @@ import { Button } from '../ui/button';
 const products = () => {
   return (
     <div className="p-4 mx-auto lg:max-w-6xl md:max-w-4xl">
-      <h2 className="text-2xl sm:text-3xl font-bold text-blue-900 mb-6 sm:mb-12">Catálogo de productos</h2>
+      <h2 className="text-2xl sm:text-3xl font-bold text-blue-900 dark:text-blue-500 mb-6 sm:mb-12">Catálogo de productos</h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-        <div className="bg-white flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
+        <div className="bg-white dark:bg-neutral-600 flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
             <div className="w-full">
             <Image
               src="https://readymadeui.com/images/product1.webp"
@@ -38,7 +38,7 @@ const products = () => {
           </div>
         </div>
 
-        <div className="bg-white flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
+        <div className="bg-white dark:bg-neutral-600 flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
             <div className="w-full">
             <Image
               src="https://readymadeui.com/images/product2.webp"
@@ -68,7 +68,7 @@ const products = () => {
           </div>
         </div>
 
-        <div className="bg-white flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
+        <div className="bg-white dark:bg-neutral-600 flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
             <div className="w-full">
             <Image
               src="https://readymadeui.com/images/product3.webp"
@@ -98,7 +98,7 @@ const products = () => {
           </div>
         </div>
 
-        <div className="bg-white flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
+        <div className="bg-white dark:bg-neutral-600 flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
             <div className="w-full">
             <Image
               src="https://readymadeui.com/images/product7.webp"
@@ -128,7 +128,7 @@ const products = () => {
           </div>
         </div>
 
-        <div className="bg-white flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
+        <div className="bg-white dark:bg-neutral-600 flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
             <div className="w-full">
             <Image
               src="https://readymadeui.com/images/product5.webp"
@@ -158,7 +158,7 @@ const products = () => {
           </div>
         </div>
 
-        <div className="bg-white flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
+        <div className="bg-white dark:bg-neutral-600 flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
             <div className="w-full">
             <Image
               src="https://readymadeui.com/images/product6.webp"
@@ -188,7 +188,7 @@ const products = () => {
           </div>
         </div>
 
-        <div className="bg-white flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
+        <div className="bg-white dark:bg-neutral-600 flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
             <div className="w-full">
             <Image
               src="https://readymadeui.com/images/product1.webp"
@@ -218,7 +218,7 @@ const products = () => {
           </div>
         </div>
 
-        <div className="bg-white flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
+        <div className="bg-white dark:bg-neutral-600 flex flex-col rounded overflow-hidden shadow-md cursor-pointer hover:scale-[1.01] transition-all">
             <div className="w-full">
             <Image
               src="https://readymadeui.com/images/product2.webp"
