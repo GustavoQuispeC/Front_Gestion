@@ -8,7 +8,6 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Slide, ToastContainer } from "react-toastify";
-// import { ModeToggle } from "@/components/togle/Togle";
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <SidebarProvider>
@@ -18,10 +17,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           <div className="flex items-center gap-2">
             <SidebarTrigger className="-ml-1" />
           </div>
-          {/* <div className="flex-1" />
-          <div className="flex items-center gap-2 justify-end mt-4 mr-2">
-            <ModeToggle />
-          </div> */}
         </header>
 
         <div className="m-4">{children}</div>
