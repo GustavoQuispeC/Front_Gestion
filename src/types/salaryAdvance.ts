@@ -1,12 +1,15 @@
 export interface SalaryAdvanceTableProps {
-  employeeId: number;
-  date: Date;
-  observation: string;
-  createdAt: Date;
-  isJustified: boolean;
+    employeeId:    number;
+    amount:        number;
+    dateRequested: Date;
+    isApproved:    boolean;
+    id:            number;
+    createdAt:     Date;
+    isActive:      boolean;
 }
+
 
 export interface SalaryAdvanceSummary {
   employeeId: number;
-  totalAdvance: number;
+  totalSalaryAdvance: number;
 }

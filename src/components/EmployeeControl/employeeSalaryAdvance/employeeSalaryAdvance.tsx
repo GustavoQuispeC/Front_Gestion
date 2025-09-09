@@ -1,15 +1,26 @@
-'use client';
+"use client";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+} from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { GetAbsencesByEmployeeId, GetAbsenceSummaryById } from "@/helpers/absence.helper";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
 import { getEmployeeByFullname } from "@/helpers/employee.helper";
 import { EmployeeSearchProps } from "@/types/employee";
-import { SalaryAdvanceSummary, SalaryAdvanceTableProps } from "@/types/salaryAdvance";
+import {
+  SalaryAdvanceSummary,
+  SalaryAdvanceTableProps,
+} from "@/types/salaryAdvance";
 import { ChevronDownIcon, Eye, SaveIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
@@ -18,30 +29,27 @@ import { toast } from "react-toastify";
 import EmployeeSelect from "../subcomponentes/EmployeeSelect";
 import EmployeeDetails from "../subcomponentes/EmployeeDetails";
 import SalaryAdvanceTable from "./subcomponent/SalaryAdvanceTable";
-
+import {
+  GetSalaryAdvanceByEmployeeId,
+  GetSalaryAdvanceSummaryById,
+} from "@/helpers/salaryAdvance.helper";
 
 export default function EmployeeSalaryAdvance() {
-
   const [open1, setOpen1] = useState(false);
   const [date1, setDate1] = useState<Date | null>(null);
   const [selectedEmployee, setSelectedEmployee] =
     useState<EmployeeSearchProps | null>(null);
-  const [SalaryAdvanceSummary, setSalaryAdvanceSummary] = useState<SalaryAdvanceSummary| null>(
-    null
-   );
+  const [SalaryAdvanceSummary, setSalaryAdvanceSummary] =
+    useState<SalaryAdvanceSummary | null>(null);
   const [isApproved, setIsApproved] = useState(false);
   const [token, setToken] = useState<string | null>(null);
-  const [employeeSalaryAdvances, setEmployeeSalaryAdvances] = useState<SalaryAdvanceTableProps[]>(
-    []
-  );
+  const [employeeSalaryAdvances, setEmployeeSalaryAdvances] = useState<
+    SalaryAdvanceTableProps[]
+  >([]);
 
-  const [formData, setFormData] = useState<{
-    date: Date | null;
-    observation: string;
-  }>({
-    date: null,
-    observation: "",
-  });
+  // Estado para el formulario de adelanto de salario
+  const [formData, setFormData] = useState<{ date: Date | null }>({ date: null });
+
 
   const [mounted, setMounted] = useState(false);
 
@@ -83,14 +91,12 @@ export default function EmployeeSalaryAdvance() {
       if (!token) return;
       try {
         // const [summary, absences] = await Promise.all([
-        const [summary] = await Promise.all([
-          GetAbsenceSummaryById(employeeId, token),
-          GetAbsencesByEmployeeId(employeeId, token),
+        const [summary, advances] = await Promise.all([
+          GetSalaryAdvanceSummaryById(employeeId, token),
+          GetSalaryAdvanceByEmployeeId(employeeId, token),
         ]);
-        // setSalaryAdvanceSummary(summary);
-        // setEmployeeSalaryAdvances(advances);
-        // setAbsenceSummary(summary);
-        // setEmployeeAbsences(absences);
+        setSalaryAdvanceSummary(summary);
+        setEmployeeSalaryAdvances(advances);
       } catch (error) {
         console.error("Error al obtener datos del empleado:", error);
       }
@@ -141,168 +147,148 @@ export default function EmployeeSalaryAdvance() {
     return null; // Evita la renderización en el servidor
   }
 
-
   return (
     <>
-          <section className="w-full mx-auto mt-4 h-full px-2 sm:px-4 md:px-8">
-            <div className="dark:bg-neutral-900 text-black dark:text-white rounded-2xl shadow-sm px-4 sm:px-6 md:px-12 pb-8">
-              <h2 className="text-xl text-blue-900 dark:text-blue-500 sm:text-2xl font-bold mb-6 pt-8 text-center md:text-left">
-                Control de Ausencias
-              </h2>
-    
-              {/* Selector de Empleado */}
-              <div className="my-4">
-                <EmployeeSelect
-                  onChange={setSelectedEmployee}
-                  loadOptions={loadOptions}
-                  value={selectedEmployee}
-                />
-              </div>
-    
-              {/* Detalles del empleado */}
-              <Card>
-                <CardHeader>
-                  <CardDescription>
-                    Información del empleado seleccionado.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {selectedEmployee && (
-                    <EmployeeDetails employee={selectedEmployee} />
-                  )}
-                  {SalaryAdvanceSummary && (
-                    <div className="mt-4">
-                      <p className="font-bold text-sm sm:text-base">
-                        Total Adelanto:{" "}
-                        <span className="font-normal">
-                          {SalaryAdvanceSummary.totalAdvance}
-                        </span>
-                      </p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-    
-              {/* Formulario de Vacaciones */}
-              <div className="flex flex-col gap-6 mt-3 pb-8">
-                <Card>
-                  <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* Fecha inicio */}
-                    <div className="flex flex-col">
-                      <Label htmlFor="start-date" className="mb-2">
-                        Fecha de solicitud
-                      </Label>
-                      <Popover open={open1} onOpenChange={setOpen1}>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            id="start-date"
-                            className="w-full justify-between font-normal"
-                            type="button"
-                          >
-                            {renderDate(date1)}
-                            <ChevronDownIcon />
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto overflow-hidden p-0">
-                          <Calendar
-                            mode="single"
-                            selected={date1 ?? undefined}
-                            captionLayout="dropdown"
-                            onSelect={(selectedDate) => {
-                              if (selectedDate) {
-                                setDate1(selectedDate);
-                                setFormData((prev) => ({
-                                  ...prev,
-                                  date: selectedDate,
-                                }));
-                              }
-                              setOpen1(false);
-                            }}
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-    
-                    {/* Observación */}
-                    <div className="flex flex-col">
-                      <Label htmlFor="observation" className="mb-2">
-                        Observación (opcional)
-                      </Label>
-                      <Input
-                        id="observation"
-                        type="text"
-                        value={formData.observation}
-                        onChange={(e) =>
-                          setFormData({ ...formData, observation: e.target.value })
-                        }
-                        placeholder="Observación (opcional)"
-                        className="w-full"
+      <section className="w-full mx-auto mt-4 h-full px-2 sm:px-4 md:px-8">
+        <div className="dark:bg-neutral-900 text-black dark:text-white rounded-2xl shadow-sm px-4 sm:px-6 md:px-12 pb-8">
+          <h2 className="text-xl text-blue-900 dark:text-blue-500 sm:text-2xl font-bold mb-6 pt-8 text-center md:text-left">
+            Control de Ausencias
+          </h2>
+
+          {/* Selector de Empleado */}
+          <div className="my-4">
+            <EmployeeSelect
+              onChange={setSelectedEmployee}
+              loadOptions={loadOptions}
+              value={selectedEmployee}
+            />
+          </div>
+
+          {/* Detalles del empleado */}
+          <Card>
+            <CardHeader>
+              <CardDescription>
+                Información del empleado seleccionado.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {selectedEmployee && (
+                <EmployeeDetails employee={selectedEmployee} />
+              )}
+              {SalaryAdvanceSummary && (
+                <div className="mt-4">
+                  <p className="font-bold text-sm sm:text-base">
+                    Total Adelanto:{" "}
+                    <span className="font-normal">
+                      S/ {SalaryAdvanceSummary.totalSalaryAdvance}
+                    </span>
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Formulario de Vacaciones */}
+          <div className="flex flex-col gap-6 mt-3 pb-8">
+            <Card>
+              <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Fecha inicio */}
+                <div className="flex flex-col">
+                  <Label htmlFor="start-date" className="mb-2">
+                    Fecha de solicitud
+                  </Label>
+                  <Popover open={open1} onOpenChange={setOpen1}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        id="start-date"
+                        className="w-full justify-between font-normal"
+                        type="button"
+                      >
+                        {renderDate(date1)}
+                        <ChevronDownIcon />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto overflow-hidden p-0">
+                      <Calendar
+                        mode="single"
+                        selected={date1 ?? undefined}
+                        captionLayout="dropdown"
+                        onSelect={(selectedDate) => {
+                          if (selectedDate) {
+                            setDate1(selectedDate);
+                            setFormData((prev) => ({
+                              ...prev,
+                              date: selectedDate,
+                            }));
+                          }
+                          setOpen1(false);
+                        }}
                       />
-                    </div>
-                  </CardContent>
-                </Card>
-    
-                {/* Aprobación y botón */}
-                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <Checkbox
-                      id="aprobado"
-                      checked={isApproved}
-                      onCheckedChange={(checked) =>
-                        setIsApproved(Boolean(checked))
-                      }
-                    />
-                    <Label htmlFor="aprobado">Aprobado</Label>
-                  </div>
+                    </PopoverContent>
+                  </Popover>
                 </div>
-    
-                {/* Botones */}
-                <div className="flex flex-col sm:flex-row flex-wrap items-center gap-3 justify-end w-full">
-                  <Button
-                    variant="outline"
-                    type="button"
-                    onClick={() => router.push("/dashboard/main")}
-                    className="w-full sm:w-64 text-blue-900 dark:text-blue-500"
-                  >
-                    <IoMdArrowRoundBack className="text-base" />
-                    Volver
-                  </Button>
-    
-                  <Button
-                    variant="reset"
-                    type="button"
-                    onClick={() => router.push("/dashboard/main")}
-                    className="w-full sm:w-64"
-                  >
-                    <Eye className="text-base" />
-                    Ver todos
-                  </Button>
-    
-                  <Button
-                    className="w-full sm:w-64 mt-2 md:mt-0"
-                    type="button"
-                    // onClick={handleAbsenceRegister}
-                  >
-                    <SaveIcon className="mr-2" />
-                    Registrar Adelanto
-                  </Button>
-                </div>
-    
-                {/* Tabla de Vacaciones */}
-                <Card>
-                  <CardHeader>
-                    <CardDescription>
-                      Historial de adelantos del empleado.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <SalaryAdvanceTable salaryAdvances={employeeSalaryAdvances} />
-                  </CardContent>
-                </Card>
+              </CardContent>
+            </Card>
+
+            {/* Aprobación y botón */}
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <Checkbox
+                  id="aprobado"
+                  checked={isApproved}
+                  onCheckedChange={(checked) => setIsApproved(Boolean(checked))}
+                />
+                <Label htmlFor="aprobado">Aprobado</Label>
               </div>
             </div>
-          </section>
-        </>
-  )
+
+            {/* Botones */}
+            <div className="flex flex-col sm:flex-row flex-wrap items-center gap-3 justify-end w-full">
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() => router.push("/dashboard/main")}
+                className="w-full sm:w-64 text-blue-900 dark:text-blue-500"
+              >
+                <IoMdArrowRoundBack className="text-base" />
+                Volver
+              </Button>
+
+              <Button
+                variant="reset"
+                type="button"
+                onClick={() => router.push("/dashboard/main")}
+                className="w-full sm:w-64"
+              >
+                <Eye className="text-base" />
+                Ver todos
+              </Button>
+
+              <Button
+                className="w-full sm:w-64 mt-2 md:mt-0"
+                type="button"
+                // onClick={handleAbsenceRegister}
+              >
+                <SaveIcon className="mr-2" />
+                Registrar Adelanto
+              </Button>
+            </div>
+
+            {/* Tabla de Vacaciones */}
+            <Card>
+              <CardHeader>
+                <CardDescription>
+                  Historial de adelantos del empleado.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <SalaryAdvanceTable salaryAdvances={employeeSalaryAdvances} />
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+    </>
+  );
 }
