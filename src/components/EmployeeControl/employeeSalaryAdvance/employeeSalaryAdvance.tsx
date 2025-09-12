@@ -8,6 +8,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Popover,
@@ -18,6 +19,7 @@ import {
 import { getEmployeeByFullname } from "@/helpers/employee.helper";
 import { EmployeeSearchProps } from "@/types/employee";
 import {
+  SalaryAdvanceRegisterProps,
   SalaryAdvanceSummary,
   SalaryAdvanceTableProps,
 } from "@/types/salaryAdvance";
@@ -32,6 +34,7 @@ import SalaryAdvanceTable from "./subcomponent/SalaryAdvanceTable";
 import {
   GetSalaryAdvanceByEmployeeId,
   GetSalaryAdvanceSummaryById,
+  SalaryAdvanceRegister,
 } from "@/helpers/salaryAdvance.helper";
 
 export default function EmployeeSalaryAdvance() {
@@ -47,16 +50,21 @@ export default function EmployeeSalaryAdvance() {
     SalaryAdvanceTableProps[]
   >([]);
 
-  // Estado para el formulario de adelanto de salario
-  const [formData, setFormData] = useState<{ date: Date | null }>({ date: null });
-
+  const [formData, setFormData] = useState<{
+    date: Date | null;
+    amount: number | null;
+  }>({
+    date: null,
+    amount: null,
+  });
 
   const [mounted, setMounted] = useState(false);
 
   const router = useRouter();
 
   useEffect(() => {
-    setMounted(true); // Establecer `mounted` a true cuando se monta el componente
+    setMounted(true);
+    // Establecer `mounted` a true cuando se monta el componente
   }, []);
 
   //! Cargar el token del localStorage al iniciar el componente
@@ -115,33 +123,33 @@ export default function EmployeeSalaryAdvance() {
     date ? date.toISOString().slice(0, 10) : "Seleccionar fecha";
 
   //! Manejar el registro de ausencias
-  // const handleAbsenceRegister = async () => {
-  //   if (!selectedEmployee) return toast.error("Debe seleccionar un empleado.");
-  //   if (!formData.date)
-  //     return toast.error("Debe seleccionar una fecha de ausencia.");
+  const handleSalaryAdvanceRegister = async () => {
+    if (!selectedEmployee) return toast.error("Debe seleccionar un empleado.");
+    if (!formData.date)
+      return toast.error("Debe seleccionar una fecha de ausencia.");
 
-  //   const data: AbsenceRegisterProps = {
-  //     employeeId: Number(selectedEmployee.id),
-  //     date: formData.date,
-  //     isJustified: isJustified,
-  //     reason: formData.reason,
-  //   };
+    const data: SalaryAdvanceRegisterProps = {
+      employeeId: Number(selectedEmployee.id),
+      amount: Number(formData.amount),
+      dateRequested: formData.date,
+      isApproved: isApproved,
+    };
 
-  //   try {
-  //     await AbsenceRegister(data, token || "");
-  //     toast.success("Falta registrada con éxito.");
-  //     await fetchEmployeeData(selectedEmployee.id);
-  //     setFormData({ date: null, reason: "" });
-  //     setIsJustified(false);
-  //   } catch (error) {
-  //     console.error("Error al registrar la falta:", error);
-  //     const errorMsg =
-  //       error && typeof error === "object" && "message" in error
-  //         ? (error as { message: string }).message
-  //         : "Error al registrar la falta.";
-  //     toast.error(errorMsg);
-  //   }
-  // };
+    try {
+      await SalaryAdvanceRegister(data, token || "");
+      toast.success("Adelanto de sueldo registrado con éxito.");
+      await fetchEmployeeData(selectedEmployee.id);
+      setFormData({ date: null, amount: null });
+      setIsApproved(false);
+    } catch (error) {
+      console.error("Error al registrar el adelanto de sueldo:", error);
+      const errorMsg =
+        error && typeof error === "object" && "message" in error
+          ? (error as { message: string }).message
+          : "Error al registrar el adelanto de sueldo.";
+      toast.error(errorMsg);
+    }
+  };
 
   if (!mounted) {
     return null; // Evita la renderización en el servidor
@@ -152,7 +160,7 @@ export default function EmployeeSalaryAdvance() {
       <section className="w-full mx-auto mt-4 h-full px-2 sm:px-4 md:px-8">
         <div className="dark:bg-neutral-900 text-black dark:text-white rounded-2xl shadow-sm px-4 sm:px-6 md:px-12 pb-8">
           <h2 className="text-xl text-blue-900 dark:text-blue-500 sm:text-2xl font-bold mb-6 pt-8 text-center md:text-left">
-            Control de Ausencias
+           Adelanto de Sueldo de Empleados
           </h2>
 
           {/* Selector de Empleado */}
@@ -228,6 +236,27 @@ export default function EmployeeSalaryAdvance() {
                     </PopoverContent>
                   </Popover>
                 </div>
+
+                {/* Observación */}
+                <div className="flex flex-col">
+                  <Label htmlFor="observation" className="mb-2">
+                    Monto solicitado:
+                  </Label>
+                  <Input
+                    id="observation"
+                    type="number"
+                    value={formData.amount || ""}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        amount: Number(e.target.value),
+                      })
+                    }
+                    placeholder="Monto solicitado"
+                    className="w-full"
+                    required
+                  />
+                </div>
               </CardContent>
             </Card>
 
@@ -238,6 +267,7 @@ export default function EmployeeSalaryAdvance() {
                   id="aprobado"
                   checked={isApproved}
                   onCheckedChange={(checked) => setIsApproved(Boolean(checked))}
+                  
                 />
                 <Label htmlFor="aprobado">Aprobado</Label>
               </div>
@@ -268,7 +298,7 @@ export default function EmployeeSalaryAdvance() {
               <Button
                 className="w-full sm:w-64 mt-2 md:mt-0"
                 type="button"
-                // onClick={handleAbsenceRegister}
+                onClick={handleSalaryAdvanceRegister}
               >
                 <SaveIcon className="mr-2" />
                 Registrar Adelanto
