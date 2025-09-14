@@ -1,9 +1,34 @@
+
 import {
+  EmployeeSalaryAdvanceAll,
   SalaryAdvanceRegisterProps,
   SalaryAdvanceSummary,
   SalaryAdvanceTableProps,
 } from "@/types/salaryAdvance";
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+export async function GetAllSalaryAdvances(): Promise<EmployeeSalaryAdvanceAll[]> {
+  try {
+    const response = await fetch(`${apiUrl}/SalaryAdvance/all`, {
+      method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+      },
+    });
+    console.log("Response from all employee salary advances:", response);
+
+    if (!response.ok) {
+      throw new Error("Error en la solicitud: " + response.statusText);
+    }
+
+    const json = (await response.json()) as EmployeeSalaryAdvanceAll[];
+    return json;
+  } catch (error) {
+    console.error("Error al obtener todas las faltas de los empleados:", error);
+    throw error;
+  }
+}
+
 
 //Listar adelanto de sueldo por id de empleado
 export async function GetSalaryAdvanceByEmployeeId(

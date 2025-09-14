@@ -160,7 +160,7 @@ export default function EmployeeSalaryAdvance() {
       <section className="w-full mx-auto mt-4 h-full px-2 sm:px-4 md:px-8">
         <div className="dark:bg-neutral-900 text-black dark:text-white rounded-2xl shadow-sm px-4 sm:px-6 md:px-12 pb-8">
           <h2 className="text-xl text-blue-900 dark:text-blue-500 sm:text-2xl font-bold mb-6 pt-8 text-center md:text-left">
-           Adelanto de Sueldo de Empleados
+            Adelanto de Sueldo de Empleados
           </h2>
 
           {/* Selector de Empleado */}
@@ -267,7 +267,6 @@ export default function EmployeeSalaryAdvance() {
                   id="aprobado"
                   checked={isApproved}
                   onCheckedChange={(checked) => setIsApproved(Boolean(checked))}
-                  
                 />
                 <Label htmlFor="aprobado">Aprobado</Label>
               </div>
@@ -288,7 +287,9 @@ export default function EmployeeSalaryAdvance() {
               <Button
                 variant="reset"
                 type="button"
-                onClick={() => router.push("/dashboard/main")}
+                onClick={() =>
+                  router.push("/dashboard/employeeSalaryAdvanceList")
+                }
                 className="w-full sm:w-64"
               >
                 <Eye className="text-base" />
