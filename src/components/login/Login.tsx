@@ -11,6 +11,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import "../../style/loader.css";
 
 const Login = () => {
   const router = useRouter();
@@ -78,7 +79,10 @@ const Login = () => {
       console.error("Error al iniciar sesión:", error);
       toast.error("Error al autenticarte. Intenta nuevamente.");
     } finally {
-      setIsLoading(false);
+      // Espera 1 segundo antes de ocultar el loader
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 8000); // 8 segundos de retraso
     }
   };
 
@@ -96,9 +100,6 @@ const Login = () => {
                 className="object-cover block"
                 priority
               /> */}
-              {/* <h2 className="px-3 lg:text-2xl text-md font-bold lg:leading-[57px] text-blue-800 font-serif italic">
-                Tu mejor aliado en la construcción.
-              </h2> */}
               <h1>Gustavodev</h1>
             </div>
 
@@ -175,6 +176,12 @@ const Login = () => {
                 >
                   {isLoading ? "Cargando..." : "Iniciar Sesión"}
                 </Button>
+                {isLoading && (
+                  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
+                  <div className="loader"></div>
+                  </div>
+                )}
+                {/* Asegúrate de que se renderice solo si isLoading es true */}
               </div>
 
               <div className="space-x-6 flex justify-center">

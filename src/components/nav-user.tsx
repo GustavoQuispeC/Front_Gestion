@@ -1,20 +1,12 @@
 "use client";
 
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-  Sparkles,
-} from "lucide-react";
-
 import { useEffect, useState } from "react";
+
+import { ChevronsUpDown, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -26,6 +18,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import Link from "next/link";
 
 type User = {
   username: string;
@@ -36,24 +29,37 @@ type User = {
 export function NavUser() {
   const { isMobile } = useSidebar();
   const [user, setUser] = useState<User | null>(null);
+  const [mounted, setMounted] = useState(false); // Estado para verificar si el componente se ha montado
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      try {
-        const parsed = JSON.parse(storedUser);
-        setUser({
-          username: parsed.username,
-          photoUrl: parsed.photoUrl,
-          roles: parsed.roles || [],
-        });
-      } catch (error) {
-        console.error("Error parsing user from localStorage", error);
-      }
-    }
+    setMounted(true); // Garantiza que solo se ejecute después de que el componente esté montado
   }, []);
 
-  if (!user) return null;
+  useEffect(() => {
+    if (mounted) {
+      if (typeof window !== 'undefined') {
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+          try {
+            const parsed = JSON.parse(storedUser);
+            setUser({
+              username: parsed.username,
+              photoUrl: parsed.photoUrl,
+              roles: parsed.roles || [],
+            });
+          } catch (error) {
+            console.error("Error parsing user from localStorage", error);
+          }
+        }
+      }
+    }
+  }, [mounted]);
+
+  const logout = () => {
+    localStorage.clear(); // Limpiar localStorage al cerrar sesión
+  };
+
+  if (!mounted || !user) return null;
 
   return (
     <SidebarMenu>
@@ -61,17 +67,21 @@ export function NavUser() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
+              aria-label="Menú de usuario"
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.photoUrl} alt={user.username} />
+                <AvatarImage
+                  src={user.photoUrl || "/path/to/default/avatar.png"}
+                  alt={user.username}
+                />
                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{user.username}</span>
                 <span className="truncate text-xs">
-                  {user.roles[0] || "Sin rol"}
+                  {user.roles.join(", ") || "Sin rol"}
                 </span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
@@ -86,38 +96,28 @@ export function NavUser() {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.photoUrl} alt={user.username} />
+                  <AvatarImage
+                    src={user.photoUrl || "/path/to/default/avatar.png"}
+                    alt={user.username}
+                  />
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{user.username}</span>
                   <span className="truncate text-xs">
-                    {user.roles[0] || "Sin rol"}
+                    {user.roles.join(", ") || "Sin rol"}
                   </span>
                 </div>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            
-            
-            {/* <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
-            </DropdownMenuGroup> */}
-            
+
             <DropdownMenuItem>
-              <LogOut />
-              Cerrar Sesión
+              {/* Link que redirige a "/" (home) después de cerrar sesión */}
+              <Link href="/" onClick={logout} className="flex items-center gap-2">
+                <LogOut />
+                Cerrar Sesión
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
