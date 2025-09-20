@@ -61,7 +61,7 @@ export default function EmployeeSalaryAdvanceList() {
                 <TableCell>{e.lastNameFather}</TableCell>
                 <TableCell>{e.lastNameMother}</TableCell>
                 <TableCell>{e.firstName}</TableCell>
-                <TableCell>{e.amount}</TableCell>
+                <TableCell>S/ {e.amount.toFixed(2)}</TableCell>
                 <TableCell>
                   {new Date(e.createdAt).toLocaleDateString("es-PE", {
                     year: "numeric",
