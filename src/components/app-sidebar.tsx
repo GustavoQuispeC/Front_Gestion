@@ -63,6 +63,21 @@ const data = {
       ],
     },
     {
+      title: "Proveedores",
+      url: "#",
+      icon: UserLock,
+      items: [
+        {
+          title: "Lista de Proveedores",
+          url: "/dashboard/proveedorList",
+        },
+        {
+          title: "Registro de Proveedores",
+          url: "/dashboard/proveedorRegister",
+        },
+      ],
+    },
+    {
       title: "Empleados",
       url: "#",
       icon: CircleUserRound,
