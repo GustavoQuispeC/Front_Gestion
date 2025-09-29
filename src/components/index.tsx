@@ -20,4 +20,4 @@ export { default as EmployeeSelect } from "./employeeControl/subcomponentes/Empl
 export { default as Products } from "./products/Products";
 export { default as ProductFilterSidebar } from "./ProductFilterSidebar/ProductFilterSidebar";
 export { default as EmployeeSalaryAdvanceList } from "./employeeControl/employeeSalaryAdvanceList/EmployeeSalaryAdvanceList";
-export { default as ProveedorList } from "./proveedor/proveedorList/Proveedor";
+export { default as ProveedorList } from "./proveedor/proveedorList/ProveedorList";

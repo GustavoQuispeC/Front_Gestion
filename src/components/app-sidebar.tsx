@@ -30,9 +30,9 @@ import {
 const data = {
   teams: [
     {
-      name: "Acme Inc",
+      name: "Gusstavo Dev.",
       logo: GalleryVerticalEnd,
-      plan: "Enterprise",
+      plan: "Desarrollo",
     },
     {
       name: "Acme Corp.",
