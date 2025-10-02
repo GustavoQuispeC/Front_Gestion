@@ -1,9 +1,9 @@
-import { ProveedorList } from "@/components";
+import { ProveedorListar } from "@/components";
 
 const proveedorList = () => {
   return (
     <>
-      <ProveedorList />
+      <ProveedorListar />
     </>
   );
 };

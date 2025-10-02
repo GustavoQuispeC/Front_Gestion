@@ -30,7 +30,7 @@ import { getAllProveedores } from "@/helpers/proveedor.helper";
 import { toast } from "react-toastify";
 import { ListarProveedoresProps } from "@/types/proveedor";
 
-export default function ProveedorList() {
+export default function ProveedorListar() {
   const [proveedores, setProveedores] = useState<ListarProveedoresProps[]>([]);
 
   //funcion para obtener los proveedores

@@ -69,11 +69,11 @@ const data = {
       items: [
         {
           title: "Lista de Proveedores",
-          url: "/dashboard/proveedorList",
+          url: "/dashboard/proveedorListar",
         },
         {
           title: "Registro de Proveedores",
-          url: "/dashboard/proveedorRegister",
+          url: "/dashboard/proveedorRegistrar",
         },
       ],
     },
