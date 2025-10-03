@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import {
   Table,
   TableBody,
@@ -57,7 +57,7 @@ export default function ProveedorListar() {
         </h2>
 
         <Link
-          href="/dashboard/proveedorRegister"
+          href="/dashboard/proveedorRegistrar"
           className=" inline-flex items-center text-primary hover:underline font-small font-semibold text-base"
         >
           <CirclePlus size={18} className="mr-1" />
