@@ -7,3 +7,11 @@ export interface ListarProveedoresProps {
     createdAt:   Date;
     isActive:    boolean;
 }
+
+export interface ProveedorRegistrarProps {
+    razonSocial: string;
+    ruc:         string;
+    telefono:    string;
+    direccion:   string;
+    isActive:    boolean;
+}
