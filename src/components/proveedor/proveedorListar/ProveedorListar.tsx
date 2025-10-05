@@ -26,7 +26,7 @@ import { es } from "date-fns/locale";
 import { format } from "date-fns";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { getAllProveedores } from "@/helpers/proveedor.helper";
+import { ProveedoresListar } from "@/helpers/proveedor.helper";
 import { toast } from "react-toastify";
 import { ListarProveedoresProps } from "@/types/proveedor";
 
@@ -36,7 +36,7 @@ export default function ProveedorListar() {
   //funcion para obtener los proveedores
   const getProveedores = async () => {
     try {
-      const proveedoresData = await getAllProveedores();
+      const proveedoresData = await ProveedoresListar();
       setProveedores(proveedoresData);
     } catch (error) {
       console.error("Error al obtener los proveedores:", error);

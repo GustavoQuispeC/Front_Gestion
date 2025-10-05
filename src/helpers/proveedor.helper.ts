@@ -1,10 +1,9 @@
 import { ProveedorRegistrarProps } from '@/types/proveedor';
-import ProveedorRegistrar from '../components/proveedor/proveedorRegistrar/ProveedorRegistrar';
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 
 //Listar todos los proveedores
-export async function getAllProveedores() {
+export async function ProveedoresListar() {
   try {
     const response = await fetch(`${apiUrl}/proveedor`, {
       method: "GET",
@@ -24,12 +23,13 @@ export async function getAllProveedores() {
 }
 
 //Registrar un nuevo proveedor
-export async function proveedorRegistrar(formData: ProveedorRegistrarProps) {
+export async function registrarProveedor(formData: ProveedorRegistrarProps, token:string) {
   try {
-    const response = await fetch(`${apiUrl}/proveedor`, {
+    const response = await fetch(`${apiUrl}/proveedor/registrar`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(formData),
     });
