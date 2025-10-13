@@ -1,3 +1,4 @@
+
 export { default as HeroWithCarousel } from "./carousel/HeroWithCarousel";
 export { default as ComplexNavbar } from "./navbar/ComplexNavbar";
 export { default as Footer } from "./footer/Footer";
@@ -22,3 +23,4 @@ export { default as ProductFilterSidebar } from "./ProductFilterSidebar/ProductF
 export { default as EmployeeSalaryAdvanceList } from "./employeeControl/employeeSalaryAdvanceList/EmployeeSalaryAdvanceList";
 export { default as ProveedorListar } from "./proveedor/proveedorListar/ProveedorListar";
 export { default as ProveedorRegistrar } from "./proveedor/proveedorRegistrar/ProveedorRegistrar";
+export { default as ProductoRegistrar} from "./Producto/productoRegistrar/ProductoRegistrar";

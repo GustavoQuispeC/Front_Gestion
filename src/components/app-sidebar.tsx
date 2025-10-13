@@ -58,7 +58,7 @@ const data = {
         },
         {
           title: "Registro de productos",
-          url: "#",
+          url: "/dashboard/productoRegistrar",
         },
       ],
     },
