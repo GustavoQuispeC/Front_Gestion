@@ -1,5 +1,5 @@
 export interface ListarProveedoresProps {
-    proveedorId: number;
+    proveedorId: string;
     razonSocial: string;
     ruc:         string;
     telefono:    string;

@@ -5,5 +5,5 @@ export interface ProductoRegistrarProps {
     precio:      number;
     stock:       number;
     imageUrl:    string;
-    proveedorId: number;
+    proveedorId: string ;
 }

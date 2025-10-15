@@ -1,8 +1,18 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { registrarProducto } from "@/helpers/producto.helper";
+import { ProveedoresListar } from "@/helpers/proveedor.helper";
 import { ProductoRegistrarProps } from "@/types/producto";
+import { ListarProveedoresProps } from "@/types/proveedor";
 import { Label } from "@radix-ui/react-label";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -17,11 +27,12 @@ export default function ProductoRegistrar() {
       descripcion: "",
       precio: 0,
       stock: 0,
-      proveedorId: 0,
+      proveedorId: "",
       imageUrl: "",
     });
 
   const [token, setToken] = useState<string>("");
+  const [proveedor, setProveedor] = useState<ListarProveedoresProps[]>([]);
 
   //! validación de permisos
   useEffect(() => {
@@ -34,21 +45,41 @@ export default function ProductoRegistrar() {
       !storedToken
     ) {
       setHasPermission(false);
+    } else {
       setToken(storedToken);
+      ListarProveedores();
     }
   }, []);
 
-  // limpiar formulario
+  //! limpiar formulario
   const handleReset = () => {
     setProductoRegistrar({
       descripcion: "",
-      precio: 0,
-      stock: 0,
-      proveedorId: 0,
+      precio: 0.00,
+      stock: 0.00,
+      proveedorId: "",
       imageUrl: "",
     });
   };
-  // función para registrar el producto
+
+  //!Funcion para obtener los proveedores
+  const ListarProveedores = async () => {
+    try {
+      const proveedoresData = await ProveedoresListar();
+      setProveedor(proveedoresData);
+    } catch (e) {
+      toast.error("Error al listar los proveedores");
+      console.error("Error al listar proveedores:", e);
+    }
+  };
+  //! Función para manejar el cambio del proveedor
+  const handleProveedorChange = (value: string) => {
+    setProductoRegistrar({
+      ...productoRegistrar,
+      proveedorId: value,
+    });
+  };
+  //! función para registrar el producto
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (
@@ -66,7 +97,7 @@ export default function ProductoRegistrar() {
       ...productoRegistrar,
       precio: Number(productoRegistrar.precio),
       stock: Number(productoRegistrar.stock),
-      proveedorId: Number(productoRegistrar.proveedorId),
+      proveedorId: productoRegistrar.proveedorId,
     };
 
     try {
@@ -143,8 +174,8 @@ export default function ProductoRegistrar() {
           <Label className="mb-2 mx-10">Precio</Label>
           <div className="relative flex items-center mx-10">
             <Input
-              type="text"
-              placeholder="Precio"
+              type="number"
+              placeholder="0.00"
               id="precio"
               value={productoRegistrar.precio}
               onChange={(e) =>
@@ -161,8 +192,8 @@ export default function ProductoRegistrar() {
           <Label className="mb-2 mx-10">Stock</Label>
           <div className="relative flex items-center mx-10">
             <Input
-              type="text"
-              placeholder="Stock"
+              type="number"
+              placeholder="0.00"
               id="stock"
               value={productoRegistrar.stock}
               onChange={(e) =>
@@ -177,7 +208,28 @@ export default function ProductoRegistrar() {
 
         <div>
           <Label className="mb-2 mx-10">Proveedor</Label>
-          <div className="relative flex items-center mx-10"></div>
+          <div className="relative flex items-center mx-10">
+            <Select
+              value={productoRegistrar.proveedorId.toString()}
+              onValueChange={handleProveedorChange}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Seleccione un proveedor" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {proveedor.map((proveedor) => (
+                    <SelectItem
+                      key={proveedor.proveedorId}
+                      value={proveedor.proveedorId}
+                    >
+                      {proveedor.razonSocial}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
 
