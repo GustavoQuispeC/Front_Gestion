@@ -19,9 +19,16 @@ import { useEffect, useState } from "react";
 import { FaBrush, FaSave } from "react-icons/fa";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { toast } from "react-toastify";
+import Image from "next/image";
+import { uploadProductoImagen } from "@/helpers/uploadProductoImagenToFirebase";
 
 export default function ProductoRegistrar() {
-  const [hasPermission, setHasPermission] = useState<boolean>(true);
+  const [hasPermission, setHasPermission] = useState(true);
+  const [token, setToken] = useState("");
+  const [proveedor, setProveedor] = useState<ListarProveedoresProps[]>([]);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+
   const [productoRegistrar, setProductoRegistrar] =
     useState<ProductoRegistrarProps>({
       descripcion: "",
@@ -31,14 +38,12 @@ export default function ProductoRegistrar() {
       imageUrl: "",
     });
 
-  const [token, setToken] = useState<string>("");
-  const [proveedor, setProveedor] = useState<ListarProveedoresProps[]>([]);
-
-  //! validación de permisos
+  //! Validación de permisos
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
     const role = user?.roles?.[0];
     const storedToken = user?.token;
+
     if (
       !role ||
       !["Administrador", "Supervisor"].includes(role) ||
@@ -51,18 +56,7 @@ export default function ProductoRegistrar() {
     }
   }, []);
 
-  //! limpiar formulario
-  const handleReset = () => {
-    setProductoRegistrar({
-      descripcion: "",
-      precio: 0.00,
-      stock: 0.00,
-      proveedorId: "",
-      imageUrl: "",
-    });
-  };
-
-  //!Funcion para obtener los proveedores
+  //! Obtener lista de proveedores
   const ListarProveedores = async () => {
     try {
       const proveedoresData = await ProveedoresListar();
@@ -72,22 +66,55 @@ export default function ProductoRegistrar() {
       console.error("Error al listar proveedores:", e);
     }
   };
-  //! Función para manejar el cambio del proveedor
-  const handleProveedorChange = (value: string) => {
+
+  //! Limpiar formulario
+  const handleReset = () => {
     setProductoRegistrar({
-      ...productoRegistrar,
-      proveedorId: value,
+      descripcion: "",
+      precio: 0,
+      stock: 0,
+      proveedorId: "",
+      imageUrl: "",
     });
+    setPreviewUrl(null);
+    setSelectedImage(null);
   };
-  //! función para registrar el producto
-  const handleRegister = async (e: React.FormEvent) => {
+
+  //! Cambio de proveedor
+  const handleProveedorChange = (value: string) => {
+    setProductoRegistrar({ ...productoRegistrar, proveedorId: value });
+  };
+
+  //! Manejar cambios en los inputs
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, files } = e.target;
+
+    if (type === "file" && files && files.length > 0) {
+      const file = files[0];
+      setSelectedImage(file);
+      const imageUrl = URL.createObjectURL(file);
+      setPreviewUrl(imageUrl);
+      setProductoRegistrar((prev) => ({ ...prev, imageUrl }));
+    } else {
+      setProductoRegistrar((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  //! Registrar producto
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    let uploadedImageUrl = "";
+    if (selectedImage) {
+      uploadedImageUrl = await uploadProductoImagen(selectedImage);
+    }
+    const finalImageUrl = uploadedImageUrl || productoRegistrar.imageUrl;
+
     if (
       !productoRegistrar.descripcion ||
       !productoRegistrar.precio ||
       !productoRegistrar.stock ||
-      !productoRegistrar.proveedorId ||
-      !productoRegistrar.imageUrl
+      !productoRegistrar.proveedorId
     ) {
       toast.error("Por favor, complete todos los campos");
       return;
@@ -95,9 +122,9 @@ export default function ProductoRegistrar() {
 
     const productoRegistrarData = {
       ...productoRegistrar,
-      precio: Number(productoRegistrar.precio),
-      stock: Number(productoRegistrar.stock),
-      proveedorId: productoRegistrar.proveedorId,
+      precio: productoRegistrar.precio,
+      stock: productoRegistrar.stock,
+      imageUrl: finalImageUrl,
     };
 
     try {
@@ -105,45 +132,46 @@ export default function ProductoRegistrar() {
       if (response?.message === "Producto registrado correctamente") {
         toast.success("Producto registrado con éxito.");
         handleReset();
-      } else if (response?.message) {
-        toast.error(response.message);
-      } else if (response?.error) {
-        toast.error(response.error);
       } else {
-        toast.error("Error al registrar el producto");
+        toast.error(
+          response?.message ||
+            response?.error ||
+            "Error al registrar el producto"
+        );
       }
     } catch (error) {
       console.error("Error al registrar el producto:", error);
-      if (error instanceof Error && error.message) {
-        toast.error(error.message);
-      } else {
-        toast.error("Error desconocido al registrar el producto");
-      }
+      toast.error(
+        error instanceof Error && error.message
+          ? error.message
+          : "Error desconocido al registrar el producto"
+      );
     }
   };
 
-  // Si no tiene permisos
+  console.log(productoRegistrar);
+
+  //! Si no tiene permisos
   if (!hasPermission) {
     return (
-      <div className="p-6">
-        <div className="text-center">
-          <h2 className="text-3xl font-semibold text-red-600">
-            Lo siento, no tiene permisos suficientes
-          </h2>
-          <p className="text-xl mt-2">
-            Por favor comuníquese con el administrador del sistema.
-          </p>
-          <Link href="/dashboard/main">
-            <Button className="mt-6 px-4 py-2">Volver al Dashboard</Button>
-          </Link>
-        </div>
+      <div className="p-6 text-center">
+        <h2 className="text-3xl font-semibold text-red-600">
+          Lo siento, no tiene permisos suficientes
+        </h2>
+        <p className="text-xl mt-2">
+          Por favor comuníquese con el administrador del sistema.
+        </p>
+        <Link href="/dashboard/main">
+          <Button className="mt-6 px-4 py-2">Volver al Dashboard</Button>
+        </Link>
       </div>
     );
   }
 
+  //! Render
   return (
     <form
-      onSubmit={handleRegister}
+      onSubmit={handleSubmit}
       onReset={handleReset}
       className="w-full max-w-5xl mx-auto mt-10 p-6 bg-white dark:bg-neutral-900 shadow-lg rounded-xl"
     >
@@ -151,21 +179,16 @@ export default function ProductoRegistrar() {
         Registro de Productos
       </h2>
 
-      <div className="grid sm:grid-cols-2 gap-6 ">
+      <div className="grid sm:grid-cols-2 gap-6">
         <div>
           <Label className="mb-2 mx-10">Descripción</Label>
           <div className="relative flex items-center mx-10">
             <Input
               type="text"
+              name="descripcion"
               placeholder="Ingrese nombre"
-              id="razonSocial"
               value={productoRegistrar.descripcion}
-              onChange={(e) =>
-                setProductoRegistrar({
-                  ...productoRegistrar,
-                  descripcion: e.target.value,
-                })
-              }
+              onChange={handleChange}
             />
           </div>
         </div>
@@ -175,15 +198,10 @@ export default function ProductoRegistrar() {
           <div className="relative flex items-center mx-10">
             <Input
               type="number"
+              name="precio"
               placeholder="0.00"
-              id="precio"
               value={productoRegistrar.precio}
-              onChange={(e) =>
-                setProductoRegistrar({
-                  ...productoRegistrar,
-                  precio: Number(e.target.value),
-                })
-              }
+              onChange={handleChange}
             />
           </div>
         </div>
@@ -193,15 +211,10 @@ export default function ProductoRegistrar() {
           <div className="relative flex items-center mx-10">
             <Input
               type="number"
-              placeholder="0.00"
-              id="stock"
+              name="stock"
+              placeholder="0"
               value={productoRegistrar.stock}
-              onChange={(e) =>
-                setProductoRegistrar({
-                  ...productoRegistrar,
-                  stock: Number(e.target.value),
-                })
-              }
+              onChange={handleChange}
             />
           </div>
         </div>
@@ -210,7 +223,7 @@ export default function ProductoRegistrar() {
           <Label className="mb-2 mx-10">Proveedor</Label>
           <div className="relative flex items-center mx-10">
             <Select
-              value={productoRegistrar.proveedorId.toString()}
+              value={productoRegistrar.proveedorId}
               onValueChange={handleProveedorChange}
             >
               <SelectTrigger className="w-full">
@@ -218,18 +231,52 @@ export default function ProductoRegistrar() {
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  {proveedor.map((proveedor) => (
+                  {proveedor.map((p) => (
                     <SelectItem
-                      key={proveedor.proveedorId}
-                      value={proveedor.proveedorId}
+                      key={p.proveedorId}
+                      value={p.proveedorId.toString()}
                     >
-                      {proveedor.razonSocial}
+                      {p.razonSocial}
                     </SelectItem>
                   ))}
                 </SelectGroup>
               </SelectContent>
             </Select>
           </div>
+        </div>
+
+        {/* Adjuntar Foto */}
+        <div className="flex flex-col mx-10">
+          <Label htmlFor="imageUrl" className="font-medium mb-3 block">
+            Adjuntar imagen del producto
+          </Label>
+
+          <Input
+            type="file"
+            id="imageUrl"
+            name="imageUrl"
+            accept="image/*"
+            onChange={handleChange}
+            className="border border-gray-300 rounded-md p-2"
+          />
+
+          <p className="text-xs text-slate-500 mt-2">
+            Solo se permiten archivos .jpg, .jpeg y .png
+          </p>
+
+          {previewUrl && (
+            <div className="mt-4">
+              <p className="text-sm text-slate-700 mb-2">Vista previa:</p>
+              <Image
+                src={previewUrl}
+                alt="Vista previa"
+                className="object-cover rounded-lg border"
+                width={160}
+                height={192}
+                style={{ height: "auto" }}
+              />
+            </div>
+          )}
         </div>
       </div>
 
