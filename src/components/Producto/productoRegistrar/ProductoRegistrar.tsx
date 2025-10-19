@@ -36,6 +36,8 @@ export default function ProductoRegistrar() {
       stock: 0,
       proveedorId: "",
       imageUrl: "",
+      categoriaId: "",
+      marcaId: "",
     });
 
   //! Validación de permisos
@@ -75,6 +77,8 @@ export default function ProductoRegistrar() {
       stock: 0,
       proveedorId: "",
       imageUrl: "",
+      categoriaId: "",
+      marcaId: "",
     });
     setPreviewUrl(null);
     setSelectedImage(null);
@@ -114,7 +118,10 @@ export default function ProductoRegistrar() {
       !productoRegistrar.descripcion ||
       !productoRegistrar.precio ||
       !productoRegistrar.stock ||
-      !productoRegistrar.proveedorId
+      !productoRegistrar.proveedorId ||
+      !productoRegistrar.marcaId ||
+      !productoRegistrar.categoriaId
+
     ) {
       toast.error("Por favor, complete todos los campos");
       return;

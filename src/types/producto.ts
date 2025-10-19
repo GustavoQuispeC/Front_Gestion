@@ -6,4 +6,6 @@ export interface ProductoRegistrarProps {
   stock: number;
   imageUrl: string;
   proveedorId: string;
+  marcaId : string;
+  categoriaId: string;
 }
