@@ -26,6 +26,29 @@ import { ListarMarcas } from "@/helpers/marca.helper";
 import { Categorias } from "@/types/categoria";
 import { ListarCategorias } from "@/helpers/categoria.helper";
 
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText,
+} from "@/components/ui/input-group";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { Check, ChevronsUpDown } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
 export default function ProductoRegistrar() {
   const [hasPermission, setHasPermission] = useState(true);
   const [token, setToken] = useState("");
@@ -34,6 +57,7 @@ export default function ProductoRegistrar() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [marcas, setMarcas] = useState<Marcas[]>([]);
   const [categorias, setCategorias] = useState<Categorias[]>([]);
+  const [open, setOpen] = useState(false);
 
   const [productoRegistrar, setProductoRegistrar] =
     useState<ProductoRegistrarProps>({
@@ -236,16 +260,26 @@ export default function ProductoRegistrar() {
           </div>
         </div>
 
+        {/* Precio */}
         <div>
           <Label className="mb-2 mx-10">Precio</Label>
           <div className="relative flex items-center mx-10">
-            <Input
-              type="number"
-              name="precio"
-              placeholder="0.00"
-              value={productoRegistrar.precio}
-              onChange={handleChange}
-            />
+            <InputGroup>
+              <InputGroupAddon>
+                <InputGroupText>S/</InputGroupText>
+              </InputGroupAddon>
+              <InputGroupInput
+                type="number"
+                name="precio"
+                placeholder="0.00"
+                value={productoRegistrar.precio}
+                onChange={handleChange}
+                step="0.01"
+              />
+              <InputGroupAddon align="inline-end">
+                <InputGroupText />
+              </InputGroupAddon>
+            </InputGroup>
           </div>
         </div>
 
@@ -262,6 +296,7 @@ export default function ProductoRegistrar() {
           </div>
         </div>
 
+        {/*select de proveedor*/}
         <div>
           <Label className="mb-2 mx-10">Proveedor</Label>
           <div className="relative flex items-center mx-10">
@@ -288,7 +323,7 @@ export default function ProductoRegistrar() {
           </div>
         </div>
 
-        {/*select de categoria*/}
+        {/*select de marcas */}
         <div>
           <Label className="mb-2 mx-10">Marcas</Label>
           <div className="relative flex items-center mx-10">
@@ -316,26 +351,61 @@ export default function ProductoRegistrar() {
         <div>
           <Label className="mb-2 mx-10">Categorias</Label>
           <div className="relative flex items-center mx-10">
-            <Select
-              value={productoRegistrar.categoriaId}
-              onValueChange={handleChangeCategoria}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Seleccione una categoria" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {categorias.map((c) => (
-                    <SelectItem
-                      key={c.categoriaId}
-                      value={c.categoriaId.toString()}
-                    >
-                      {c.nombre}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={open}
+                  // El ancho debe ser 100% para ajustarse al grid
+                  className="w-full justify-between"
+                >
+                  {productoRegistrar.categoriaId
+                    ? categorias.find(
+                        (categoria) =>
+                          categoria.categoriaId.toString() ===
+                          productoRegistrar.categoriaId
+                      )?.nombre
+                    : "Seleccione categoría..."}
+                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[350px] p-0">
+                <Command>
+                  <CommandInput
+                    placeholder="Buscar categoria..."
+                    className="h-9"
+                  />
+                  <CommandList>
+                    <CommandEmpty>Categoría no encontrada.</CommandEmpty>
+                    <CommandGroup>
+                      {categorias.map((c) => (
+                        <CommandItem
+                          key={c.categoriaId}
+                          value={c.nombre} // Usar el nombre para la búsqueda
+                          onSelect={() => {
+                            // Actualizar directamente la clave foránea en el estado principal
+                            handleChangeCategoria(c.categoriaId.toString());
+                            setOpen(false);
+                          }}
+                        >
+                          {c.nombre}
+                          <Check
+                            className={cn(
+                              "ml-auto h-4 w-4",
+                              productoRegistrar.categoriaId ===
+                                c.categoriaId.toString()
+                                ? "opacity-100"
+                                : "opacity-0"
+                            )}
+                          />
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
 
