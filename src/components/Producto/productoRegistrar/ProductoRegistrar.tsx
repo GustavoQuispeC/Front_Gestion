@@ -21,6 +21,10 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import { uploadProductoImagen } from "@/helpers/uploadProductoImagenToFirebase";
+import { Marcas } from "../../../types/marca";
+import { ListarMarcas } from "@/helpers/marca.helper";
+import { Categorias } from "@/types/categoria";
+import { ListarCategorias } from "@/helpers/categoria.helper";
 
 export default function ProductoRegistrar() {
   const [hasPermission, setHasPermission] = useState(true);
@@ -28,6 +32,8 @@ export default function ProductoRegistrar() {
   const [proveedor, setProveedor] = useState<ListarProveedoresProps[]>([]);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [marcas, setMarcas] = useState<Marcas[]>([]);
+  const [categorias, setCategorias] = useState<Categorias[]>([]);
 
   const [productoRegistrar, setProductoRegistrar] =
     useState<ProductoRegistrarProps>({
@@ -55,6 +61,8 @@ export default function ProductoRegistrar() {
     } else {
       setToken(storedToken);
       ListarProveedores();
+      ObtenerMarcas();
+      ObtenerCategorias();
     }
   }, []);
 
@@ -67,6 +75,40 @@ export default function ProductoRegistrar() {
       toast.error("Error al listar los proveedores");
       console.error("Error al listar proveedores:", e);
     }
+  };
+  //! Cambio de proveedor
+  const handleChangeProveedor = (value: string) => {
+    setProductoRegistrar({ ...productoRegistrar, proveedorId: value });
+  };
+
+  //! Obtener lista de marcas
+  const ObtenerMarcas = async () => {
+    try {
+      const marcasData = await ListarMarcas();
+      setMarcas(marcasData);
+    } catch (e) {
+      toast.error("Error al listar las marcas");
+      console.error("Error al listar marcas:", e);
+    }
+  };
+  //!Cambio de marca
+  const handleChangeMarca = (value: string) => {
+    setProductoRegistrar({ ...productoRegistrar, marcaId: value });
+  };
+
+  //! Obtener lista de categorias
+  const ObtenerCategorias = async () => {
+    try {
+      const categoriasData = await ListarCategorias();
+      setCategorias(categoriasData);
+    } catch (error) {
+      toast.error("Error al listar las categorias");
+      console.error("Error al listar categorias:", error);
+    }
+  };
+  //!Cambio de categoria
+  const handleChangeCategoria = (value: string) => {
+    setProductoRegistrar({ ...productoRegistrar, categoriaId: value });
   };
 
   //! Limpiar formulario
@@ -82,11 +124,6 @@ export default function ProductoRegistrar() {
     });
     setPreviewUrl(null);
     setSelectedImage(null);
-  };
-
-  //! Cambio de proveedor
-  const handleProveedorChange = (value: string) => {
-    setProductoRegistrar({ ...productoRegistrar, proveedorId: value });
   };
 
   //! Manejar cambios en los inputs
@@ -121,7 +158,6 @@ export default function ProductoRegistrar() {
       !productoRegistrar.proveedorId ||
       !productoRegistrar.marcaId ||
       !productoRegistrar.categoriaId
-
     ) {
       toast.error("Por favor, complete todos los campos");
       return;
@@ -231,7 +267,7 @@ export default function ProductoRegistrar() {
           <div className="relative flex items-center mx-10">
             <Select
               value={productoRegistrar.proveedorId}
-              onValueChange={handleProveedorChange}
+              onValueChange={handleChangeProveedor}
             >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Seleccione un proveedor" />
@@ -244,6 +280,57 @@ export default function ProductoRegistrar() {
                       value={p.proveedorId.toString()}
                     >
                       {p.razonSocial}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        {/*select de categoria*/}
+        <div>
+          <Label className="mb-2 mx-10">Marcas</Label>
+          <div className="relative flex items-center mx-10">
+            <Select
+              value={productoRegistrar.marcaId}
+              onValueChange={handleChangeMarca}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Seleccione una marca" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {marcas.map((m) => (
+                    <SelectItem key={m.marcaId} value={m.marcaId.toString()}>
+                      {m.nombre}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        {/*select de categoria*/}
+        <div>
+          <Label className="mb-2 mx-10">Categorias</Label>
+          <div className="relative flex items-center mx-10">
+            <Select
+              value={productoRegistrar.categoriaId}
+              onValueChange={handleChangeCategoria}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Seleccione una categoria" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {categorias.map((c) => (
+                    <SelectItem
+                      key={c.categoriaId}
+                      value={c.categoriaId.toString()}
+                    >
+                      {c.nombre}
                     </SelectItem>
                   ))}
                 </SelectGroup>
