@@ -57,7 +57,8 @@ export default function ProductoRegistrar() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [marcas, setMarcas] = useState<Marcas[]>([]);
   const [categorias, setCategorias] = useState<Categorias[]>([]);
-  const [open, setOpen] = useState(false);
+  const [openMarcas, setOpenMarcas] = useState(false);
+  const [openCategorias, setOpenCategorias] = useState(false);
 
   const [productoRegistrar, setProductoRegistrar] =
     useState<ProductoRegistrarProps>({
@@ -116,7 +117,7 @@ export default function ProductoRegistrar() {
     }
   };
   //!Cambio de marca
-  const handleChangeMarca = (value: string) => {
+  const handleChangeMarcas = (value: string) => {
     setProductoRegistrar({ ...productoRegistrar, marcaId: value });
   };
 
@@ -327,7 +328,7 @@ export default function ProductoRegistrar() {
         <div>
           <Label className="mb-2 mx-10">Marcas</Label>
           <div className="relative flex items-center mx-10">
-            <Select
+            {/* <Select
               value={productoRegistrar.marcaId}
               onValueChange={handleChangeMarca}
             >
@@ -343,7 +344,58 @@ export default function ProductoRegistrar() {
                   ))}
                 </SelectGroup>
               </SelectContent>
-            </Select>
+            </Select> */}
+
+            <Popover open={openMarcas} onOpenChange={setOpenMarcas}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={openMarcas}
+                  // El ancho debe ser 100% para ajustarse al grid
+                  className="w-full justify-between"
+                >
+                  {productoRegistrar.marcaId
+                    ? marcas.find(
+                        (marca) =>
+                          marca.marcaId.toString() === productoRegistrar.marcaId
+                      )?.nombre
+                    : "Seleccione marca..."}
+                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[350px] p-0">
+                <Command>
+                  <CommandInput placeholder="Buscar marca..." className="h-9" />
+                  <CommandList>
+                    <CommandEmpty>Marca no encontrada.</CommandEmpty>
+                    <CommandGroup>
+                      {marcas.map((m) => (
+                        <CommandItem
+                          key={m.marcaId}
+                          value={m.nombre} // Usar el nombre para la búsqueda
+                          onSelect={() => {
+                            // Actualizar directamente la clave foránea en el estado principal
+                            handleChangeMarcas(m.marcaId.toString());
+                            setOpenMarcas(false);
+                          }}
+                        >
+                          {m.nombre}
+                          <Check
+                            className={cn(
+                              "ml-auto h-4 w-4",
+                              productoRegistrar.marcaId === m.marcaId.toString()
+                                ? "opacity-100"
+                                : "opacity-0"
+                            )}
+                          />
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
 
@@ -351,12 +403,12 @@ export default function ProductoRegistrar() {
         <div>
           <Label className="mb-2 mx-10">Categorias</Label>
           <div className="relative flex items-center mx-10">
-            <Popover open={open} onOpenChange={setOpen}>
+            <Popover open={openCategorias} onOpenChange={setOpenCategorias}>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
                   role="combobox"
-                  aria-expanded={open}
+                  aria-expanded={openCategorias}
                   // El ancho debe ser 100% para ajustarse al grid
                   className="w-full justify-between"
                 >
@@ -386,7 +438,7 @@ export default function ProductoRegistrar() {
                           onSelect={() => {
                             // Actualizar directamente la clave foránea en el estado principal
                             handleChangeCategoria(c.categoriaId.toString());
-                            setOpen(false);
+                            setOpenCategorias(false);
                           }}
                         >
                           {c.nombre}
