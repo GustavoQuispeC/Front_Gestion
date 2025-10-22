@@ -9,3 +9,19 @@ export interface ProductoRegistrarProps {
   marcaId : string;
   categoriaId: string;
 }
+
+export interface ProductoListarProps {
+    descripcion: string;
+    precio:      number;
+    stock:       number;
+    imageUrl:    string;
+    proveedorId: number;
+    proveedor:   null;
+    marcaId:     number;
+    marca:       null;
+    categoriaId: number;
+    categoria:   null;
+    id:          number;
+    createdAt:   Date;
+    isActive:    boolean;
+}

@@ -24,3 +24,4 @@ export { default as EmployeeSalaryAdvanceList } from "./employeeControl/employee
 export { default as ProveedorListar } from "./proveedor/proveedorListar/ProveedorListar";
 export { default as ProveedorRegistrar } from "./proveedor/proveedorRegistrar/ProveedorRegistrar";
 export { default as ProductoRegistrar} from "./Producto/productoRegistrar/ProductoRegistrar";
+export { default as ProductoListar} from "./Producto/productoListar/ProductoListar";

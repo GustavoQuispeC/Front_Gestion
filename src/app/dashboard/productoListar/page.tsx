@@ -1,6 +1,9 @@
+'use client';
+import { ProductoListar } from "@/components";
+
 
 const productoListar = () => {
-  return <div>productoListar</div>;
+  return <ProductoListar />;
 };
 
 export default productoListar;
