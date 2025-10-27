@@ -18,7 +18,7 @@ export { default as EmployeeSalaryAdvance } from "./employeeControl/employeeSala
 export { default as EmployeeVacation } from "./employeeControl/employeeVacation/EmployeeVacation";
 export { default as EmployeeDetails } from "./employeeControl/subcomponentes/EmployeeDetails";
 export { default as EmployeeSelect } from "./employeeControl/subcomponentes/EmployeeSelect";
-export { default as Products } from "./products/Products";
+export { default as Products } from "./productsGrid/Products";
 export { default as ProductFilterSidebar } from "./ProductFilterSidebar/ProductFilterSidebar";
 export { default as EmployeeSalaryAdvanceList } from "./employeeControl/employeeSalaryAdvanceList/EmployeeSalaryAdvanceList";
 export { default as ProveedorListar } from "./proveedor/proveedorListar/ProveedorListar";

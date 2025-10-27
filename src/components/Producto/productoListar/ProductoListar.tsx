@@ -31,6 +31,7 @@ import { toast } from "react-toastify";
 import { listarProductos } from "@/helpers/producto.helper";
 import { Button } from "@/components/ui/button";
 import { useAuthToken } from "@/hooks/useAuthToken";
+import Image from "next/image";
 
 export default function ProductoListar() {
   const [productos, setProductos] = useState<ProductoListarProps[]>([]);
@@ -109,6 +110,7 @@ export default function ProductoListar() {
           <TableHeader className="font-extra-bold">
             <TableRow>
               <TableHead className="w-[100px]">Id</TableHead>
+              <TableHead>Imagen</TableHead>
               <TableHead>Descripción</TableHead>
               <TableHead>Precio</TableHead>
               <TableHead>Stock</TableHead>
@@ -121,6 +123,21 @@ export default function ProductoListar() {
             {productos.map((p) => (
               <TableRow key={p.id}>
                 <TableCell className="font-medium">{p.id}</TableCell>
+                <TableCell>
+                  {p.imageUrl ? (
+                    <Image 
+                    src={p.imageUrl} 
+                    alt={p.descripcion} 
+                    className="object-cover"
+                    width={48}
+                    height={48}
+                    />
+                  ) : (
+                    <div className="w-16 h-16 bg-gray-200 flex items-center justify-center text-gray-500">
+                      Sin Imagen
+                    </div>
+                  )}
+                </TableCell>
                 <TableCell>{p.descripcion}</TableCell>
                 <TableCell>{p.precio}</TableCell>
                 <TableCell>{p.stock}</TableCell>
