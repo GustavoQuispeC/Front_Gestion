@@ -1,10 +1,13 @@
 "use client";
 
 import {
-  Folder,
-  Forward,
+  Banknote,
+  Bus,
+  ChartSpline,
+  CircleDollarSign,
+  HandCoins,
   MoreHorizontal,
-  Trash2,
+  PhoneCall,
   type LucideIcon,
 } from "lucide-react";
 
@@ -38,7 +41,7 @@ export function NavProjects({
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel>Projects</SidebarGroupLabel>
+      <SidebarGroupLabel>Administración</SidebarGroupLabel>
       <SidebarMenu>
         {projects.map((item) => (
           <SidebarMenuItem key={item.name}>
@@ -61,17 +64,29 @@ export function NavProjects({
                 align={isMobile ? "end" : "start"}
               >
                 <DropdownMenuItem>
-                  <Folder className="text-muted-foreground" />
-                  <span>View Project</span>
+                  <Bus className="text-muted-foreground" />
+                  <span>Transportes</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Forward className="text-muted-foreground" />
-                  <span>Share Project</span>
+                  <CircleDollarSign className="text-muted-foreground" />
+                  <span>Bancos</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <HandCoins className="text-muted-foreground" />
+                  <span>Gastos vehiculares</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <PhoneCall className="text-muted-foreground" />
+                  <span>Telefonía</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <ChartSpline className="text-muted-foreground" />
+                  <span>Otros gastos</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                  <Trash2 className="text-muted-foreground" />
-                  <span>Delete Project</span>
+                  <Banknote className="text-muted-foreground" />
+                  <span>Notas de crédito</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

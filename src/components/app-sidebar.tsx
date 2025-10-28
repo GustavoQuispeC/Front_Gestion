@@ -3,10 +3,10 @@
 import * as React from "react";
 import {
   AudioWaveform,
+  BookText,
   CircleUserRound,
   Command,
   FolderCog,
-  Frame,
   GalleryVerticalEnd,
   Map,
   PieChart,
@@ -129,9 +129,9 @@ const data = {
   ],
   projects: [
     {
-      name: "Design Engineering",
+      name: "Documentos contables",
       url: "#",
-      icon: Frame,
+      icon: BookText,
     },
     {
       name: "Sales & Marketing",

@@ -37,23 +37,29 @@ const Products = () => {
           >
             {/* Imagen */}
             <div className="w-full flex items-center justify-center p-3 dark:bg-white">
-              <div className="max-w-[150px] max-h-[200px] w-full">
+              <div className="max-w-[135px] max-h-[170px] w-full">
+                {" "}
+                {/* Reducido un 30% */}
                 <Image
-                  src={producto.imageUrl || "images/not_found.jpg"} // Fallback inicial (ruta desde `public`)
-                  alt={producto.descripcion}
-                  className="w-full h-auto object-contain"
-                  width={150}
-                  height={200}
+                  src={
+                    producto.imageUrl && producto.imageUrl.trim() !== ""
+                      ? producto.imageUrl
+                      : "/images/not_found.jpg"
+                  }
+                  alt={producto.descripcion || "Imagen no disponible"}
+                  className="w-full h-auto object-contain bg-white"
+                  width={105}
+                  height={140}
                   onError={(e) => {
                     const img = e.currentTarget as HTMLImageElement;
-                    // Evita loop infinito
-                    if (!img.src.includes("images/not_found.jpg")) {
-                      img.src = "images/not_found.jpg";
+                    if (!img.src.includes("/images/not_found.jpg")) {
+                      img.src = "/images/not_found.jpg";
                     }
                   }}
                 />
               </div>
             </div>
+
             {/* Contenido */}
             <div className="p-3 flex flex-col flex-1">
               <h5 className="text-base font-semibold text-gray-900 dark:text-gray-100 line-clamp-2 leading-tight mb-1">
