@@ -25,3 +25,4 @@ export { default as ProveedorListar } from "./proveedor/proveedorListar/Proveedo
 export { default as ProveedorRegistrar } from "./proveedor/proveedorRegistrar/ProveedorRegistrar";
 export { default as ProductoRegistrar} from "./Producto/productoRegistrar/ProductoRegistrar";
 export { default as ProductoListar} from "./Producto/productoListar/ProductoListar";
+export { default as GastoTransporte } from "./gastoContable/GastoTransporte";

@@ -56,8 +56,8 @@ export default function ProductoRegistrar() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [marcas, setMarcas] = useState<Marcas[]>([]);
-  const [categorias, setCategorias] = useState<Categorias[]>([]);
   const [openMarcas, setOpenMarcas] = useState(false);
+  const [categorias, setCategorias] = useState<Categorias[]>([]);
   const [openCategorias, setOpenCategorias] = useState(false);
 
   const [productoRegistrar, setProductoRegistrar] =
@@ -217,7 +217,6 @@ export default function ProductoRegistrar() {
     }
   };
 
-  console.log(productoRegistrar);
 
   //! Si no tiene permisos
   if (!hasPermission) {
@@ -328,24 +327,6 @@ export default function ProductoRegistrar() {
         <div>
           <Label className="mb-2 mx-10">Marcas</Label>
           <div className="relative flex items-center mx-10">
-            {/* <Select
-              value={productoRegistrar.marcaId}
-              onValueChange={handleChangeMarca}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Seleccione una marca" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {marcas.map((m) => (
-                    <SelectItem key={m.marcaId} value={m.marcaId.toString()}>
-                      {m.nombre}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select> */}
-
             <Popover open={openMarcas} onOpenChange={setOpenMarcas}>
               <PopoverTrigger asChild>
                 <Button

@@ -63,9 +63,11 @@ export function NavProjects({
                 side={isMobile ? "bottom" : "right"}
                 align={isMobile ? "end" : "start"}
               >
-                <DropdownMenuItem>
-                  <Bus className="text-muted-foreground" />
-                  <span>Transportes</span>
+                <DropdownMenuItem asChild>
+                  <a href="/dashboard/transporte" className="flex items-center gap-2">
+                    <Bus className="text-muted-foreground" />
+                    <span>Transportes</span>
+                  </a>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <CircleDollarSign className="text-muted-foreground" />
