@@ -44,7 +44,7 @@
     "sweetalert2-react-content": "^5.1.0",
     "swiper": "^11.2.10",
     "tailwind-merge": "^3.3.1",
-    "xlsx": "^0.18.5"
+    "xlsx-js-style": "^1.2.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

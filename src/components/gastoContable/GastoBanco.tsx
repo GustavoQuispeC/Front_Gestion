@@ -70,7 +70,7 @@ import {
 import * as XLSX from "xlsx-js-style";
 import { saveAs } from "file-saver";
 
-const GastoTransporte = () => {
+const GastoBanco = () => {
   const [open1, setOpen1] = useState(false);
   const [date1, setDate1] = useState<Date | undefined>(undefined);
   const [proveedor, setProveedor] = useState<ListarProveedoresProps[]>([]);
@@ -78,9 +78,9 @@ const GastoTransporte = () => {
   const [token, setToken] = useState("");
   const [hasPermission, setHasPermission] = useState(true);
   const [username, setUsername] = useState("");
-  const [gastosTransporte, setGastosTransporte] = useState<
-    ListarGastoContableProps[]
-  >([]);
+  const [gastosBanco, setGastosBanco] = useState<ListarGastoContableProps[]>(
+    []
+  );
 
   const [gastoContableRegistrar, setGastoContableRegistrar] =
     useState<GastoContableRegistrarProps>({
@@ -89,7 +89,7 @@ const GastoTransporte = () => {
       total: 0,
       usuario: "",
       proveedorId: "",
-      gastoId: "2", //? valor por defecto (Transporte)
+      gastoId: "6", //? valor por defecto (Bancos)
     });
 
   //! --- nuevos estados para filtros ---
@@ -147,19 +147,19 @@ const GastoTransporte = () => {
   };
 
   //! Listar gastos según filtros
-  const getGastosTransporte = useCallback(async () => {
+  const getGastosBanco = useCallback(async () => {
     if (!token || !hasPermission) return;
     try {
       const data = await listarGastosContables(
         token,
-        "2",
+        "6",
         selectedMonth,
         selectedYear
       );
-      setGastosTransporte(data);
+      setGastosBanco(data);
     } catch (error) {
-      console.error("Error al obtener los gastos de transporte:", error);
-      toast.error("Error al obtener los gastos de transporte", {
+      console.error("Error al obtener los gastos de bancos:", error);
+      toast.error("Error al obtener los gastos de bancos", {
         theme: "colored",
       });
     }
@@ -167,8 +167,8 @@ const GastoTransporte = () => {
 
   //! --- Actualizar tabla cuando cambien filtros ---
   useEffect(() => {
-    getGastosTransporte();
-  }, [getGastosTransporte]);
+    getGastosBanco();
+  }, [getGastosBanco]);
 
   //! ---Cambio de proveedor ---
   const handleChangeProveedores = (value: string) => {
@@ -194,7 +194,7 @@ const GastoTransporte = () => {
       total: 0,
       usuario: username,
       proveedorId: "",
-      gastoId: "2",
+      gastoId: "6",
     });
     setDate1(undefined);
   };
@@ -223,7 +223,7 @@ const GastoTransporte = () => {
       if (response?.message === "Se ha registrado correctamente") {
         toast.success("Se ha registrado con éxito.");
         handleReset();
-        getGastosTransporte();
+        getGastosBanco();
       } else {
         toast.error(response?.message || "Error al registrar");
       }
@@ -339,8 +339,9 @@ const GastoTransporte = () => {
   return (
     <>
       <h2 className="text-2xl text-blue-900 dark:text-blue-400 font-semibold ml-2 mb-6">
-        Registro de Transporte
+        Registro de Bancos
       </h2>
+
       <form onSubmit={handleSubmit} onReset={handleReset}>
         <Card>
           <CardContent className="grid grid-cols-1 md:grid-cols-7 gap-6 items-end">
@@ -481,54 +482,54 @@ const GastoTransporte = () => {
                 <FaSave className="text-white text-lg hidden md:block" />
                 {/* Ícono + texto en móvil */}
                 <span className="flex md:hidden items-center gap-2">
-                  <FaSave className="text-black text-lg" />
+                  <FaSave className="text-black text-lg" /> 
                 </span>
               </Button>
             </div>
           </CardContent>
         </Card>
       </form>
+
       {/* Filtros */}
-      <h3 className="text-md font-semibold text-gray-700 dark:text-gray-300 mt-2 ml-4">
+      <h3 className="text-md font-semibold text-gray-700 dark:text-gray-300 mt-4 ml-4">
         Filtrar:
       </h3>
+
       <div className="w-full p-4 border rounded-lg bg-white dark:bg-neutral-900 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           {/* Filtros Año/Mes */}
-          <div className="flex flex-col gap-2 w-full md:w-auto">
-            <div className="flex flex-wrap gap-3">
-              <Select value={selectedYear} onValueChange={setSelectedYear}>
-                <SelectTrigger className="w-[160px]">
-                  <SelectValue placeholder="Seleccione año" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Año</SelectLabel>
-                    {years.map((year) => (
-                      <SelectItem key={year} value={year.toString()}>
-                        {year}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+          <div className="flex flex-wrap gap-3">
+            <Select value={selectedYear} onValueChange={setSelectedYear}>
+              <SelectTrigger className="w-[160px]">
+                <SelectValue placeholder="Seleccione año" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Año</SelectLabel>
+                  {years.map((year) => (
+                    <SelectItem key={year} value={year.toString()}>
+                      {year}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
 
-              <Select value={selectedMonth} onValueChange={setSelectedMonth}>
-                <SelectTrigger className="w-[160px]">
-                  <SelectValue placeholder="Seleccione mes" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Mes</SelectLabel>
-                    {months.map((m) => (
-                      <SelectItem key={m.value} value={m.value.toString()}>
-                        {m.name}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
+            <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+              <SelectTrigger className="w-[160px]">
+                <SelectValue placeholder="Seleccione mes" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Mes</SelectLabel>
+                  {months.map((m) => (
+                    <SelectItem key={m.value} value={m.value.toString()}>
+                      {m.name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Botones */}
@@ -537,7 +538,7 @@ const GastoTransporte = () => {
               href="/dashboard/proveedorListar"
               className="w-full md:w-auto"
             >
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" type="button" className="w-full">
                 <IoMdArrowRoundBack className="text-green-600 text-base mr-1" />
                 Volver
               </Button>
@@ -551,7 +552,7 @@ const GastoTransporte = () => {
               type="button"
               variant="outline"
               className="w-full md:w-auto"
-              onClick={() => handleExportExcel(gastosTransporte)}
+              onClick={() => handleExportExcel(gastosBanco)}
             >
               <FaFileExcel className="text-green-600 text-base mr-1" /> Excel
             </Button>
@@ -570,7 +571,7 @@ const GastoTransporte = () => {
       {/* Tabla */}
       <div className="overflow-x-auto bg-white shadow-lg rounded-lg p-4 mt-6 dark:bg-neutral-900 border">
         <Table className="w-full">
-          <TableCaption>Listado de transportes</TableCaption>
+          <TableCaption>Listado de Bancos</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead>Fecha</TableHead>
@@ -586,8 +587,8 @@ const GastoTransporte = () => {
           </TableHeader>
 
           <TableBody>
-            {gastosTransporte.length > 0 ? (
-              gastosTransporte.map((p) => (
+            {gastosBanco.length > 0 ? (
+              gastosBanco.map((p) => (
                 <TableRow key={p.idGastoContable}>
                   <TableCell>
                     {p.fecha_doc
@@ -660,4 +661,4 @@ const GastoTransporte = () => {
   );
 };
 
-export default GastoTransporte;
+export default GastoBanco;
