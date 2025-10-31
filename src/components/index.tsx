@@ -27,3 +27,4 @@ export { default as ProductoRegistrar} from "./Producto/productoRegistrar/Produc
 export { default as ProductoListar} from "./Producto/productoListar/ProductoListar";
 export { default as GastoTransporte } from "./gastoContable/GastoTransporte";
 export { default as GastoBanco } from "./gastoContable/GastoBanco";
+export { default as OtrosGastos } from "./gastoContable/OtrosGastos";

@@ -90,8 +90,13 @@ export function NavProjects({
                   <span>Telefonía</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <ChartSpline className="text-muted-foreground" />
-                  <span>Otros gastos</span>
+                  <a
+                    href="/dashboard/otrosGastos"
+                    className="flex items-center gap-2"
+                  >
+                    <ChartSpline className="text-muted-foreground" />
+                    <span>Otros gastos</span>
+                  </a>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
