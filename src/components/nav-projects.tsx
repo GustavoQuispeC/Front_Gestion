@@ -86,8 +86,13 @@ export function NavProjects({
                   <span>Gastos vehiculares</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <PhoneCall className="text-muted-foreground" />
-                  <span>Telefonía</span>
+                  <a
+                    href="/dashboard/telefonia"
+                    className="flex items-center gap-2"
+                  >
+                    <PhoneCall className="text-muted-foreground" />
+                    <span>Telefonía</span>
+                  </a>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <a
