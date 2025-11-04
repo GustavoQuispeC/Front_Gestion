@@ -105,8 +105,13 @@ export function NavProjects({
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                  <Banknote className="text-muted-foreground" />
-                  <span>Notas de crédito</span>
+                  <a
+                    href="/dashboard/notasCredito"
+                    className="flex items-center gap-2"
+                  >
+                    <Banknote className="text-muted-foreground" />
+                    <span>Notas de crédito</span>
+                  </a>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

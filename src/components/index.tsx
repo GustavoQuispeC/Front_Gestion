@@ -29,3 +29,4 @@ export { default as GastoTransporte } from "./gastoContable/GastoTransporte";
 export { default as GastoBanco } from "./gastoContable/GastoBanco";
 export { default as OtrosGastos } from "./gastoContable/OtrosGastos";
 export { default as GastoTelefonia } from "./gastoContable/GastoTelefonia";
+export { default as NotasCredito } from "./gastoContable/NotasCredito";
