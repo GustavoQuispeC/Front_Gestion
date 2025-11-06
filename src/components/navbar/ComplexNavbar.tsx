@@ -13,32 +13,32 @@ const ComplexNavbar = () => {
 
   return (
     <header className="min-h-[60px] tracking-wide relative z-50">
-      <section className="bg-blue-900 min-h-[40px] dark:bg-neutral-800 px-4 py-2 sm:px-10 flex items-center max-sm:flex-col">
-        <button type="button" className="text-white dark:text-blue-500 text-sm flex items-center">
+      <section className="bg-gray-100 min-h-[40px] dark:bg-neutral-800 px-4 py-2 sm:px-10 flex items-center max-sm:flex-col">
+        <button type="button" className="text-gray-800 dark:text-blue-500 text-sm flex items-center">
           <Phone width={16} className="mr-2" />
           +180-548-2588
         </button>
         <span className="border-l h-3 mx-6 max-sm:hidden"></span>
         <button
           type="button"
-          className="text-white dark:text-blue-500 text-sm max-sm:my-2 flex items-center"
+          className="text-gray-800 dark:text-blue-500 text-sm max-sm:my-2 flex items-center"
         >
           <Mail width={18} className="mr-2" />
           gusstavocta@gmail.com
         </button>
-        <div className="sm:ml-auto text-white">
-          <Link href="/login" className="text-white dark:text-blue-500 text-sm mr-1">
+        <div className="sm:ml-auto text-gray-800 dark:text-blue-500 flex items-center">
+          <Link href="/login" className="text-gray-800 dark:text-blue-500 text-sm mr-1">
             Iniciar Sesión
           </Link>
           /
-          <a href="javscript:void(0)" className="text-white dark:text-blue-500 text-sm ml-1 mr-8">
+          <a href="javscript:void(0)" className="text-gray-800 dark:text-blue-500 text-sm ml-1 mr-8">
             Salir
           </a>
         </div>
       </section>
 
-      <div className="flex flex-wrap items-center justify-between py-3 px-4 sm:px-10 bg-gray-900 dark:bg-blue-950 lg:gap-y-4 gap-y-6 gap-x-4">
-        <a href="javascript:void(0)">
+      <div className="flex flex-wrap items-center justify-between py-3 px-4 sm:px-10 bg-white dark:bg-blue-950 lg:gap-y-4 gap-y-6 gap-x-4">
+        <a href ="#">
           {/* <Image
             src="/images/LogoFamet.png"
             alt="logo"
@@ -62,7 +62,7 @@ const ComplexNavbar = () => {
 
           <ul className="lg:!flex lg:gap-x-10 max-lg:space-y-3 max-lg:fixed max-lg:bg-gray-900 max-lg:w-2/3 max-lg:min-w-[300px] max-lg:top-0 max-lg:left-0 max-lg:px-10 max-lg:py-4 max-lg:h-full max-lg:shadow-md max-lg:overflow-auto z-50">
             <li className="mb-6 hidden max-lg:block">
-              <a href="javascript:void(0)">
+              <a href="#">
                 {/* <Image
                   src="https://readymadeui.com/readymadeui-white.svg"
                   alt="logo"
@@ -70,7 +70,7 @@ const ComplexNavbar = () => {
                   width={144}
                   height={36}
                 /> */}
-                <h4 className="text-blue-200 font-bold">gusstavodev.help</h4>
+                <h4 className="text-blue-600 font-bold">gusstavodev.help</h4>
               </a>
             </li>
             <li className="max-lg:border-b max-lg:border-gray-100 max-lg:py-3 relative lg:after:absolute lg:after:bg-orange-500 lg:after:w-full lg:after:h-[2px] lg:after:block lg:after:-bottom-4 lg:after:transition-all lg:after:duration-300">
@@ -83,42 +83,35 @@ const ComplexNavbar = () => {
             </li>
             <li className="max-lg:border-b max-lg:border-gray-100 max-lg:py-3 relative lg:hover:after:absolute lg:after:bg-orange-500 lg:after:w-0 lg:hover:after:w-full lg:hover:after:h-[2px] lg:after:block lg:after:-bottom-4 lg:after:transition-all lg:after:duration-300">
               <a
-                href="javascript:void(0)"
-                className="text-orange-500 block text-[15px] font-semibold hover:text-orange-400"
+                href="#"
+                className="text-gray-800 block text-[15px] font-semibold hover:text-orange-400"
               >
-                Tracking
+                Nosotros
               </a>
             </li>
             <li className="max-lg:border-b max-lg:border-gray-100 max-lg:py-3 relative lg:hover:after:absolute lg:after:bg-orange-500 lg:after:w-0 lg:hover:after:w-full lg:hover:after:h-[2px] lg:after:block lg:after:-bottom-4 lg:after:transition-all lg:after:duration-300">
               <a
-                href="javascript:void(0)"
-                className="text-orange-500 block text-[15px] font-semibold hover:text-orange-400"
+                href="#"
+                className="text-gray-800 block text-[15px] font-semibold hover:text-orange-400"
               >
-                Support
+                Historia
               </a>
             </li>
             <li className="max-lg:border-b max-lg:border-gray-100 max-lg:py-3 relative lg:hover:after:absolute lg:after:bg-orange-500 lg:after:w-0 lg:hover:after:w-full lg:hover:after:h-[2px] lg:after:block lg:after:-bottom-4 lg:after:transition-all lg:after:duration-300">
               <a
-                href="javascript:void(0)"
-                className="text-orange-500 block text-[15px] font-semibold hover:text-orange-400"
+                href="#"
+                className="text-gray-800 block text-[15px] font-semibold hover:text-orange-400"
               >
-                Accountsemibold
+                Productos
               </a>
             </li>
-            <li className="max-lg:border-b max-lg:border-gray-100 max-lg:py-3 relative lg:hover:after:absolute lg:after:bg-orange-500 lg:after:w-0 lg:hover:after:w-full lg:hover:after:h-[2px] lg:after:block lg:after:-bottom-4 lg:after:transition-all lg:after:duration-300">
-              <a
-                href="javascript:void(0)"
-                className="text-orange-500 block text-[15px] font-semibold hover:text-orange-400"
-              >
-                Places
-              </a>
-            </li>
+           
             <li className="max-lg:border-b max-lg:border-gray-100 max-lg:py-3 relative lg:hover:after:absolute lg:after:bg-orange-500 lg:after:w-0 lg:hover:after:w-full lg:hover:after:h-[2px] lg:after:block lg:after:-bottom-4 lg:after:transition-all lg:after:duration-300">
               <Link
                 href="/contact"
-                className="text-orange-500 block text-[15px] font-semibold hover:text-orange-400"
+                className="text-gray-800 block text-[15px] font-semibold hover:text-orange-400"
               >
-                Contáctenos
+                Contáctanos
               </Link>
             </li>
           </ul>
