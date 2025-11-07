@@ -11,8 +11,16 @@ const ProductFilterSidebar = () => {
 
   // Ejemplo de imágenes de promoción (puedes cambiarlas por las reales)
   const promociones = [
-    { id: 1, src: "/images/promo1.jpg", alt: "Descuento en zapatillas" },
-    { id: 2, src: "/images/promo2.jpg", alt: "Ofertas en polos" },
+    {
+      id: 1,
+      src: "https://firebasestorage.googleapis.com/v0/b/grupofamet-456604.firebasestorage.app/o/imagenes-ui%2Fpublicidad%202.jpg?alt=media&token=d141f9a0-a643-4545-a1fa-70d2a9cbdbab",
+      alt: "Publicidad 1",
+    },
+    {
+      id: 2,
+      src: "https://firebasestorage.googleapis.com/v0/b/grupofamet-456604.firebasestorage.app/o/imagenes-ui%2Fpublicidad2.png?alt=media&token=301d4bb0-0b5a-43fc-b3c4-039c8daf80d7",
+      alt: "Publicidad 2",
+    },
   ];
 
   return (

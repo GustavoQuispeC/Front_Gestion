@@ -78,8 +78,8 @@ const ComplexNavbar = () => {
       <div className="flex flex-wrap items-center justify-between py-3 px-4 sm:px-10 lg:gap-y-4 gap-y-6 gap-x-4">
         <a href="#">
           <div className="flex items-center space-x-2">
-            <h4 className="text-blue-600 font-extrabold m-0">GRUPO</h4>
-            <h4 className="text-orange-500 m-0">Famet</h4>
+            <h6 className="text-blue-700 font-extrabold m-0">GRUPO</h6>
+            <h6 className="text-orange-500 m-0">Famet</h6>
           </div>
         </a>
 
