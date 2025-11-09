@@ -12,6 +12,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import "../../style/loader.css";
+import Image from "next/image";
 
 const Login = () => {
   const router = useRouter();
@@ -92,15 +93,15 @@ const Login = () => {
         <div className="min-h-screen flex flex-col items-center justify-center py-6 px- dark:bg-neutral-800">
           <div className="grid md:grid-cols-2 items-center gap-10 max-w-6xl max-md:max-w-md w-full">
             <div className="space-y-2">
-              {/* <Image
+              <Image
                 src="/images/LogoFamet2.png"
                 alt="Logo Principal"
                 width={350}
                 height={100}
                 className="object-cover block"
                 priority
-              /> */}
-              <h1>Gustavodev</h1>
+              />
+              {/* <h1>Gustavodev</h1> */}
             </div>
 
             <div className="max-w-md md:ml-auto w-full">

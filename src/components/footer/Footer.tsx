@@ -8,16 +8,19 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Logo */}
           <div className="lg:flex lg:items-center">
-            <Link href="/" aria-label="Inicio">
-              {/* <Image
-                src="/images/LogoFamet.png"
-                alt="Logo Principal"
-                width={350}
-                height={100}
-                className="object-cover mb-4 lg:mb-0"
-                priority
-              /> */}
-              <h4 className="text-blue-300 font-bold pt-3">gusstavodev.help</h4>
+            <Link href="/">
+              <a aria-label="Inicio" className="flex items-center space-x-2">
+                {/* <Image
+                  src="/images/LogoFamet.png"
+                  alt="Logo Principal"
+                  width={350}
+                  height={100}
+                  className="object-cover mb-4 lg:mb-0"
+                  priority
+                /> */}
+                <h6 className="text-blue-700 font-extrabold m-0">GRUPO</h6>
+                <h6 className="text-orange-500 m-0">Famet</h6>
+              </a>
             </Link>
           </div>
 
@@ -78,17 +81,26 @@ export default function Footer() {
             <h4 className="text-lg mb-6 text-blue-300">Secciones</h4>
             <ul className="space-y-3">
               <li>
-                <a href="#" className="text-orange-500 hover:text-orange-200 text-sm">
+                <a
+                  href="#"
+                  className="text-orange-500 hover:text-orange-200 text-sm"
+                >
                   Inicio
                 </a>
               </li>
               <li>
-                <a href="#" className="text-orange-500 hover:text-orange-200 text-sm">
+                <a
+                  href="#"
+                  className="text-orange-500 hover:text-orange-200 text-sm"
+                >
                   Promociones
                 </a>
               </li>
               <li>
-                <a href="#" className="text-orange-500 hover:text-orange-200 text-sm">
+                <a
+                  href="#"
+                  className="text-orange-500 hover:text-orange-200 text-sm"
+                >
                   Productos
                 </a>
               </li>
@@ -100,17 +112,26 @@ export default function Footer() {
             <h4 className="text-lg mb-6 text-blue-300">Información</h4>
             <ul className="space-y-3">
               <li>
-                <a href="#" className="text-orange-500 hover:text-orange-200 text-sm">
+                <a
+                  href="#"
+                  className="text-orange-500 hover:text-orange-200 text-sm"
+                >
                   Sobre Nosotros
                 </a>
               </li>
               <li>
-                <a href="#" className="text-orange-500 hover:text-orange-200 text-sm">
+                <a
+                  href="#"
+                  className="text-orange-500 hover:text-orange-200 text-sm"
+                >
                   Términos &amp; Condiciones
                 </a>
               </li>
               <li>
-                <a href="#" className="text-orange-500 hover:text-orange-200 text-sm">
+                <a
+                  href="#"
+                  className="text-orange-500 hover:text-orange-200 text-sm"
+                >
                   Política de Privacidad
                 </a>
               </li>
