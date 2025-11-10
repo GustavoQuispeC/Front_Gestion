@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -9,18 +10,16 @@ export default function Footer() {
           {/* Logo */}
           <div className="lg:flex lg:items-center">
             <Link href="/">
-              <a aria-label="Inicio" className="flex items-center space-x-2">
-                {/* <Image
+              <Image
                   src="/images/LogoFamet.png"
                   alt="Logo Principal"
                   width={350}
                   height={100}
                   className="object-cover mb-4 lg:mb-0"
                   priority
-                /> */}
-                <h6 className="text-blue-700 font-extrabold m-0">GRUPO</h6>
-                <h6 className="text-orange-500 m-0">Famet</h6>
-              </a>
+                />
+              {/* <h6 className="text-blue-700 font-extrabold m-0">GRUPO</h6>
+              <h6 className="text-orange-500 m-0">Famet</h6> */}
             </Link>
           </div>
 
