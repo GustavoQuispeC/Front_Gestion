@@ -64,7 +64,7 @@ export default function ProductoRegistrar() {
     useState<ProductoRegistrarProps>({
       descripcion: "",
       precio: 0,
-      stock: 0,
+      stock: 0, 
       proveedorId: "",
       imageUrl: "",
       categoriaId: "",

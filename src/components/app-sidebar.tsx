@@ -78,6 +78,21 @@ const data = {
       ],
     },
     {
+      title: "Clientes",
+      url: "#",
+      icon: UserLock,
+      items: [
+        {
+          title: "Lista de Clientes",
+          url: "/dashboard/clienteListar",
+        },
+        {
+          title: "Registro de Clientes",
+          url: "/dashboard/clienteRegistrar",
+        },
+      ],
+    },
+    {
       title: "Empleados",
       url: "#",
       icon: CircleUserRound,

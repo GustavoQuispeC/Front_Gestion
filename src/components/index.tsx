@@ -1,4 +1,5 @@
 
+
 export { default as HeroWithCarousel } from "./carousel/HeroWithCarousel";
 export { default as ComplexNavbar } from "./navbar/ComplexNavbar";
 export { default as Footer } from "./footer/Footer";
@@ -30,3 +31,5 @@ export { default as GastoBanco } from "./gastoContable/GastoBanco";
 export { default as OtrosGastos } from "./gastoContable/OtrosGastos";
 export { default as GastoTelefonia } from "./gastoContable/GastoTelefonia";
 export { default as NotasCredito } from "./gastoContable/NotasCredito";
+export { default as PedidoRegistrar } from "./pedido/PedidoRegistrar/PedidoRegistrar";
+export { default as ClienteListar} from "./cliente/clienteListar/ClienteListar";
